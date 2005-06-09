@@ -110,6 +110,11 @@ fi;
 
 total_files="`ls $images | wc -l`"
 
+# handle file names with white spaces and order by modify time
+all_files="`ls -t $images`"
+IFS='\
+'
+
 #############
 # Set options
 #############
@@ -223,7 +228,7 @@ if [ "$only_index" != "yes" ]; then
     
     processed=0
     
-    for file in $images; do
+    for file in $all_files; do
 	processed=$(($processed+1))
 	processed100=$(($processed*100))
 	percent=$(($processed100/$total_files))
@@ -278,7 +283,7 @@ lin_counter=1
 
 col_percentage=$((100/$n_columns))
 
-for file in $images; do
+for file in $all_files; do
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
     
