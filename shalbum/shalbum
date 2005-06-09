@@ -1,0 +1,514 @@
+#!/bin/sh
+
+#  Copyright 2003 Eduardo Sztokbant <du@du.eti.br>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+##########
+# shalbum
+#
+# Script to generate thumbnails and smaller copies from *.jpg
+# - requires: ImageMagick and bc
+#
+# Usage (from pics dir):
+#  shalbum 'Main Title' 'Sub Title/Date' <mhd>
+#  
+# mhd: use "mhd" options, including watermark.
+##############################################################
+
+f_index()
+{
+    echo '<table width="'$table_width'"><tr><td align="right">' >> $1
+    if [ $n_lines -gt 0 ]; then
+	aux=1
+	echo -n '<font size="2"><b><center>__LAST_PAGE__ ' >> $1
+	while [ $aux -le $idx_counter ]; do
+	    last=`echo "$aux - 1" | bc`
+	    next=`echo "$aux + 1" | bc`
+
+	    echo -n '<a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a> ' >> $1
+
+	    if [ $aux -eq $idx_counter ]; then
+		echo -n ' __NEXT_PAGE__' >> $1
+	    else
+		echo -n ' ' >> $1
+	    fi
+
+	    # aux++
+	    aux=`echo "$aux + 1" | bc`
+	done;
+	echo '</center>' >> $1
+    fi;
+
+
+    if [ "$back_link" != "" ]; then
+	echo '<center><a href="'"$back_link"'">&iacute;ndice</a></center><br>' >> $1
+    fi;
+
+    # don't remember why... (25 Nov 2003)
+    if [ "$mhd" = "yes" ]; then
+	echo '</b></font>' >> $1
+    fi;
+
+    echo '</b></font><br>' >> $1
+
+}
+
+######
+# Test
+######
+
+# are there any pictures here?
+
+images=""
+
+echo -n "[ "
+
+if [ "`ls *.jpg 2>/dev/null`" != "" ]; then
+    images=$images' *.jpg'
+    echo -n "jpg "
+fi
+
+if [ "`ls *.JPG 2>/dev/null`" != "" ]; then
+    images=$images' *.JPG'
+    echo -n "JPG "
+fi
+
+if [ "`ls *.gif 2>/dev/null`" != "" ]; then
+    images=$images' *.gif'
+    echo -n "gif "
+fi
+
+if [ "`ls *.GIF 2>/dev/null`" != "" ]; then
+    images=$images' *.GIF'
+    echo -n "GIF "
+fi
+
+if [ "`ls *.PNG 2>/dev/null`" != "" ]; then
+    images=$images' *.PNG'
+    echo -n "PNG "
+fi
+
+if [ "`ls *.png 2>/dev/null`" != "" ]; then
+    images=$images' *.png'
+    echo -n "png "
+fi
+
+echo "]"
+
+if [ "$images" = "" ]; then
+    echo "No pictures in `pwd`"
+    exit
+fi;
+
+total_files="`ls $images | wc -l`"
+
+#########
+# Options
+#########
+
+software_revision="shalbum by Eduardo Sztokbant <du@du.eti.br> - last revision 2005 May 2"
+
+# entrada
+if [ $# -le 1 ]; then
+    if [ -e _title ]; then
+	title="`cat _title`"
+    else
+	title="Fotos"
+    fi;
+
+    if [ -e _date ]; then
+	date="`cat _date`"
+    else
+	date=""
+    fi;
+
+    if [ -e _mhd ]; then
+	mhd="yes"
+    else
+	mhd="no"
+    fi;
+
+    if [ "$1" = "index" ]; then
+    	only_index="yes"
+    else
+    	only_index="no"
+    fi
+else
+    title="$1"
+    date="$2"
+
+    if [ "$3" = "mhd" ]; then
+	mhd="yes"
+    else
+	mhd="no"
+    fi;
+fi;
+
+echo -n "Starting for album '$title', '$date', MHD = "
+if [ $mhd = "yes" ]; then
+    echo "yes"
+else
+    echo "no"
+fi;
+
+if [ $mhd = "yes" ]; then
+    vga_res=500
+    th_res=150
+    table_width=520
+    n_columns=3
+    print_number=yes
+    print_filename=no
+    e_mail='du@meiahoradepois.com'
+    watermark="yes"
+    watermark_th_src="$HOME/.shalbum/watermark_th.png"
+    watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
+    watermark_th="./watermark_${th_res}.png"
+    watermark_vga="./watermark_${vga_res}.png"
+    #author2=""
+    author2="Gledson Monteiro"
+    e_mail2="gledson@meiahoradepois.com"
+    n_lines=16
+    back_link="http://denisgv.sites.uol.com.br/fotos.htm"
+    credits_str="photos & page "
+else
+    # default options
+    vga_res=800
+    th_res=250
+    table_width=780
+    n_columns=3
+    print_number=no
+    print_filename=no
+    e_mail='du@du.eti.br'
+    #e_mail='du@meiahoradepois.com'
+    watermark="no"
+    n_lines=15
+    back_link=""
+    credits_str=""
+fi;
+
+author="Eduardo Sztokbant"
+
+if [ "$only_index" != "yes" ]; then
+###################
+# Part I: the filez
+###################
+
+if [ -e thumbnails ]; then
+    rm -rf thumbnails
+fi;
+mkdir thumbnails
+
+if [ -e vga ]; then
+    rm -rf vga
+fi;
+mkdir vga
+
+# generate watermarks
+if [ $watermark = "yes" ]; then
+    echo -n "Creating watermarks..."
+
+    echo -n "tnail $th_res..."
+    convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
+    #convert -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
+
+    echo -n "vga $vga_res..."
+    convert -sharpen 3 -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
+    #convert -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
+    
+    echo "done!"
+fi; # $watermark = yes
+
+processed=0
+
+for file in `ls -t $images`; do
+    # processed++
+    processed=`echo "$processed + 1" | bc`
+
+    processed100=`echo "$processed * 100" | bc`
+    percent=`echo "scale=2; $processed100 / $total_files" | bc` 
+
+    printf "%4d/%4d (%.2f%%) %s: " "$processed" "$total_files" "$percent" "$file"
+    echo -n "tnail $th_res..."
+    th_file="th_""$file"
+    convert -size ${th_res}x${th_res} "$file" -resize ${th_res}x${th_res} +profile "*" thumbnails/"$th_file"
+
+    if [ $watermark = "yes" ]; then
+	echo -n "watermark..."
+	mv thumbnails/"$th_file" ./tmp.jpg
+	composite -gravity SouthEast $watermark_th tmp.jpg thumbnails/"$th_file"
+	rm ./tmp.jpg
+    fi;
+
+    echo -n "pic $vga_res..."
+    vga_file="vga_""$file"
+
+    convert -size ${vga_res}x${vga_res} "$file" -sharpen 2 -resize ${vga_res}x${vga_res} +profile "*" vga/"$vga_file"
+
+
+    if [ $watermark = "yes" ]; then
+	echo -n "watermark..."
+	mv vga/"$vga_file" ./tmp.jpg
+	composite -dissolve 60 -gravity SouthEast $watermark_vga tmp.jpg vga/"$vga_file"
+	rm ./tmp.jpg
+    fi;
+
+    echo "done!"
+done;
+
+if [ $watermark = "yes" ]; then
+    rm $watermark_vga $watermark_th
+fi;
+
+fi; # !only_index
+
+####################
+# Part II: the index
+####################
+
+echo -n "Generating indexes..."
+
+idx_basename='index'
+idx_counter=1
+idx_filename="$idx_basename""$idx_counter"".html"
+
+
+############################## CONTENTS ##############################
+echo '<table width="'$table_width'"><tr>' >> $idx_filename
+
+col_counter=1
+lin_counter=1
+
+#for file in `ls $images 2>/dev/null`; do
+for file in $images; do
+    th_file="thumbnails/th_""$file"
+    vga_file="vga/vga_""$file"
+
+    # lines & columns
+    if [ $col_counter -eq 1 ]; then
+	echo '<td width="'`echo "100 / $n_columns" | bc`'%" align="left" valign="top">' >> $idx_filename
+    elif [ $col_counter -eq $n_columns ]; then
+	echo '<td width="'`echo "100 / $n_columns" | bc`'%" align="right" valign="top">' >> $idx_filename
+    else
+	echo '<td width="'`echo "100 / $n_columns" | bc`'%" align="center" valign="top">' >> $idx_filename
+    fi;
+
+    echo '<table><tr><td><a href="'$vga_file'" target="'$file'"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
+
+    # number
+    if [ "$print_number" = "yes" ]; then
+	if [ "`echo $file | grep _`" = "$file" ]; then
+		num_sep="_"
+	elif [ "`echo $file | grep c`" = "$file" ]; then
+		num_sep="c"
+	else
+		num_sep="C"
+	fi
+	number=`echo $file | cut -d "." -f 1 | cut -d "$num_sep" -f 2`
+	echo $number >> $idx_filename
+    elif [ "$print_filename" = "yes" ]; then
+    	echo $file >> $idx_filename
+    fi;
+
+    echo '</td></tr></table></td>' >> $idx_filename
+
+    # col_counter++
+    col_counter=`echo "$col_counter + 1" | bc`
+
+    if [ $col_counter -gt $n_columns ]; then
+	echo '</tr><tr>' >> $idx_filename
+	col_counter=1
+	#lin_counter++
+	lin_counter=`echo "$lin_counter + 1" | bc`
+    fi;
+
+    if [ $n_lines -gt 0 ]; then
+	if [ $lin_counter -gt $n_lines ]; then
+	    #idx_counter++
+	    idx_counter=`echo "$idx_counter + 1" | bc`
+	    idx_filename="$idx_basename""$idx_counter"".html"
+
+	    echo '<table width="'$table_width'"><tr>' >> $idx_filename
+	    lin_counter=1
+	fi;
+    fi;
+
+done;
+
+# Fill empty columns
+while [ $col_counter -gt 1 ]; do
+    echo '<td width="'`echo "100 / $n_columns" | bc`'%"></td>' >> $idx_filename
+
+    # col_counter++
+    col_counter=`echo "$col_counter + 1" | bc`
+
+    if [ $col_counter -gt $n_columns ]; then
+	col_counter=1
+    fi;
+
+done;
+############################## /CONTENTS ##############################
+
+
+############################## HEADER ##############################
+idx_header="header.html"
+
+echo "<html>" > $idx_header
+echo >> $idx_header
+echo -n "<head><title>" >> $idx_header
+
+if [ $mhd = "yes" ]; then
+    echo -n "Meia Hora Depois - " >> $idx_header
+fi;
+
+# echoes title
+echo -n "$title" >> $idx_header
+if [ "$date" != "" ]; then
+    echo -n "- $date" >> $idx_header
+fi;
+
+echo '</title><style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style></head>' >> $idx_header
+echo >> $idx_header
+
+echo '<body text="#ffffff" bgcolor="#000000" link="#ffffff" vlink="#888888" alink="#ff0000"><font face="Arial, Helvetica"><center>' >> $idx_header
+echo '<table width="'$table_width'">' >> $idx_header
+
+echo '<tr><td><font size="5"><b>' >> $idx_header
+
+if [ $mhd = "yes" ]; then
+    echo '<font size="3">Meia Hora Depois</font><br>' >> $idx_header
+fi;
+
+# echoes title
+echo $title'</b></font><br><font size="3">'$date'</font>' >> $idx_header
+echo '</td></tr></table>' >> $idx_header
+
+# page index
+f_index $idx_header
+############################## /HEADER ##############################
+
+
+############################## FOOTER ##############################
+idx_footer="footer.html"
+
+echo '</tr></table><br>' >> $idx_footer
+
+# page index
+f_index $idx_footer
+
+# Author
+echo '<font size="1"><b>'$credits_str'by '$author'</b></font><br>' >> $idx_footer
+echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a>' >> $idx_footer
+
+# Author2
+if [ "$author2" != "" ]; then
+    echo '<br><br><font size="1"><b>and '$author2'</b></font><br>' >> $idx_footer
+    echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a>' >> $idx_footer
+
+fi
+
+echo '</td></tr></table>' >> $idx_footer
+echo '</center></font></body></html>' >> $idx_footer
+
+echo '<!-- '$software_revision' -->' >> $idx_footer
+############################## /FOOTER ##############################
+
+
+################################### CREATION #################################
+aux=1
+while [ $aux -le $idx_counter ]; do
+    idx_filename="$idx_basename""$aux"".html"
+
+    cat $idx_header $idx_filename $idx_footer > tmp.html
+    mv tmp.html $idx_filename
+
+    if [ $idx_filename = "index1.html" ]; then
+	mv $idx_filename "$idx_basename".html
+	idx_filename="$idx_basename".html
+    fi
+
+    next=`echo "$aux + 1" | bc`
+    last=`echo "$aux - 1" | bc`
+
+    neighbors=0
+    # last page
+    if [ $aux -eq 1 ]; then
+	cat $idx_filename | sed s/"__LAST_PAGE__"/""/g > tmp_idx.html
+    else
+        neighbors=`echo "$neighbors + 1" | bc`
+	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt; ANTERIOR<\/b><\/font><\/a> |'/g > tmp_idx.html
+    fi
+    mv tmp_idx.html $idx_filename
+
+    # next page
+    if [ $aux -eq $idx_counter ]; then
+	cat $idx_filename | sed s/"__NEXT_PAGE__"/""/g > tmp_idx.html
+    else
+        neighbors=`echo "$neighbors + 1" | bc`
+	cat $idx_filename | sed s/"__NEXT_PAGE__"/'| <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>PR\&Oacute;XIMA \&gt;<\/b><\/font><\/a>'/g > tmp_idx.html
+    fi
+    mv tmp_idx.html $idx_filename
+
+    # index1.html
+    cat $idx_filename | sed s/"index1.html"/"index.html"/g > tmp_idx.html
+    mv tmp_idx.html $idx_filename
+
+    # link to current file
+    cat $idx_filename | sed s/'<a href="'"$idx_filename"'">'"$aux"'<\/a>'/'<font color="red">'"$aux"'<\/font>'/g > tmp_idx.html
+    mv tmp_idx.html $idx_filename
+
+    # aux++
+    aux=`echo "$aux + 1" | bc`
+done;
+rm $idx_header $idx_footer
+
+# if there's only one index file, remove page number.
+if [ $neighbors -eq 0 ]; then
+    cat $idx_filename | sed s/'<font color="red">1<\/font>'/""/g > tmp_idx.html
+    mv tmp_idx.html $idx_filename
+fi;
+################################### /CREATION #################################
+
+
+echo "done!"
+
+##################
+# Part III: export
+##################
+
+echo -n "Exporting "
+
+if [ "$only_index" != yes ]; then
+
+    if [ -e album ]; then
+	rm -rf album
+    fi;
+    mkdir album
+
+    echo -n "thumbnails..."
+    mv thumbnails album
+    echo -n "vga..."
+    mv vga album
+
+fi; # !only_index
+
+echo -n "indexes..."
+mkdir -p album
+rm "album/""$idx_basename"*.html 2>/dev/null
+mv "$idx_basename"*.html album
+
+echo "done!"
+
+exit
