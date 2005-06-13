@@ -19,8 +19,11 @@
 ##########
 # shalbum
 #
-# Script to generate thumbnails and smaller copies from *.jpg
-# - requires: ImageMagick
+# Bourne shell script to create an HTML album from the image files in
+# current directory.
+# Customization can be achieved by editing the "Options" session in
+# this file.
+# Requires ImageMagick.
 #
 # Usage (from pics dir):
 #  $ shalbum "Album Title" "Sub-title/Date" mhd
@@ -33,6 +36,8 @@
 # 'mhd' is optional. Use it to choose 'mhd' options.
 #
 ##############################################################
+
+software_revision="shalbum by Eduardo Sztokbant <du@du.eti.br> - last revision 2005 June 13"
 
 ###############
 # Aux functions
@@ -81,24 +86,34 @@ images=""
 
 echo -n "[ "
 
+# JPG
 if [ "`ls *.[Jj][Pp][Gg] 2>/dev/null`" != "" ]; then
     images=$images' *.[Jj][Pp][Gg]'
     echo -n "jpg "
 fi
 
+# GIF
 if [ "`ls *.[Gg][Ii][Ff] 2>/dev/null`" != "" ]; then
     images=$images' *.[Gg][Ii][Ff]'
     echo -n "gif "
 fi
 
+# PNG
 if [ "`ls *.[Pp][Nn][Gg] 2>/dev/null`" != "" ]; then
     images=$images' *.[Pp][Nn][Gg]'
     echo -n "png "
 fi
 
+# BMP
 if [ "`ls *.[Bb][Mm][Pp] 2>/dev/null`" != "" ]; then
     images=$images' *.[Bb][Mm][Pp]'
     echo -n "bmp "
+fi
+
+# TIFF
+if [ "`ls *.[Tt][Ii][Ff][Ff] 2>/dev/null`" != "" ]; then
+    images=$images' *.[Tt][Ii][Ff][Ff]'
+    echo -n "tiff "
 fi
 
 echo "]"
@@ -115,13 +130,10 @@ all_files="`ls -t $images`"
 IFS='\
 '
 
-#############
-# Set options
-#############
+#######
+# Input
+#######
 
-software_revision="shalbum by Eduardo Sztokbant <du@du.eti.br> - last revision 2005 June 9"
-
-# input
 if [ $# -le 1 ]; then
     if [ -e _title ]; then
 	title="`cat _title`"
@@ -162,41 +174,56 @@ echo "  title:    \"$title\""
 echo "  subtitle: \"$date\""
 echo "  mhd:      $mhd"
 
+#########
+# Options
+#########
+
 if [ $mhd = "yes" ]; then
-    vga_res=500
-    th_res=150
-    table_width=520
-    n_columns=3
-    print_number=yes
-    print_filename=no
-    e_mail='du@meiahoradepois.com'
-    watermark="yes"
+    # mhd options
+    vga_res=500                     # max width/heigth of final image
+    th_res=150                      # max width/height of thumbnail
+    table_width=520                 # number of HTML table columns
+    n_lines=16                      # number of table lines
+    n_columns=3                     # number of table columns
+    print_number=yes                # boolean to print number found in filename
+    print_filename=no               # boolean to print filename under thumbnail
+    author="Eduardo Sztokbant"      # site author's name
+    e_mail='du@du.eti.br'           # site author's e-mail
+    author2=""                      # site #2 author (blank for none)
+    e_mail2=""                      # site #2 author's e-mail
+    watermark="yes"                 # boolean to stamp watermarks
     watermark_th_src="$HOME/.shalbum/watermark_th.png"
+                                    # source for thumbnail watermark
     watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
+                                    # source for final image watermark
     watermark_th="./watermark_${th_res}.png"
+                                    # name of temporary resized thumbnail file
     watermark_vga="./watermark_${vga_res}.png"
-    #author2=""
-    author2="Gledson Monteiro"
-    e_mail2="gledson@meiahoradepois.com"
-    n_lines=16
+                                    # name of temporary resized image file
     back_link="http://denisgv.sites.uol.com.br/fotos.htm"
-    credits_str="photos & page "
+                                    # link to go back
+    credits_str="photos & page "    # credit information
 else
     # default options
-    vga_res=800
-    th_res=250
-    table_width=780
-    n_columns=3
-    print_number=no
-    print_filename=no
-    e_mail='du@du.eti.br'
-    watermark="no"
-    n_lines=2
-    back_link=""
-    credits_str=""
+    vga_res=800                     # max width/heigth of final image
+    th_res=250                      # max width/height of thumbnail
+    table_width=780                 # number of HTML table columns
+    n_lines=2                       # number of table lines
+    n_columns=3                     # number of table columns
+    print_number=no                 # boolean to print number found in filename
+    print_filename=no               # boolean to print filename under thumbnail
+    author="Eduardo Sztokbant"      # site author's name
+    e_mail='du@du.eti.br'           # site author's e-mail
+    author2=""                      # site #2 author (blank for none)
+    e_mail2=""                      # site #2 author's e-mail
+    watermark="no"                  # boolean to stamp watermarks
+    watermark_th_src=""             # source for thumbnail watermark
+    watermark_vga_src=""            # source for final image watermark
+    watermark_th=""                 # name of temporary resized thumbnail file
+    watermark_vga=""                # name of temporary resized image file
+    back_link=""                    # link to go back
+    credits_str=""                  # credit information
 fi;
-
-author="Eduardo Sztokbant"
 
 #############################
 # Part I: process image files
