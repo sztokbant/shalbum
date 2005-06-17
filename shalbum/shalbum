@@ -33,11 +33,14 @@
 #  $ touch _mhd
 #  $ shalbum
 #
+# To regenerate only the index files:
+#  $ shalbum index
+#
 # 'mhd' is optional. Use it to choose 'mhd' options.
 #
 ##############################################################
 
-software_revision="shalbum by Eduardo Sztokbant <du@du.eti.br> - last revision 2005 June 13"
+software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 June 17"
 
 ###############
 # Aux functions
@@ -45,8 +48,9 @@ software_revision="shalbum by Eduardo Sztokbant <du@du.eti.br> - last revision 2
 
 create_pages_index()
 {
+    echo '<!-- pages index begin -->' >> $1
     echo '<table width="'$table_width'"><tr><td align="right">' >> $1
-    if [ $n_lines -gt 0 ]; then
+    if [ $n_rows -gt 0 ]; then
 	aux=1
 	echo -n '<font size="2"><b><center>__LAST_PAGE__ ' >> $1
 	while [ $aux -le $idx_counter ]; do
@@ -68,7 +72,7 @@ create_pages_index()
 
 
     if [ "$back_link" != "" ]; then
-	echo '<center><a href="'"$back_link"'">&iacute;ndice</a></center><br>' >> $1
+	echo "<center><a href=\"$back_link\">$backlink_label</a></center><br>" >> $1
     fi;
 
     if [ "$mhd" = "yes" ]; then
@@ -76,6 +80,7 @@ create_pages_index()
     fi;
 
     echo '</b></font><br>' >> $1
+    echo '<!-- pages index end -->' >> $1
 }
 
 #################
@@ -183,12 +188,13 @@ if [ $mhd = "yes" ]; then
     vga_res=500                     # max width/heigth of final image
     th_res=150                      # max width/height of thumbnail
     table_width=520                 # number of HTML table columns
-    n_lines=16                      # number of table lines
+    n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
     print_number=yes                # boolean to print number found in filename
     print_filename=no               # boolean to print filename under thumbnail
-    author="Eduardo Sztokbant"      # site author's name
-    e_mail='du@du.eti.br'           # site author's e-mail
+    author="Meia Hora Depois"       # site author's name
+    e_mail='banda@meiahoradepois.com'
+                                    # site author's e-mail
     author2=""                      # site #2 author (blank for none)
     e_mail2=""                      # site #2 author's e-mail
     watermark="yes"                 # boolean to stamp watermarks
@@ -202,13 +208,22 @@ if [ $mhd = "yes" ]; then
                                     # name of temporary resized image file
     back_link="http://denisgv.sites.uol.com.br/fotos.htm"
                                     # link to go back
-    credits_str="photos & page "    # credit information
+    backlink_label="&iacute;ndice"  # back link label
+    credits_str="photos by"         # credit information
+    support_shalbum="yes"           # print link to shalbum site
+
+    # HTML body colors
+    color_text="#ffffff"
+    color_bgcolor="#000000"
+    color_link="#ffffff"
+    color_vlink="#888888"
+    color_alink="#ff0000"
 else
     # default options
     vga_res=800                     # max width/heigth of final image
     th_res=250                      # max width/height of thumbnail
     table_width=780                 # number of HTML table columns
-    n_lines=2                       # number of table lines
+    n_rows=2                        # number of table rows
     n_columns=3                     # number of table columns
     print_number=no                 # boolean to print number found in filename
     print_filename=no               # boolean to print filename under thumbnail
@@ -222,7 +237,16 @@ else
     watermark_th=""                 # name of temporary resized thumbnail file
     watermark_vga=""                # name of temporary resized image file
     back_link=""                    # link to go back
+    backlink_label=""               # back link label
     credits_str=""                  # credit information
+    support_shalbum="yes"           # print link to shalbum site
+
+    # HTML body colors
+    color_text="#ffffff"
+    color_bgcolor="#000000"
+    color_link="#ffffff"
+    color_vlink="#888888"
+    color_alink="#ff0000"
 fi;
 
 #############################
@@ -314,8 +338,9 @@ for file in $all_files; do
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
     
-    # lines & columns
+    # rows & columns
     if [ $col_counter -eq 1 ]; then
+	echo "<!-- row begins -->" >> $idx_filename
 	echo "<td width='${col_percentage}%' align='left' valign='top'>" >> $idx_filename
     elif [ $col_counter -eq $n_columns ]; then
 	echo "<td width='${col_percentage}%' align='right' valign='top'>" >> $idx_filename
@@ -351,8 +376,8 @@ for file in $all_files; do
 	lin_counter=$(($lin_counter+1))
     fi;
 
-    if [ $n_lines -gt 0 ]; then
-	if [ $lin_counter -gt $n_lines ]; then
+    if [ $n_rows -gt 0 ]; then
+	if [ $lin_counter -gt $n_rows ]; then
 	    idx_counter=$(($idx_counter+1))
 	    idx_filename="$idx_basename""$idx_counter"".html"
 
@@ -396,7 +421,7 @@ fi;
 echo '</title><style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style></head>' >> $idx_header
 echo >> $idx_header
 
-echo '<body text="#ffffff" bgcolor="#000000" link="#ffffff" vlink="#888888" alink="#ff0000"><font face="Arial, Helvetica"><center>' >> $idx_header
+echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face="Arial, Helvetica"><center>" >> $idx_header
 echo '<table width="'$table_width'">' >> $idx_header
 
 echo '<tr><td><font size="5"><b>' >> $idx_header
@@ -417,19 +442,26 @@ create_pages_index $idx_header
 idx_footer="footer.html"
 
 echo '</tr></table><br>' >> $idx_footer
+echo '</tr></table><br>' >> $idx_footer
 
 # page index
 create_pages_index $idx_footer
 
 # Author
-echo '<font size="1"><b>'$credits_str'by '$author'</b></font><br>' >> $idx_footer
-echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a>' >> $idx_footer
+if [ "$author" != "" ]; then
+    echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br>' >> $idx_footer
+    echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a></p>' >> $idx_footer
+fi
 
 # Author2
 if [ "$author2" != "" ]; then
-    echo '<br><br><font size="1"><b>and '$author2'</b></font><br>' >> $idx_footer
-    echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a>' >> $idx_footer
+    echo '<p align="right"><font size="1"><b>'$author2'</b></font><br>' >> $idx_footer
+    echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a></p>' >> $idx_footer
+fi
 
+# support shalbum!
+if [ "$support_shalbum" = "yes" ]; then
+    echo '<p align="right"><font size="1"><b>page created with <a href="http://sourceforge.net/projects/shalbum"><u>shalbum</u></a></b></font></p>' >> $idx_footer
 fi
 
 echo '</td></tr></table>' >> $idx_footer
