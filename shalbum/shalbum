@@ -40,7 +40,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 June 17"
+software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 June 20"
 
 ###############
 # Aux functions
@@ -473,7 +473,7 @@ fi
 
 # support shalbum!
 if [ "$support_shalbum" = "yes" ]; then
-    echo '<p align="right"><font size="1"><b>page created with <a href="http://sourceforge.net/projects/shalbum"><u>shalbum</u></a></b></font></p>' >> $idx_footer
+    echo '<p align="right"><font size="1"><b>page created with <a href="http://sourceforge.net/projects/shalbum" target="shalbum"><u>shalbum</u></a></b></font></p>' >> $idx_footer
 fi
 
 echo '</td></tr></table>' >> $idx_footer
