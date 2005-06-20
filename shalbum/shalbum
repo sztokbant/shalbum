@@ -206,6 +206,10 @@ if [ $mhd = "yes" ]; then
                                     # name of temporary resized thumbnail file
     watermark_vga="./watermark_${vga_res}.png"
                                     # name of temporary resized image file
+    thframe="yes"                   # enable thumbnail frame
+    thframesize=2                   # size of thumbnail frame
+    vgaframe="yes"                  # enable final image frame
+    vgaframesize=3                  # size of final image frame
     back_link="http://denisgv.sites.uol.com.br/fotos.htm"
                                     # link to go back
     backlink_label="&iacute;ndice"  # back link label
@@ -236,6 +240,10 @@ else
     watermark_vga_src=""            # source for final image watermark
     watermark_th=""                 # name of temporary resized thumbnail file
     watermark_vga=""                # name of temporary resized image file
+    thframe="yes"                   # enable thumbnail frame
+    thframesize=2                   # size of thumbnail frame
+    vgaframe="yes"                  # enable final image frame
+    vgaframesize=3                  # size of final image frame
     back_link=""                    # link to go back
     backlink_label=""               # back link label
     credits_str=""                  # credit information
@@ -295,7 +303,11 @@ if [ "$only_index" != "yes" ]; then
 	    composite -gravity SouthEast $watermark_th tmp.jpg thumbnails/"$th_file"
 	    rm ./tmp.jpg
 	fi;
-	
+
+	if [ $thframe = "yes" ]; then
+	    montage thumbnails/"$th_file" -mode concatenate -frame $thframesize thumbnails/"$th_file"
+	fi;
+
 	echo -n "pic $vga_res..."
 	vga_file="vga_""$file"
 	
@@ -306,6 +318,10 @@ if [ "$only_index" != "yes" ]; then
 	    mv vga/"$vga_file" ./tmp.jpg
 	    composite -dissolve 60 -gravity SouthEast $watermark_vga tmp.jpg vga/"$vga_file"
 	    rm ./tmp.jpg
+	fi;
+
+	if [ $vgaframe = "yes" ]; then
+	    montage vga/"$vga_file" -mode concatenate -frame $vgaframesize vga/"$vga_file"
 	fi;
 	
 	echo "done!"
