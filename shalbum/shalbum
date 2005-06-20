@@ -17,7 +17,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 ##########
-# shalbum
+# shalbum - http://sourceforge.net/projects/shalbum
 #
 # Bourne shell script to create an HTML album from the image files in
 # current directory.
