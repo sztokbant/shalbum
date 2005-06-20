@@ -299,9 +299,7 @@ if [ "$only_index" != "yes" ]; then
 	
 	if [ $watermark = "yes" ]; then
 	    echo -n "watermark..."
-	    mv thumbnails/"$th_file" ./tmp.jpg
-	    composite -gravity SouthEast $watermark_th tmp.jpg thumbnails/"$th_file"
-	    rm ./tmp.jpg
+	    composite -gravity SouthEast $watermark_th thumbnails/"$th_file" thumbnails/"$th_file"
 	fi;
 
 	if [ $thframe = "yes" ]; then
@@ -315,9 +313,7 @@ if [ "$only_index" != "yes" ]; then
 	
 	if [ $watermark = "yes" ]; then
 	    echo -n "watermark..."
-	    mv vga/"$vga_file" ./tmp.jpg
-	    composite -dissolve 60 -gravity SouthEast $watermark_vga tmp.jpg vga/"$vga_file"
-	    rm ./tmp.jpg
+	    composite -dissolve 60 -gravity SouthEast $watermark_vga vga/"$vga_file" vga/"$vga_file"
 	fi;
 
 	if [ $vgaframe = "yes" ]; then
