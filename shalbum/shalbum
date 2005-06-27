@@ -40,7 +40,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 June 20"
+software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 June 27"
 
 ###############
 # Aux functions
@@ -131,7 +131,7 @@ fi;
 total_files="`ls $images | wc -l`"
 
 # handle file names with white spaces and order by modify time
-all_files="`ls -t $images`"
+all_files="`ls -t -r $images`"
 IFS='\
 '
 
@@ -206,10 +206,12 @@ if [ $mhd = "yes" ]; then
                                     # name of temporary resized thumbnail file
     watermark_vga="./watermark_${vga_res}.png"
                                     # name of temporary resized image file
-    thframe="yes"                   # enable thumbnail frame
+    thframe="no"                    # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
-    vgaframe="yes"                  # enable final image frame
+    vgaframe="no"                   # enable final image frame
     vgaframesize=3                  # size of final image frame
+    th_quality=60                   # thumbnail percentage quality
+    vga_quality=60                  # final image percentage quality
     back_link="http://denisgv.sites.uol.com.br/fotos.htm"
                                     # link to go back
     backlink_label="&iacute;ndice"  # back link label
@@ -227,7 +229,7 @@ else
     vga_res=800                     # max width/heigth of final image
     th_res=250                      # max width/height of thumbnail
     table_width=780                 # number of HTML table columns
-    n_rows=2                        # number of table rows
+    n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
     print_number=no                 # boolean to print number found in filename
     print_filename=no               # boolean to print filename under thumbnail
@@ -240,10 +242,12 @@ else
     watermark_vga_src=""            # source for final image watermark
     watermark_th=""                 # name of temporary resized thumbnail file
     watermark_vga=""                # name of temporary resized image file
-    thframe="yes"                   # enable thumbnail frame
+    thframe="no"                    # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
-    vgaframe="yes"                  # enable final image frame
+    vgaframe="no"                   # enable final image frame
     vgaframesize=3                  # size of final image frame
+    th_quality=75                   # thumbnail percentage quality
+    vga_quality=75                  # final image percentage quality
     back_link=""                    # link to go back
     backlink_label=""               # back link label
     credits_str=""                  # credit information
@@ -295,7 +299,7 @@ if [ "$only_index" != "yes" ]; then
 	printf "%4d/%4d (%3.0f%%) %s: " "$processed" "$total_files" "$percent" "$file"
 	echo -n "tnail $th_res..."
 	th_file="th_""$file"
-	convert -size ${th_res}x${th_res} "$file" -resize ${th_res}x${th_res} +profile "*" thumbnails/"$th_file"
+	convert -size ${th_res}x${th_res} -quality ${th_quality} "$file" -strip -resize ${th_res}x${th_res} +profile "*" thumbnails/"$th_file"
 	
 	if [ $watermark = "yes" ]; then
 	    echo -n "watermark..."
@@ -309,7 +313,7 @@ if [ "$only_index" != "yes" ]; then
 	echo -n "pic $vga_res..."
 	vga_file="vga_""$file"
 	
-	convert -size ${vga_res}x${vga_res} "$file" -sharpen 2 -resize ${vga_res}x${vga_res} +profile "*" vga/"$vga_file"
+	convert -size ${vga_res}x${vga_res} -quality ${vga_quality} "$file" -sharpen 2 -strip -resize ${vga_res}x${vga_res} +profile "*" vga/"$vga_file"
 	
 	if [ $watermark = "yes" ]; then
 	    echo -n "watermark..."
