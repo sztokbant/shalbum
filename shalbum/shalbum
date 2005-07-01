@@ -250,10 +250,11 @@ else
     echo "  title:    \"$title\""
     echo "  subtitle: \"$date\""
     echo "  mhd:      $mhd"
-    echo "Image types found in `pwd`: [$image_types ]"
+    echo "Image types found in current dir: [$image_types ]"
 fi;
 
 total_files="`ls $images | wc -l`"
+echo "# of images found in current dir: $(($total_files))"
 
 # handle file names with white spaces and order by modify time
 all_files="`ls -t -r $images`"
