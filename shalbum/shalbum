@@ -40,100 +40,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 June 27"
-
-###############
-# Aux functions
-###############
-
-create_pages_index()
-{
-    echo '<!-- pages index begin -->' >> $1
-    echo '<table width="'$table_width'"><tr><td align="right">' >> $1
-    if [ $n_rows -gt 0 ]; then
-	aux=1
-	echo -n '<font size="2"><b><center>__LAST_PAGE__ ' >> $1
-	while [ $aux -le $idx_counter ]; do
-	    last=$(($aux-1))
-	    next=$(($aux+1))
-
-	    echo -n '<a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a> ' >> $1
-
-	    if [ $aux -eq $idx_counter ]; then
-		echo -n ' __NEXT_PAGE__' >> $1
-	    else
-		echo -n ' ' >> $1
-	    fi
-
-	    aux=$(($aux+1))
-	done;
-	echo '</center>' >> $1
-    fi;
-
-
-    if [ "$back_link" != "" ]; then
-	echo "<center><a href=\"$back_link\">$backlink_label</a></center><br>" >> $1
-    fi;
-
-    if [ "$mhd" = "yes" ]; then
-	echo '</b></font>' >> $1
-    fi;
-
-    echo '</b></font><br>' >> $1
-    echo '<!-- pages index end -->' >> $1
-}
-
-#################
-# Look for images
-#################
-
-images=""
-
-echo -n "[ "
-
-# JPG
-if [ "`ls *.[Jj][Pp][Gg] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Jj][Pp][Gg]'
-    echo -n "jpg "
-fi
-
-# GIF
-if [ "`ls *.[Gg][Ii][Ff] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Gg][Ii][Ff]'
-    echo -n "gif "
-fi
-
-# PNG
-if [ "`ls *.[Pp][Nn][Gg] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Pp][Nn][Gg]'
-    echo -n "png "
-fi
-
-# BMP
-if [ "`ls *.[Bb][Mm][Pp] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Bb][Mm][Pp]'
-    echo -n "bmp "
-fi
-
-# TIFF
-if [ "`ls *.[Tt][Ii][Ff][Ff] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Tt][Ii][Ff][Ff]'
-    echo -n "tiff "
-fi
-
-echo "]"
-
-if [ "$images" = "" ]; then
-    echo "No pictures in `pwd`"
-    exit
-fi;
-
-total_files="`ls $images | wc -l`"
-
-# handle file names with white spaces and order by modify time
-all_files="`ls -t -r $images`"
-IFS='\
-'
+software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 July 1"
 
 #######
 # Input
@@ -159,10 +66,11 @@ if [ $# -le 1 ]; then
     fi;
 
     if [ "$1" = "index" ]; then
-    	only_index="yes"
+	only_index="yes"
     else
-    	only_index="no"
-    fi
+	only_index="no"
+    fi;
+
 else
     title="$1"
     date="$2"
@@ -260,6 +168,99 @@ else
     color_vlink="#888888"
     color_alink="#ff0000"
 fi;
+
+###############
+# Aux functions
+###############
+
+create_pages_index()
+{
+    echo '<!-- pages index begin -->' >> $1
+    echo '<table width="'$table_width'"><tr><td align="right">' >> $1
+    if [ $n_rows -gt 0 ]; then
+	aux=1
+	echo -n '<font size="2"><b><center>__LAST_PAGE__ ' >> $1
+	while [ $aux -le $idx_counter ]; do
+	    last=$(($aux-1))
+	    next=$(($aux+1))
+
+	    echo -n '<a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a> ' >> $1
+
+	    if [ $aux -eq $idx_counter ]; then
+		echo -n ' __NEXT_PAGE__' >> $1
+	    else
+		echo -n ' ' >> $1
+	    fi
+
+	    aux=$(($aux+1))
+	done;
+	echo '</center>' >> $1
+    fi;
+
+
+    if [ "$back_link" != "" ]; then
+	echo "<center><a href=\"$back_link\">$backlink_label</a></center><br>" >> $1
+    fi;
+
+    if [ "$mhd" = "yes" ]; then
+	echo '</b></font>' >> $1
+    fi;
+
+    echo '</b></font><br>' >> $1
+    echo '<!-- pages index end -->' >> $1
+}
+
+#########################
+# Part 0: Look for images
+#########################
+
+images=""
+
+echo -n "[ "
+
+# JPG
+if [ "`ls *.[Jj][Pp][Gg] 2>/dev/null`" != "" ]; then
+    images=$images' *.[Jj][Pp][Gg]'
+    echo -n "jpg "
+fi
+
+# GIF
+if [ "`ls *.[Gg][Ii][Ff] 2>/dev/null`" != "" ]; then
+    images=$images' *.[Gg][Ii][Ff]'
+    echo -n "gif "
+fi
+
+# PNG
+if [ "`ls *.[Pp][Nn][Gg] 2>/dev/null`" != "" ]; then
+    images=$images' *.[Pp][Nn][Gg]'
+    echo -n "png "
+fi
+
+# BMP
+if [ "`ls *.[Bb][Mm][Pp] 2>/dev/null`" != "" ]; then
+    images=$images' *.[Bb][Mm][Pp]'
+    echo -n "bmp "
+fi
+
+# TIFF
+if [ "`ls *.[Tt][Ii][Ff][Ff] 2>/dev/null`" != "" ]; then
+    images=$images' *.[Tt][Ii][Ff][Ff]'
+    echo -n "tiff "
+fi
+
+echo "]"
+
+if [ "$images" = "" ]; then
+    echo "No pictures in `pwd`"
+    exit
+fi;
+
+total_files="`ls $images | wc -l`"
+
+# handle file names with white spaces and order by modify time
+all_files="`ls -t -r $images`"
+IFS='\
+'
 
 #############################
 # Part I: process image files
