@@ -82,11 +82,6 @@ else
     fi;
 fi;
 
-echo "Creating album"
-echo "  title:    \"$title\""
-echo "  subtitle: \"$date\""
-echo "  mhd:      $mhd"
-
 #########
 # Options
 #########
@@ -215,44 +210,47 @@ create_pages_index()
 #########################
 
 images=""
-
-echo -n "[ "
+image_types=""
 
 # JPG
 if [ "`ls *.[Jj][Pp][Gg] 2>/dev/null`" != "" ]; then
     images=$images' *.[Jj][Pp][Gg]'
-    echo -n "jpg "
+    image_types=$image_types' jpg'
 fi
 
 # GIF
 if [ "`ls *.[Gg][Ii][Ff] 2>/dev/null`" != "" ]; then
     images=$images' *.[Gg][Ii][Ff]'
-    echo -n "gif "
+    image_types=$image_types' gif'
 fi
 
 # PNG
 if [ "`ls *.[Pp][Nn][Gg] 2>/dev/null`" != "" ]; then
     images=$images' *.[Pp][Nn][Gg]'
-    echo -n "png "
+    image_types=$image_types' png'
 fi
 
 # BMP
 if [ "`ls *.[Bb][Mm][Pp] 2>/dev/null`" != "" ]; then
     images=$images' *.[Bb][Mm][Pp]'
-    echo -n "bmp "
+    image_types=$image_types' bmp'
 fi
 
 # TIFF
 if [ "`ls *.[Tt][Ii][Ff][Ff] 2>/dev/null`" != "" ]; then
     images=$images' *.[Tt][Ii][Ff][Ff]'
-    echo -n "tiff "
+    image_types=$image_types' tiff'
 fi
-
-echo "]"
 
 if [ "$images" = "" ]; then
     echo "No pictures in `pwd`"
     exit
+else
+    echo "Creating album"
+    echo "  title:    \"$title\""
+    echo "  subtitle: \"$date\""
+    echo "  mhd:      $mhd"
+    echo "Image types found in `pwd`: [$image_types ]"
 fi;
 
 total_files="`ls $images | wc -l`"
