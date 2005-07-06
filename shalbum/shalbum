@@ -109,12 +109,13 @@ if [ $mhd = "yes" ]; then
                                     # name of temporary resized thumbnail file
     watermark_vga="./watermark_${vga_res}.png"
                                     # name of temporary resized image file
-    thframe="no"                    # enable thumbnail frame
+    watermark_dissolve=60           # final image watermark dissolve percent
+    thframe="yes"                   # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
-    vgaframe="no"                   # enable final image frame
+    vgaframe="yes"                  # enable final image frame
     vgaframesize=3                  # size of final image frame
-    th_quality=60                   # thumbnail percentage quality
-    vga_quality=60                  # final image percentage quality
+    th_quality=75                   # thumbnail percentage quality
+    vga_quality=75                  # final image percentage quality
     back_link="http://denisgv.sites.uol.com.br/fotos.htm"
                                     # link to go back
     backlink_label="&iacute;ndice"  # back link label
@@ -145,9 +146,10 @@ else
     watermark_vga_src=""            # source for final image watermark
     watermark_th=""                 # name of temporary resized thumbnail file
     watermark_vga=""                # name of temporary resized image file
-    thframe="no"                    # enable thumbnail frame
+    watermark_dissolve=60           # final image watermark dissolve percent
+    thframe="yes"                   # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
-    vgaframe="no"                   # enable final image frame
+    vgaframe="yes"                  # enable final image frame
     vgaframesize=3                  # size of final image frame
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
@@ -299,29 +301,34 @@ if [ "$only_index" != "yes" ]; then
 	printf "%4d/%4d (%3.0f%%) %s: " "$processed" "$total_files" "$percent" "$file"
 	echo -n "tnail $th_res..."
 	th_file="th_""$file"
-	convert -size ${th_res}x${th_res} -quality ${th_quality} "$file" -strip -resize ${th_res}x${th_res} +profile "*" thumbnails/"$th_file"
-	
+
+	convert "$file" -resize ${th_res}x${th_res} thumbnails/"$th_file"
+
 	if [ $watermark = "yes" ]; then
 	    echo -n "watermark..."
 	    composite -gravity SouthEast $watermark_th thumbnails/"$th_file" thumbnails/"$th_file"
 	fi;
 
 	if [ $thframe = "yes" ]; then
-	    montage thumbnails/"$th_file" -mode concatenate -frame $thframesize thumbnails/"$th_file"
+	    montage thumbnails/"$th_file" -mode concatenate -frame $thframesize -strip -quality ${th_quality} thumbnails/"$th_file"
+	else
+	    convert thumbnails/"$th_file" -strip -quality ${th_quality} thumbnails/"$th_file"
 	fi;
 
 	echo -n "pic $vga_res..."
 	vga_file="vga_""$file"
 	
-	convert -size ${vga_res}x${vga_res} -quality ${vga_quality} "$file" -sharpen 2 -strip -resize ${vga_res}x${vga_res} +profile "*" vga/"$vga_file"
+	convert "$file" -resize ${vga_res}x${vga_res} vga/"$vga_file"
 	
 	if [ $watermark = "yes" ]; then
 	    echo -n "watermark..."
-	    composite -dissolve 60 -gravity SouthEast $watermark_vga vga/"$vga_file" vga/"$vga_file"
+	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga vga/"$vga_file" vga/"$vga_file"
 	fi;
 
 	if [ $vgaframe = "yes" ]; then
-	    montage vga/"$vga_file" -mode concatenate -frame $vgaframesize vga/"$vga_file"
+	    montage vga/"$vga_file" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} vga/"$vga_file"
+	else
+	    convert vga/"$vga_file" -strip -quality ${vga_quality} vga/"$vga_file"
 	fi;
 	
 	echo "done!"
