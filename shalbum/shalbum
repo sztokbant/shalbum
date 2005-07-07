@@ -363,35 +363,35 @@ if [ "$only_index" != "yes" ]; then
 
     # generate watermarks
     if [ $watermark = "yes" ]; then
-	echo -n "Creating watermarks..."
+	echo -n "Creating watermarks: "
 	# temporary resized watermarks
 	watermark_th="./tmp/watermark_${th_res}.png"
 	watermark_vga="./tmp/watermark_${vga_res}.png"
 	
-	echo -n "tnail $th_res..."
+	echo -n "[tn""${th_res}]"
 	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
 	
-	echo -n "vga $vga_res..."
+	echo -n "[pic""${vga_res}]"
 	convert -sharpen 3 -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
 	
-	echo "done!"
+	echo " ok!"
     fi; # $watermark = yes
     
+    echo "Creating pictures: "
     processed=0
-    
     for file in $all_files; do
 	processed=$(($processed+1))
 	processed100=$(($processed*100))
 	percent=$(($processed100/$total_files))
 	
-	printf "%4d/%4d (%3.0f%%) %s: " "$processed" "$total_files" "$percent" "$file"
-	echo -n "tnail $th_res..."
+	printf "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
+	echo -n "[tn""${th_res}]"
 	th_file="th_""$file"
 
 	convert "$file" -resize ${th_res}x${th_res} thumbnails/"$th_file"
 
 	if [ $watermark = "yes" ]; then
-	    echo -n "watermark..."
+	    echo -n "[wmark]"
 	    composite -gravity SouthEast $watermark_th thumbnails/"$th_file" thumbnails/"$th_file"
 	fi;
 
@@ -401,13 +401,13 @@ if [ "$only_index" != "yes" ]; then
 	    convert thumbnails/"$th_file" -strip -quality ${th_quality} thumbnails/"$th_file"
 	fi;
 
-	echo -n "pic $vga_res..."
+	echo -n "[pic""${vga_res}]"
 	vga_file="vga_""$file"
 	
 	convert "$file" -resize ${vga_res}x${vga_res} vga/"$vga_file"
 	
 	if [ $watermark = "yes" ]; then
-	    echo -n "watermark..."
+	    echo -n "[wmark]"
 	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga vga/"$vga_file" vga/"$vga_file"
 	fi;
 
@@ -417,7 +417,7 @@ if [ "$only_index" != "yes" ]; then
 	    convert vga/"$vga_file" -strip -quality ${vga_quality} vga/"$vga_file"
 	fi;
 	
-	echo "done!"
+	echo " ok!"
     done;
     
     if [ $watermark = "yes" ]; then
@@ -670,13 +670,13 @@ if [ $neighbors -eq 0 ]; then
 fi;
 ################################### /CREATION #################################
 
-echo "done!"
+echo " ok!"
 
 ##################
 # Part III: export
 ##################
 
-echo -n "Exporting "
+echo -n "Exporting: "
 
 if [ "$only_index" != yes ]; then
 
@@ -685,9 +685,9 @@ if [ "$only_index" != yes ]; then
     fi;
     mkdir album
 
-    echo -n "thumbnails..."
+    echo -n "[tnails]"
     mv thumbnails album
-    echo -n "vga..."
+    echo -n "[pics]"
     mv vga album
 
     # cleanup
@@ -697,18 +697,18 @@ if [ "$only_index" != yes ]; then
 
 fi; # !only_index
 
-echo -n "indexes..."
+echo -n "[idx]"
 mkdir -p album
 rm "album/""$idx_basename"*.html 2>/dev/null
 mv "$idx_basename"*.html album
 
 if [ $multi_html = "yes" ]; then
-    echo -n 'multi-indexes...'
+    echo -n '[multi-idx]'
     for file in $all_files; do
 	mv "${file}.html" album
     done
 fi
 
-echo "done!"
+echo " ok!"
 
 exit
