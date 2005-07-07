@@ -448,9 +448,6 @@ col_percentage=$((100/$n_columns))
 
 for file in $all_files; do
 
-    th_file="thumbnails/th_""$file"
-    vga_file="vga/vga_""$file"
-    
     # rows & columns
     if [ $col_counter -eq 1 ]; then
 	echo "<!-- row begins -->" >> $idx_filename
@@ -461,14 +458,16 @@ for file in $all_files; do
 	echo "<td width='${col_percentage}%' align='center' valign='top'>" >> $idx_filename
     fi;
 
+    th_file="thumbnails/th_""$file"
+    vga_file="vga/vga_""$file"
+
     if [ $multi_html = "yes" ]; then
 	echo '<table><tr><td><a href="'$file'.html"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
     else
 	echo '<table><tr><td><a href="'$vga_file'" target="'$file'"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
     fi
     
-    # number
-    # try to guess picture number following IMG_####.JPG or DSC#####.JPG (Sony camera) format
+    # try to guess pic number following IMG_####.JPG or DSC#####.JPG (Sony) pattern
     if [ "$print_number" = "yes" ]; then
 	if [ "`echo $file | grep _`" = "$file" ]; then
 		num_sep="_"
