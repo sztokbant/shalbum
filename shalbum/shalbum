@@ -40,7 +40,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 July 1"
+software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 July 7"
 
 #######
 # Input
@@ -88,8 +88,8 @@ fi;
 
 if [ $mhd != "yes" ]; then
     # Default options
-    vga_res=800                     # max width/heigth of final image
-    th_res=250                      # max width/height of thumbnail
+    vga_res=640                     # max width/heigth of final image
+    th_res=150                      # max width/height of thumbnail
     table_width=780                 # number of HTML table columns
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
@@ -115,6 +115,9 @@ if [ $mhd != "yes" ]; then
     backlink_label=""               # back link label
     credits_str=""                  # credit information
     support_shalbum="yes"           # print link to shalbum site
+
+    multi_html="yes"                # use one html page per picture?
+    th_on_multi="yes"               # show thumbnail for next/last pics?
 
     # HTML body colors
     color_text="#ffffff"
@@ -157,6 +160,9 @@ else
     backlink_label="&iacute;ndice"  # back link label
     credits_str="photos by"         # credit information
     support_shalbum="yes"           # print link to shalbum site
+
+    multi_html="yes"                # use one html page per picture?
+    th_on_multi="yes"               # show thumbnail for next/last pics?
 
     # HTML body colors
     color_text="#ffffff"
@@ -206,6 +212,84 @@ create_pages_index()
     echo '</b></font><br>' >> $1
     echo '<!-- pages index end -->' >> $1
 }
+
+create_page_for_pic()
+{
+    pic="$1"
+    before="$2"
+    after="$3"
+    pic_subtitle="$4"
+
+    html_file=${pic}".html"
+
+    echo "<html><title>$pic</title>" > $html_file
+    echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face="Arial, Helvetica"><center>" >> $html_file
+
+
+    echo "<p align='left'><a href='index.html'><b><font size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+    echo "<br><br>" >> $html_file
+
+    echo "<table border='0' width='100%'><tr>" >> $html_file
+
+    # before
+    echo "<td align='left' valign='middle' width='$th_res'>" >> $html_file
+    if [ "$before" != "[NONE]" ]; then
+	echo "<a href='${before}.html'>" >> $html_file
+	if [ "$th_on_multi" = yes ]; then
+	    before_th="thumbnails/th_""${before}"
+	    echo "<img border='0' src='$before_th'>" >> $html_file
+	else
+	    echo "<b>&lt;&lt;</b>" >> $html_file
+	fi
+	echo "</a>" >> $html_file
+    fi;
+    echo "</td>" >> $html_file
+
+    # pic
+    echo "<td valign='middle' width='$vga_res' align=center>" >> $html_file
+    echo "<img src='vga/vga_${pic}'>" >> $html_file
+    echo "<br><br><b>$pic_subtitle</b>" >> $html_file
+    echo "</td>" >> $html_file
+
+    # after
+    echo "<td align='right' valign='middle' width='$th_res'>" >> $html_file
+    if [ "$after" != "[NONE]" ]; then
+	echo "<a href='${after}.html'>" >> $html_file
+	if [ "$th_on_multi" = yes ]; then
+	    after_th="thumbnails/th_""${after}"
+	    echo "<img border='0' src='$after_th'>" >> $html_file
+	else
+	    echo "<b>&gt;&gt;</b>" >> $html_file
+	fi
+	echo "</a>" >> $html_file
+    fi;
+    echo "</td>" >> $html_file
+
+    echo "</tr></table><br><br>" >> $html_file
+
+
+    ############################## FOOTER ##############################
+    # Author
+    if [ "$author" != "" ]; then
+	echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br>' >> $html_file
+	echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a></p>' >> $html_file
+    fi
+    
+    # Author2
+    if [ "$author2" != "" ]; then
+	echo '<p align="right"><font size="1"><b>'$author2'</b></font><br>' >> $html_file
+	echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a></p>' >> $html_file
+    fi
+
+    # support shalbum!
+    if [ "$support_shalbum" = "yes" ]; then
+	echo '<p align="right"><font size="1"><b>page created with <a href="http://sourceforge.net/projects/shalbum" target="shalbum"><u>shalbum</u></a></b></font></p>' >> $html_file
+    fi
+    ############################## /FOOTER ##############################
+
+    echo "</center></body></html>" >> $html_file
+}
+
 
 #########################
 # Part 0: Look for images
@@ -355,9 +439,15 @@ echo '<table width="'$table_width'"><tr>' >> $idx_filename
 col_counter=1
 lin_counter=1
 
+if [ $multi_html = "yes" ]; then
+    cur_counter=1
+    b4_file="[NONE]"
+fi;
+
 col_percentage=$((100/$n_columns))
 
 for file in $all_files; do
+
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
     
@@ -371,8 +461,12 @@ for file in $all_files; do
 	echo "<td width='${col_percentage}%' align='center' valign='top'>" >> $idx_filename
     fi;
 
-    echo '<table><tr><td><a href="'$vga_file'" target="'$file'"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
-
+    if [ $multi_html = "yes" ]; then
+	echo '<table><tr><td><a href="'$file'.html"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
+    else
+	echo '<table><tr><td><a href="'$vga_file'" target="'$file'"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
+    fi
+    
     # number
     # try to guess picture number following IMG_####.JPG or DSC#####.JPG (Sony camera) format
     if [ "$print_number" = "yes" ]; then
@@ -385,9 +479,32 @@ for file in $all_files; do
 	fi
 	number=`echo $file | cut -d "." -f 1 | cut -d "$num_sep" -f 2`
 	echo $number >> $idx_filename
+	pic_subtitle=$number
     elif [ "$print_filename" = "yes" ]; then
     	echo $file >> $idx_filename
+	pic_subtitle=$file
+    else
+	pic_subtitle=""
     fi;
+
+    # multi-pages
+    if [ $multi_html = "yes" ]; then
+        # finds next file!
+	if [ "$total_files" -gt "$cur_counter" ]; then
+	    next_counter=0
+	    for f_find in $all_files; do
+		next_file=$f_find
+		if [ "$next_counter" = "$cur_counter" ]; then
+		    break
+		fi;
+		next_counter=$(($next_counter+1))
+	    done
+	else
+	    next_file="[NONE]"
+	fi
+
+	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle"
+    fi
 
     echo '</td></tr></table></td>' >> $idx_filename
 
@@ -407,6 +524,11 @@ for file in $all_files; do
 	    echo '<table width="'$table_width'"><tr>' >> $idx_filename
 	    lin_counter=1
 	fi;
+    fi;
+
+    if [ $multi_html = "yes" ]; then
+	b4_file="$file"
+	cur_counter=$(($cur_counter+1))
     fi;
 done;
 
@@ -515,7 +637,7 @@ while [ $aux -le $idx_counter ]; do
 	cat $idx_filename | sed s/"__LAST_PAGE__"/""/g > tmp_idx.html
     else
 	neighbors=$(($neighbors+1))
-	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt;-<\/b><\/font><\/a> |'/g > tmp_idx.html
+	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt;\&lt;<\/b><\/font><\/a> '/g > tmp_idx.html
     fi
     mv tmp_idx.html $idx_filename
 
@@ -524,7 +646,7 @@ while [ $aux -le $idx_counter ]; do
 	cat $idx_filename | sed s/"__NEXT_PAGE__"/""/g > tmp_idx.html
     else
 	neighbors=$(($neighbors+1))
-	cat $idx_filename | sed s/"__NEXT_PAGE__"/'| <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>-\&gt;<\/b><\/font><\/a>'/g > tmp_idx.html
+	cat $idx_filename | sed s/"__NEXT_PAGE__"/' <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>\&gt;\&gt;<\/b><\/font><\/a>'/g > tmp_idx.html
     fi
     mv tmp_idx.html $idx_filename
 
@@ -573,6 +695,12 @@ echo -n "indexes..."
 mkdir -p album
 rm "album/""$idx_basename"*.html 2>/dev/null
 mv "$idx_basename"*.html album
+
+if [ $multi_html = "yes" ]; then
+    for file in $all_files; do
+	mv "${file}.html" album
+    done
+fi
 
 echo "done!"
 
