@@ -36,7 +36,7 @@
 # To regenerate only the index files:
 #  $ shalbum index
 #
-# 'mhd' is optional. Use it to choose 'mhd' options.
+# 'mhd' is optional. Use it to opt for "Mostly Harmless Decisions"
 #
 ##############################################################
 
@@ -86,8 +86,44 @@ fi;
 # Options
 #########
 
-if [ $mhd = "yes" ]; then
-    # mhd options
+if [ $mhd != "yes" ]; then
+    # Default options
+    vga_res=800                     # max width/heigth of final image
+    th_res=250                      # max width/height of thumbnail
+    table_width=780                 # number of HTML table columns
+    n_rows=10                       # number of table rows
+    n_columns=3                     # number of table columns
+    print_number=no                 # boolean to print number found in filename
+    print_filename=no               # boolean to print filename under thumbnail
+    author="Eduardo Sztokbant"      # site author's name
+    e_mail='du@du.eti.br'           # site author's e-mail
+    author2=""                      # site #2 author (blank for none)
+    e_mail2=""                      # site #2 author's e-mail
+    watermark="no"                  # boolean to stamp watermarks
+    watermark_th_src=""             # source for thumbnail watermark
+    watermark_vga_src=""            # source for final image watermark
+    watermark_th=""                 # name of temporary resized thumbnail file
+    watermark_vga=""                # name of temporary resized image file
+    watermark_dissolve=60           # final image watermark dissolve percent
+    thframe="yes"                   # enable thumbnail frame
+    thframesize=2                   # size of thumbnail frame
+    vgaframe="yes"                  # enable final image frame
+    vgaframesize=3                  # size of final image frame
+    th_quality=75                   # thumbnail percentage quality
+    vga_quality=75                  # final image percentage quality
+    back_link=""                    # link to go back
+    backlink_label=""               # back link label
+    credits_str=""                  # credit information
+    support_shalbum="yes"           # print link to shalbum site
+
+    # HTML body colors
+    color_text="#ffffff"
+    color_bgcolor="#000000"
+    color_link="#ffffff"
+    color_vlink="#888888"
+    color_alink="#ff0000"
+else
+    # Mostly Harmless Decisions
     vga_res=500                     # max width/heigth of final image
     th_res=150                      # max width/height of thumbnail
     table_width=520                 # number of HTML table columns
@@ -120,42 +156,6 @@ if [ $mhd = "yes" ]; then
                                     # link to go back
     backlink_label="&iacute;ndice"  # back link label
     credits_str="photos by"         # credit information
-    support_shalbum="yes"           # print link to shalbum site
-
-    # HTML body colors
-    color_text="#ffffff"
-    color_bgcolor="#000000"
-    color_link="#ffffff"
-    color_vlink="#888888"
-    color_alink="#ff0000"
-else
-    # default options
-    vga_res=800                     # max width/heigth of final image
-    th_res=250                      # max width/height of thumbnail
-    table_width=780                 # number of HTML table columns
-    n_rows=10                       # number of table rows
-    n_columns=3                     # number of table columns
-    print_number=no                 # boolean to print number found in filename
-    print_filename=no               # boolean to print filename under thumbnail
-    author="Eduardo Sztokbant"      # site author's name
-    e_mail='du@du.eti.br'           # site author's e-mail
-    author2=""                      # site #2 author (blank for none)
-    e_mail2=""                      # site #2 author's e-mail
-    watermark="no"                  # boolean to stamp watermarks
-    watermark_th_src=""             # source for thumbnail watermark
-    watermark_vga_src=""            # source for final image watermark
-    watermark_th=""                 # name of temporary resized thumbnail file
-    watermark_vga=""                # name of temporary resized image file
-    watermark_dissolve=60           # final image watermark dissolve percent
-    thframe="yes"                   # enable thumbnail frame
-    thframesize=2                   # size of thumbnail frame
-    vgaframe="yes"                  # enable final image frame
-    vgaframesize=3                  # size of final image frame
-    th_quality=75                   # thumbnail percentage quality
-    vga_quality=75                  # final image percentage quality
-    back_link=""                    # link to go back
-    backlink_label=""               # back link label
-    credits_str=""                  # credit information
     support_shalbum="yes"           # print link to shalbum site
 
     # HTML body colors
