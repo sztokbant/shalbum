@@ -102,8 +102,6 @@ if [ $mhd != "yes" ]; then
     watermark="no"                  # boolean to stamp watermarks
     watermark_th_src=""             # source for thumbnail watermark
     watermark_vga_src=""            # source for final image watermark
-    watermark_th=""                 # name of temporary resized thumbnail file
-    watermark_vga=""                # name of temporary resized image file
     watermark_dissolve=60           # final image watermark dissolve percent
     thframe="yes"                   # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
@@ -144,10 +142,6 @@ else
                                     # source for thumbnail watermark
     watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
                                     # source for final image watermark
-    watermark_th="./watermark_${th_res}.png"
-                                    # name of temporary resized thumbnail file
-    watermark_vga="./watermark_${vga_res}.png"
-                                    # name of temporary resized image file
     watermark_dissolve=60           # final image watermark dissolve percent
     thframe="yes"                   # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
@@ -362,9 +356,17 @@ if [ "$only_index" != "yes" ]; then
     fi;
     mkdir vga
     
+    if [ -e tmp ]; then
+	rm -rf tmp
+    fi;
+    mkdir tmp
+
     # generate watermarks
     if [ $watermark = "yes" ]; then
 	echo -n "Creating watermarks..."
+	# temporary resized watermarks
+	watermark_th="./tmp/watermark_${th_res}.png"
+	watermark_vga="./tmp/watermark_${vga_res}.png"
 	
 	echo -n "tnail $th_res..."
 	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
@@ -688,6 +690,11 @@ if [ "$only_index" != yes ]; then
     echo -n "vga..."
     mv vga album
 
+    # cleanup
+    if [ -e tmp ]; then
+	rm -rf tmp
+    fi;
+
 fi; # !only_index
 
 echo -n "indexes..."
@@ -696,6 +703,7 @@ rm "album/""$idx_basename"*.html 2>/dev/null
 mv "$idx_basename"*.html album
 
 if [ $multi_html = "yes" ]; then
+    echo -n 'multi-indexes...'
     for file in $all_files; do
 	mv "${file}.html" album
     done
