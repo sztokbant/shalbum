@@ -214,6 +214,7 @@ create_page_for_pic()
     before="$2"
     after="$3"
     pic_subtitle="$4"
+    index_page="$5"
 
     html_file=${pic}".html"
 
@@ -222,10 +223,32 @@ create_page_for_pic()
 
 
     echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
-    echo "<p align='left'><a href='index.html'><b><font size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+    if [ "$index_page" = "1" ]; then
+	echo "<p align='left'><a href='index.html'><b><font size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+    else
+	echo "<p align='left'><a href='index${index_page}.html'><b><font size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+    fi
+
     echo "</td></tr></table>" >> $html_file
 
     echo "<table border='0' width='$table_width'>" >> $html_file
+
+    # top arrows
+    echo "<table border='0' width='$table_width'><tr>" >> $html_file
+    if [ "$before" != "[NONE]" ]; then
+	before_th="thumbnails/th_""${before}"
+	echo "<td align='left' width='10%'><a href='${before}.html'>&lt;&lt;</a></td>" >> $html_file
+    else
+	echo "<td align='left'></td>" >> $html_file
+    fi
+    echo "<td align='center' width='80%'><!-- empty --></td>" >> $html_file
+    if [ "$after" != "[NONE]" ]; then
+	after_th="thumbnails/th_""${after}"
+	echo "<td align='right' width='10%'><a href='${after}.html'>&gt;&gt;</a></td>" >> $html_file
+    else
+	echo "<td align='right'></td>" >> $html_file
+    fi
+    echo "</tr></table>" >> $html_file
 
     # pic
     echo "<tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
@@ -233,9 +256,8 @@ create_page_for_pic()
     echo "</td></tr>" >> $html_file
     echo "</table>" >> $html_file
 
+    # bottom arrows and pic subtitle
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
-
-    # arrows and pic subtitle
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
 	echo "<td align='left' width='10%'><a href='${before}.html'>&lt;&lt;</a></td>" >> $html_file
@@ -525,7 +547,10 @@ for file in $all_files; do
 	    next_file="[NONE]"
 	fi
 
-	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle"
+	# finds index page
+	index_page=$(((($cur_counter-1)/($n_rows*$n_columns))+1))
+
+	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page"
     fi
 
     echo '</td></tr></table></td>' >> $idx_filename
