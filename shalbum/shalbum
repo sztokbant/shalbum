@@ -100,9 +100,11 @@ if [ $mhd != "yes" ]; then
     e_mail='du@du.eti.br'           # site author's e-mail
     author2=""                      # site #2 author (blank for none)
     e_mail2=""                      # site #2 author's e-mail
-    watermark="no"                  # boolean to stamp watermarks
-    watermark_th_src=""             # source for thumbnail watermark
-    watermark_vga_src=""            # source for final image watermark
+    watermark="yes"                 # boolean to stamp watermarks
+    watermark_th_src="$HOME/.shalbum/watermark_th.png"
+                                    # source for thumbnail watermark
+    watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
+                                    # source for final image watermark
     watermark_dissolve=60           # final image watermark dissolve percent
     thframe="yes"                   # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
