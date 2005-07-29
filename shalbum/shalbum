@@ -36,11 +36,12 @@
 # To regenerate only the index files:
 #  $ shalbum index
 #
-# 'mhd' is optional. Use it to opt for "Mostly Harmless Decisions"
+# 'mhd' is optional. Use it to opt for "Mostly Harmless Decisions" (aka
+# "secondary set of options" ;)
 #
 ##############################################################
 
-software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 July 7"
+software_revision="by shalbum - http://sourceforge.net/projects/shalbum - last revision 2005 July 29"
 
 #######
 # Input
@@ -124,7 +125,7 @@ if [ $mhd != "yes" ]; then
     color_vlink="#888888"
     color_alink="#ff0000"
 else
-    # Mostly Harmless Decisions
+    # Mostly Harmless Decisions (secondary options, activated with flag 'mhd')
     vga_res=500                     # max width/heigth of final image
     th_res=140                      # max width/height of thumbnail
     table_width=520                 # number of HTML table columns
