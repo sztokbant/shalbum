@@ -100,7 +100,7 @@ if [ $mhd != "yes" ]; then
     e_mail='du@du.eti.br'           # site author's e-mail
     author2=""                      # site #2 author (blank for none)
     e_mail2=""                      # site #2 author's e-mail
-    watermark="yes"                 # boolean to stamp watermarks
+    watermark="no"                  # boolean to stamp watermarks
     watermark_th_src="$HOME/.shalbum/watermark_th.png"
                                     # source for thumbnail watermark
     watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
@@ -240,14 +240,16 @@ create_page_for_pic()
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
-	echo "<td align='left' width='10%'><a href='${before}.html'>&lt;&lt;</a></td>" >> $html_file
+	html_compliant_filename "${before}.html"
+	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'>&lt;&lt;</a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
     fi
     echo "<td align='center' width='80%'><!-- empty --></td>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
-	echo "<td align='right' width='10%'><a href='${after}.html'>&gt;&gt;</a></td>" >> $html_file
+	html_compliant_filename "${after}.html"
+	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'>&gt;&gt;</a></td>" >> $html_file
     else
 	echo "<td align='right'></td>" >> $html_file
     fi
@@ -255,7 +257,8 @@ create_page_for_pic()
 
     # pic
     echo "<tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
-    echo "<img src='vga/vga_${pic}'>" >> $html_file
+    html_compliant_filename "vga/vga_${pic}"
+    echo "<img src='${html_compliant_filename}'>" >> $html_file
     echo "</td></tr>" >> $html_file
     echo "</table>" >> $html_file
 
@@ -263,14 +266,16 @@ create_page_for_pic()
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
-	echo "<td align='left' width='10%'><a href='${before}.html'>&lt;&lt;</a></td>" >> $html_file
+	html_compliant_filename "${before}.html"
+	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'>&lt;&lt;</a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
     fi
     echo "<td align='center' width='80%'><b>$pic_subtitle</b></td>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
-	echo "<td align='right' width='10%'><a href='${after}.html'>&gt;&gt;</a></td>" >> $html_file
+	html_compliant_filename "${after}.html"
+	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'>&gt;&gt;</a></td>" >> $html_file
     else
 	echo "<td align='right'></td>" >> $html_file
     fi
@@ -282,8 +287,10 @@ create_page_for_pic()
         # before
 	echo "<td align='left' valign='top' width='$th_res'>" >> $html_file
 	if [ "$before" != "[NONE]" ]; then
-	    echo "<a href='${before}.html'>" >> $html_file
-	    echo "<img border='0' src='$before_th'>" >> $html_file
+	    html_compliant_filename "${before}.html"
+	    echo "<a href='${html_compliant_filename}'>" >> $html_file
+	    html_compliant_filename "${before_th}"
+	    echo "<img border='0' src='${html_compliant_filename}'>" >> $html_file
 	    echo "</a>" >> $html_file
 	fi;
 	echo "</td>" >> $html_file
@@ -293,8 +300,10 @@ create_page_for_pic()
         # after
 	echo "<td align='right' valign='top' width='$th_res'>" >> $html_file
 	if [ "$after" != "[NONE]" ]; then
-	    echo "<a href='${after}.html'>" >> $html_file
-	    echo "<img border='0' src='$after_th'>" >> $html_file
+	    html_compliant_filename "${after}.html"
+	    echo "<a href='${html_compliant_filename}'>" >> $html_file
+	    html_compliant_filename "${after_th}"
+	    echo "<img border='0' src='${html_compliant_filename}'>" >> $html_file
 	    echo "</a>" >> $html_file
 	fi;
 	echo "</td>" >> $html_file
@@ -330,6 +339,20 @@ create_page_for_pic()
     echo "</center></body></html>" >> $html_file
 }
 
+html_compliant_filename()
+{
+    # input:  a file name
+    # output: ${html_compliant_filename}, this filename with some
+    #         chars replaced by "%XX" for HTML compliancy
+
+    html_compliant_filename="$1"
+
+    # '%'
+    html_compliant_filename=`echo $html_compliant_filename | sed -e s/'%'/'%25'/g`
+
+    # '?'
+    html_compliant_filename=`echo $html_compliant_filename | sed -e s/'?'/'%3f'/g`
+}
 
 #########################
 # Part 0: Look for images
@@ -510,9 +533,15 @@ for file in $all_files; do
     vga_file="vga/vga_""$file"
 
     if [ $multi_html = "yes" ]; then
-	echo '<table><tr><td><a href="'$file'.html"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
+	html_compliant_filename "${file}.html"
+	echo '<table><tr><td><a href="'${html_compliant_filename}'">' >> $idx_filename
+	html_compliant_filename "${th_file}"
+	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'"></a><br>' >> $idx_filename
     else
-	echo '<table><tr><td><a href="'$vga_file'" target="'$file'"><img border="0" src="'$th_file'" alt="'$file'"></a><br>' >> $idx_filename
+	html_compliant_filename "${vga_file}"
+	echo '<table><tr><td><a href="'${html_compliant_filename}'" target="'${file}'"><img border="0" ' >> $idx_filename
+	html_compliant_filename "${th_file}"
+	echo 'src="'${html_compliant_filename}'" alt="'${file}'"></a><br>' >> $idx_filename
     fi
     
     # try to guess pic number following IMG_####.JPG or DSC#####.JPG (Sony) pattern
@@ -550,7 +579,7 @@ for file in $all_files; do
 	    next_file="[NONE]"
 	fi
 
-	# finds index page
+	# finds out index page
 	index_page=$(((($cur_counter-1)/($n_rows*$n_columns))+1))
 
 	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page"
