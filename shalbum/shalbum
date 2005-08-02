@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.8 - http://sourceforge.net/projects/shalbum - last revision 2005 August 2nd"
+software_revision="by shalbum 0.9 - http://sourceforge.net/projects/shalbum - last revision 2005 August 2nd"
 
 #######
 # Input
@@ -597,7 +597,7 @@ for file in $all_files; do
 
     if [ $n_rows -gt 0 ]; then
 	if [ $lin_counter -gt $n_rows ]; then
-	    # this if prevents from creating a null last index.html
+	    # this 'if' avoids creation of an empty index.html in the end
 	    if [ ! $(($n_rows*$n_columns*$idx_counter)) -eq $total_files ]; then
 		idx_counter=$(($idx_counter+1))
 		idx_filename="$idx_basename""$idx_counter"".html"
