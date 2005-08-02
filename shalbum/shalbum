@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.8 - http://sourceforge.net/projects/shalbum - last revision 2005 August 1st"
+software_revision="by shalbum 0.8 - http://sourceforge.net/projects/shalbum - last revision 2005 August 2nd"
 
 #######
 # Input
@@ -89,9 +89,9 @@ fi;
 
 if [ $mhd != "yes" ]; then
     # Default options
-    vga_res=640                     # max width/heigth of final image
-    th_res=150                      # max width/height of thumbnail
-    table_width=780                 # number of HTML table columns
+    vga_res=800                     # max width/heigth of final image
+    th_res=250                      # max width/height of thumbnail
+    table_width=800                 # number of HTML table columns
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
     print_number=no                 # boolean to print number found in filename
@@ -597,11 +597,14 @@ for file in $all_files; do
 
     if [ $n_rows -gt 0 ]; then
 	if [ $lin_counter -gt $n_rows ]; then
-	    idx_counter=$(($idx_counter+1))
-	    idx_filename="$idx_basename""$idx_counter"".html"
-
-	    echo '<table width="'$table_width'"><tr>' >> $idx_filename
-	    lin_counter=1
+	    # this if prevents from creating a null last index.html
+	    if [ ! $(($n_rows*$n_columns*$idx_counter)) -eq $total_files ]; then
+		idx_counter=$(($idx_counter+1))
+		idx_filename="$idx_basename""$idx_counter"".html"
+		
+		echo '<table width="'$table_width'"><tr>' >> $idx_filename
+		lin_counter=1
+	    fi;
 	fi;
     fi;
 
