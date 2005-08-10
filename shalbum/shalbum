@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.9 - http://sourceforge.net/projects/shalbum - last revision 2005 August 2nd"
+software_revision="by shalbum 0.9 - http://sourceforge.net/projects/shalbum - last revision 2005 August 10"
 
 #######
 # Input
@@ -200,14 +200,14 @@ create_pages_index()
 
 
     if [ "$back_link" != "" ]; then
-	echo "<center><a href=\"$back_link\">$backlink_label</a></center><br>" >> $1
+	echo "<center><a href=\"$back_link\">$backlink_label</a></center><br />" >> $1
     fi;
 
     if [ "$mhd" = "yes" ]; then
 	echo '</b></font>' >> $1
     fi;
 
-    echo '</b></font><br>' >> $1
+    echo '</b></font><br />' >> $1
     echo '<!-- pages index end -->' >> $1
 }
 
@@ -221,8 +221,9 @@ create_page_for_pic()
 
     html_file=${pic}".html"
 
-    echo "<html><title>$pic</title><style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style>" > $html_file
-    echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face="Arial, Helvetica"><center>" >> $html_file
+    echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" > $html_file
+    echo "<html><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"><title>$pic</title><style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> $html_file
+    echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face='Arial, Helvetica'><center>" >> $html_file
 
 
     echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
@@ -258,7 +259,7 @@ create_page_for_pic()
     # pic
     echo "<tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
     html_compliant_filename "vga/vga_${pic}"
-    echo "<img src='${html_compliant_filename}'>" >> $html_file
+    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
     echo "</td></tr>" >> $html_file
     echo "</table>" >> $html_file
 
@@ -290,7 +291,7 @@ create_page_for_pic()
 	    html_compliant_filename "${before}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
 	    html_compliant_filename "${before_th}"
-	    echo "<img border='0' src='${html_compliant_filename}'>" >> $html_file
+	    echo "<img border='0' src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
 	fi;
 	echo "</td>" >> $html_file
@@ -303,7 +304,7 @@ create_page_for_pic()
 	    html_compliant_filename "${after}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
 	    html_compliant_filename "${after_th}"
-	    echo "<img border='0' src='${html_compliant_filename}'>" >> $html_file
+	    echo "<img border='0' src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
 	fi;
 	echo "</td>" >> $html_file
@@ -311,20 +312,20 @@ create_page_for_pic()
 	echo "</tr></table>" >> $html_file
     fi
 
-    echo "<br>" >> $html_file
+    echo "<br />" >> $html_file
 
     ############################## FOOTER ##############################
     echo "<table border='0' width='$table_width'><tr><td align='right'>" >> $html_file
 
     # Author
     if [ "$author" != "" ]; then
-	echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br>' >> $html_file
+	echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br />' >> $html_file
 	echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a></p>' >> $html_file
     fi
     
     # Author2
     if [ "$author2" != "" ]; then
-	echo '<p align="right"><font size="1"><b>'$author2'</b></font><br>' >> $html_file
+	echo '<p align="right"><font size="1"><b>'$author2'</b></font><br />' >> $html_file
 	echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a></p>' >> $html_file
     fi
 
@@ -536,12 +537,12 @@ for file in $all_files; do
 	html_compliant_filename "${file}.html"
 	echo '<table><tr><td><a href="'${html_compliant_filename}'">' >> $idx_filename
 	html_compliant_filename "${th_file}"
-	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'"></a><br>' >> $idx_filename
+	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'" /></a><br />' >> $idx_filename
     else
 	html_compliant_filename "${vga_file}"
 	echo '<table><tr><td><a href="'${html_compliant_filename}'" target="'${file}'"><img border="0" ' >> $idx_filename
 	html_compliant_filename "${th_file}"
-	echo 'src="'${html_compliant_filename}'" alt="'${file}'"></a><br>' >> $idx_filename
+	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a><br />' >> $idx_filename
     fi
     
     # try to guess pic number following IMG_####.JPG or DSC#####.JPG (Sony) pattern
@@ -631,9 +632,10 @@ done;
 ############################## HEADER ##############################
 idx_header="header.html"
 
-echo "<html>" > $idx_header
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" > $idx_header
+echo "<html>" >> $idx_header
 echo >> $idx_header
-echo -n "<head><title>" >> $idx_header
+echo -n "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"><title>" >> $idx_header
 
 if [ $mhd = "yes" ]; then
     echo -n "Meia Hora Depois - " >> $idx_header
@@ -648,17 +650,17 @@ fi;
 echo '</title><style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style></head>' >> $idx_header
 echo >> $idx_header
 
-echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face="Arial, Helvetica"><center>" >> $idx_header
+echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face='Arial, Helvetica'><center>" >> $idx_header
 echo '<table width="'$table_width'">' >> $idx_header
 
 echo '<tr><td><font size="5"><b>' >> $idx_header
 
 if [ $mhd = "yes" ]; then
-    echo '<font size="3">Meia Hora Depois</font><br>' >> $idx_header
+    echo '<font size="3">Meia Hora Depois</font><br />' >> $idx_header
 fi;
 
 # echoes title
-echo $title'</b></font><br><font size="3">'$date'</font>' >> $idx_header
+echo $title'</b></font><br /><font size="3">'$date'</font>' >> $idx_header
 echo '</td></tr></table>' >> $idx_header
 
 # page index
@@ -668,21 +670,21 @@ create_pages_index $idx_header
 ############################## FOOTER ##############################
 idx_footer="footer.html"
 
-echo '</tr></table><br>' >> $idx_footer
-echo '</tr></table><br>' >> $idx_footer
+echo '</tr></table><br />' >> $idx_footer
+echo '</tr></table><br />' >> $idx_footer
 
 # page index
 create_pages_index $idx_footer
 
 # Author
 if [ "$author" != "" ]; then
-    echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br>' >> $idx_footer
+    echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br />' >> $idx_footer
     echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a></p>' >> $idx_footer
 fi
 
 # Author2
 if [ "$author2" != "" ]; then
-    echo '<p align="right"><font size="1"><b>'$author2'</b></font><br>' >> $idx_footer
+    echo '<p align="right"><font size="1"><b>'$author2'</b></font><br />' >> $idx_footer
     echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a></p>' >> $idx_footer
 fi
 
