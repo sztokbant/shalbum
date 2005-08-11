@@ -252,8 +252,6 @@ create_page_for_pic()
 
     echo "</td></tr></table>" >> $html_file
 
-    echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
-
     # top arrows
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
@@ -271,10 +269,11 @@ create_page_for_pic()
     else
 	echo "<td align='right'></td>" >> $html_file
     fi
+
     echo "</tr></table>" >> $html_file
 
     # pic
-    echo "<tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
+    echo "<table border='0' width='$table_width'><tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
     html_compliant_filename "vga/vga_${pic}"
     echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
     echo "</td></tr>" >> $html_file
