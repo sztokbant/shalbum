@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.9 - http://sourceforge.net/projects/shalbum - last revision 2005 August 10"
+software_revision="by shalbum 0.9 - http://sourceforge.net/projects/shalbum - last revision 2005 August 11"
 
 #######
 # Input
@@ -120,6 +120,8 @@ if [ $mhd != "yes" ]; then
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
 
+    w3c_ok="yes"                    # print "W3C HTML 4.01 compliant" banner
+
     # HTML body colors
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -161,6 +163,8 @@ else
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
+
+    w3c_ok="no"                     # print "W3C HTML 4.01 compliant" banner
 
     # HTML body colors
     color_text="#ffffff"
@@ -222,27 +226,40 @@ create_page_for_pic()
     html_file=${pic}".html"
 
     echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" > $html_file
-    echo "<html><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"><title>$pic</title><style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> $html_file
-    echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face='Arial, Helvetica'><center>" >> $html_file
+    echo "<html>" >> $html_file
+
+    # <head>
+    echo "<!-- head -->" >> $html_file
+    echo "<head>" >> $html_file
+    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> $html_file
+    echo "<style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> $html_file
+    echo "<title>$pic</title>" >> $html_file
+    echo "</head>" >> $html_file
+    # </head>
+
+    # <body>
+    echo "<!-- body -->" >> $html_file
+    echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><center>" >> $html_file
 
 
+    # reference to index
     echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
     if [ "$index_page" = "1" ]; then
-	echo "<p align='left'><a href='index.html'><b><font size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+	echo "<p align='left'><a href='index.html'><b><font face='Arial, Helvetica' size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
     else
-	echo "<p align='left'><a href='index${index_page}.html'><b><font size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+	echo "<p align='left'><a href='index${index_page}.html'><b><font face='Arial, Helvetica' size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
     fi
 
     echo "</td></tr></table>" >> $html_file
 
-    echo "<table border='0' width='$table_width'>" >> $html_file
+    echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
 
     # top arrows
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
 	html_compliant_filename "${before}.html"
-	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'>&lt;&lt;</a></td>" >> $html_file
+	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'><font face='Arial, Helvetica'>&lt;&lt;</font></a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
     fi
@@ -250,7 +267,7 @@ create_page_for_pic()
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
 	html_compliant_filename "${after}.html"
-	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'>&gt;&gt;</a></td>" >> $html_file
+	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'><font face='Arial, Helvetica'>&gt;&gt;</font></a></td>" >> $html_file
     else
 	echo "<td align='right'></td>" >> $html_file
     fi
@@ -268,15 +285,15 @@ create_page_for_pic()
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
 	html_compliant_filename "${before}.html"
-	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'>&lt;&lt;</a></td>" >> $html_file
+	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'><font face='Arial, Helvetica'>&lt;&lt;</font></a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
     fi
-    echo "<td align='center' width='80%'><b>$pic_subtitle</b></td>" >> $html_file
+    echo "<td align='center' width='80%'><font face='Arial, Helvetica'><b>$pic_subtitle</b></font></td>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
 	html_compliant_filename "${after}.html"
-	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'>&gt;&gt;</a></td>" >> $html_file
+	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'><font face='Arial, Helvetica'>&gt;&gt;</font></a></td>" >> $html_file
     else
 	echo "<td align='right'></td>" >> $html_file
     fi
@@ -319,19 +336,24 @@ create_page_for_pic()
 
     # Author
     if [ "$author" != "" ]; then
-	echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br />' >> $html_file
-	echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a></p>' >> $html_file
+	echo '<p align="right"><font face="Arial, Helvetica" size="1"><b>'$credits_str $author'</b></font><br />' >> $html_file
+	echo '<a href="mailto:'$e_mail'"><font face="Arial, Helvetica" size="1"><b>'$e_mail'</b></font></a></p>' >> $html_file
     fi
     
     # Author2
     if [ "$author2" != "" ]; then
-	echo '<p align="right"><font size="1"><b>'$author2'</b></font><br />' >> $html_file
-	echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a></p>' >> $html_file
+	echo '<p align="right"><font face="Arial, Helvetica" size="1"><b>'$author2'</b></font><br />' >> $html_file
+	echo '<a href="mailto:'$e_mail2'"><font face="Arial, Helvetica" size="1"><b>'$e_mail2'</b></font></a></p>' >> $html_file
     fi
 
     # support shalbum!
     if [ "$support_shalbum" = "yes" ]; then
-	echo '<p align="right"><font size="1"><b>page created with <a href="http://sourceforge.net/projects/shalbum" target="shalbum"><u>shalbum</u></a></b></font></p>' >> $html_file
+	echo '<p align="right"><font face="Arial, Helvetica" size="1"><b>page created with <a href="http://sourceforge.net/projects/shalbum" target="shalbum"><u>shalbum</u></a></b></font></p>' >> $html_file
+    fi
+
+    # W3C HTML 4.01 compliant banner
+    if [ "$w3c_ok" = "yes" ]; then
+	echo '<p align="right"><a href="http://validator.w3.org/check?uri=referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $html_file
     fi
 
     echo "</td></tr></table>" >> $html_file
@@ -634,32 +656,43 @@ idx_header="header.html"
 
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" > $idx_header
 echo "<html>" >> $idx_header
-echo >> $idx_header
-echo -n "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"><title>" >> $idx_header
 
+# <head>
+echo "<!-- head -->" >> $idx_header
+echo "<head>" >> $idx_header
+
+# meta
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> $idx_header
+
+# style
+echo '<style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style>' >> $idx_header
+
+# echo title
+echo -n "<title>" >> $idx_header
 if [ $mhd = "yes" ]; then
     echo -n "Meia Hora Depois - " >> $idx_header
 fi;
-
-# echoes title
 echo -n "$title" >> $idx_header
 if [ "$date" != "" ]; then
-    echo -n "- $date" >> $idx_header
+    echo -n " - $date" >> $idx_header
 fi;
+echo -n '</title>' >> $idx_header
 
-echo '</title><style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style></head>' >> $idx_header
 echo >> $idx_header
+echo "</head>" >> $idx_header
+# </head>
 
+# <body>
+echo "<!-- body -->"  >> $idx_header
 echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face='Arial, Helvetica'><center>" >> $idx_header
 echo '<table width="'$table_width'">' >> $idx_header
 
 echo '<tr><td><font size="5"><b>' >> $idx_header
 
+# echo title
 if [ $mhd = "yes" ]; then
     echo '<font size="3">Meia Hora Depois</font><br />' >> $idx_header
 fi;
-
-# echoes title
 echo $title'</b></font><br /><font size="3">'$date'</font>' >> $idx_header
 echo '</td></tr></table>' >> $idx_header
 
@@ -679,13 +712,13 @@ create_pages_index $idx_footer
 # Author
 if [ "$author" != "" ]; then
     echo '<p align="right"><font size="1"><b>'$credits_str $author'</b></font><br />' >> $idx_footer
-    echo '<a href="mailto:'$e_mail'"><font size="1">'$e_mail'</b></font></a></p>' >> $idx_footer
+    echo '<a href="mailto:'$e_mail'"><font size="1"><b>'$e_mail'</b></font></a></p>' >> $idx_footer
 fi
 
 # Author2
 if [ "$author2" != "" ]; then
     echo '<p align="right"><font size="1"><b>'$author2'</b></font><br />' >> $idx_footer
-    echo '<a href="mailto:'$e_mail2'"><font size="1">'$e_mail2'</b></font></a></p>' >> $idx_footer
+    echo '<a href="mailto:'$e_mail2'"><font size="1"><b>'$e_mail2'</b></font></a></p>' >> $idx_footer
 fi
 
 # support shalbum!
