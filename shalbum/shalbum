@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.9 - http://sourceforge.net/projects/shalbum - last revision 2005 August 11"
+software_revision="by shalbum 0.10 - http://sourceforge.net/projects/shalbum - last revision 2005 August 15"
 
 #######
 # Input
@@ -116,11 +116,10 @@ if [ $mhd != "yes" ]; then
     backlink_label=""               # back link label
     credits_str=""                  # credit information
     support_shalbum="yes"           # print link to shalbum site
+    w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
-
-    w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
 
     # HTML layout
     color_text="#ffffff"
@@ -161,11 +160,10 @@ else
                                     # back link label
     credits_str="photos by"         # credit information
     support_shalbum="yes"           # print link to shalbum site
+    w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
-
-    w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
 
     # HTML layout
     color_text="#ffffff"
@@ -263,7 +261,7 @@ create_page_for_pic()
 
     html_file=${pic}".html"
 
-    echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" > $html_file
+    echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > $html_file
     echo "<html>" >> $html_file
 
     # <head>
@@ -664,7 +662,7 @@ done;
 ############################## HEADER ##############################
 idx_header="header.html"
 
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" > $idx_header
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > $idx_header
 echo "<html>" >> $idx_header
 
 # <head>
