@@ -154,7 +154,7 @@ else
     vgaframesize=3                  # size of final image frame
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
-    back_link="http://denisgv.sites.uol.com.br/fotos.htm"
+    back_link="http://www.meiahoradepois.com/fotos.htm"
                                     # link to go back
     backlink_label="&lt;&lt;&lt; &iacute;ndice"
                                     # back link label
