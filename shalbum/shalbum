@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.10 - http://sourceforge.net/projects/shalbum - last revision 2005 August 15"
+software_revision="by shalbum 0.11 - http://sourceforge.net/projects/shalbum - last revision 2005 September 12"
 
 #######
 # Input
@@ -113,7 +113,9 @@ if [ $mhd != "yes" ]; then
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
     back_link=""                    # link to go back
-    backlink_label=""               # back link label
+    backlink_label=""               # back link label for album list site
+    backlink_label_thumbs="&lt;&lt;&lt; thumbnails"
+                                    # back link label for thumbnails page
     credits_str=""                  # credit information
     support_shalbum="yes"           # print link to shalbum site
     w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
@@ -157,7 +159,9 @@ else
     back_link="http://www.meiahoradepois.com/fotos.htm"
                                     # link to go back
     backlink_label="&lt;&lt;&lt; &iacute;ndice"
-                                    # back link label
+                                    # back link label for album list site
+    backlink_label_thumbs="&lt;&lt;&lt; miniaturas"
+                                    # back link label for thumbnails page
     credits_str="photos by"         # credit information
     support_shalbum="yes"           # print link to shalbum site
     w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
@@ -281,9 +285,9 @@ create_page_for_pic()
     # reference to index
     echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
     if [ "$index_page" = "1" ]; then
-	echo "<p align='left'><a href='index.html'><b><font face='${font_face}' size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+	echo "<p align='left'><a href='index.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
     else
-	echo "<p align='left'><a href='index${index_page}.html'><b><font face='${font_face}' size='+2'>&lt;&lt;&lt;</font></b></a></p>" >> $html_file
+	echo "<p align='left'><a href='index${index_page}.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
     fi
 
     echo "</td></tr></table>" >> $html_file
