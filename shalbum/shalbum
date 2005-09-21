@@ -130,6 +130,8 @@ if [ $mhd != "yes" ]; then
     color_vlink="#888888"
     color_alink="#ff0000"
     font_face="Arial, Helvetica"
+
+    LS_COMMAND="ls -t -r"           # ls command parameters
 else
     # Mostly Harmless Decisions (secondary options, activated with flag 'mhd')
     vga_res=500                     # max width/heigth of final image
@@ -176,6 +178,8 @@ else
     color_vlink="#888888"
     color_alink="#ff0000"
     font_face="Arial, Helvetica"
+
+    LS_COMMAND="ls"                 # ls command parameters
 fi;
 
 ###############
@@ -443,7 +447,7 @@ total_files="`ls $images | wc -l`"
 echo "# of images found in current dir: $(($total_files))"
 
 # handle file names with white spaces and order by modify time
-all_files="`ls -t -r $images`"
+all_files="`$LS_COMMAND $images`"
 IFS='\
 '
 
