@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.11 - http://sourceforge.net/projects/shalbum - last revision 2005 September 12"
+software_revision="by shalbum 0.12 - http://sourceforge.net/projects/shalbum - last revision 2005 November 4"
 
 #######
 # Input
@@ -122,7 +122,7 @@ if [ $mhd != "yes" ]; then
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
-
+    slideshow_time="3"              # seconds per pic in slideshow mode zero=off
     # HTML layout
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -170,7 +170,7 @@ else
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
-
+    slideshow_time="3"              # seconds per pic in slideshow mode zero=off
     # HTML layout
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -266,8 +266,13 @@ create_page_for_pic()
     after="$3"
     pic_subtitle="$4"
     index_page="$5"
+    refresh="$6"
 
-    html_file=${pic}".html"
+    if [ "${refresh}" != "" ]; then
+	html_file=${pic}"_r.html"
+    else
+	html_file=${pic}".html"
+    fi
 
     echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > $html_file
     echo "<html>" >> $html_file
@@ -275,6 +280,15 @@ create_page_for_pic()
     # <head>
     echo "<!-- head -->" >> $html_file
     echo "<head>" >> $html_file
+
+    # slideshow
+    if [ "${refresh}" != "" ]; then
+	if [ "$after" != "[NONE]" ]; then
+	    html_compliant_filename "${after}_r.html"
+	    echo "<meta http-equiv='refresh' content='${refresh};url=${html_compliant_filename}'>" >> $html_file
+	fi
+    fi
+
     echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> $html_file
     echo "<style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> $html_file
     echo "<title>$pic</title>" >> $html_file
@@ -287,14 +301,29 @@ create_page_for_pic()
 
 
     # reference to index
-    echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
+    echo "<table border='0' width='$table_width'><tr><td width='10%'>" >> $html_file
     if [ "$index_page" = "1" ]; then
 	echo "<p align='left'><a href='index.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
     else
 	echo "<p align='left'><a href='index${index_page}.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
     fi
 
-    echo "</td></tr></table>" >> $html_file
+    # slideshow
+    echo "</td><td align='center' width='80%'>" >> $html_file
+
+    if [ "$after" != "[NONE]" ]; then
+	if [ "${refresh}" != "" ]; then
+	    html_compliant_filename "${pic}.html"
+	    echo "<a href='${html_compliant_filename}'><font face='${font_face}' size='1'>STOP<font color='red' size='1'><b> X</b></font></font></a>" >> $html_file
+	else
+	    if [ "${slideshow_time}" != "0" ]; then
+		html_compliant_filename "${pic}_r.html"
+		echo "<a href='${html_compliant_filename}'><font face='${font_face}' size='1'>PLAY<font color='green' size='3'><b> &gt;</b></font></font></a>" >> $html_file
+	    fi
+	fi
+    fi
+
+    echo "</td><td width='10%'></td></tr></table>" >> $html_file
 
     # top arrows
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
@@ -624,6 +653,10 @@ for file in $all_files; do
 	index_page=$(((($cur_counter-1)/($n_rows*$n_columns))+1))
 
 	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page"
+
+	if [ "slideshow_time" != "0" ]; then
+	    create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page" "$slideshow_time"
+	fi
     fi
 
     echo '</td></tr></table></td>' >> $idx_filename
@@ -823,6 +856,9 @@ if [ $multi_html = "yes" ]; then
     echo -n '[multi-idx]'
     for file in $all_files; do
 	mv "${file}.html" album
+	if [ "${slideshow_time}" != "0" ]; then
+	    mv "${file}_r.html" album
+	fi
     done
 fi
 
