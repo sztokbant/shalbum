@@ -299,18 +299,27 @@ create_page_for_pic()
     echo "<!-- body -->" >> $html_file
     echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><center>" >> $html_file
 
-
     # reference to index
-    echo "<table border='0' width='$table_width'><tr><td width='10%'>" >> $html_file
+    echo "<table border='0' width='$table_width'><tr><td width='20%'>" >> $html_file
     if [ "$index_page" = "1" ]; then
 	echo "<p align='left'><a href='index.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
     else
 	echo "<p align='left'><a href='index${index_page}.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
     fi
+    echo "</td><td width='60%'><!-- empty --></td><td width='20%'></td></tr></table>" >> $html_file
+
+    # left top arrow
+    echo "<table border='0' width='$table_width'><tr>" >> $html_file
+    if [ "$before" != "[NONE]" ]; then
+	before_th="thumbnails/th_""${before}"
+	html_compliant_filename "${before}.html"
+	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'><font face='${font_face}'>&lt;&lt;</font></a></td>" >> $html_file
+    else
+	echo "<td align='left'></td>" >> $html_file
+    fi
 
     # slideshow
-    echo "</td><td align='center' width='80%'>" >> $html_file
-
+    echo "<td align='center' width='80%'>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	if [ "${refresh}" != "" ]; then
 	    html_compliant_filename "${pic}.html"
@@ -322,19 +331,9 @@ create_page_for_pic()
 	    fi
 	fi
     fi
+    echo "</td>" >> $html_file
 
-    echo "</td><td width='10%'></td></tr></table>" >> $html_file
-
-    # top arrows
-    echo "<table border='0' width='$table_width'><tr>" >> $html_file
-    if [ "$before" != "[NONE]" ]; then
-	before_th="thumbnails/th_""${before}"
-	html_compliant_filename "${before}.html"
-	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'><font face='${font_face}'>&lt;&lt;</font></a></td>" >> $html_file
-    else
-	echo "<td align='left'></td>" >> $html_file
-    fi
-    echo "<td align='center' width='80%'><!-- empty --></td>" >> $html_file
+    # right top arrow
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
 	html_compliant_filename "${after}.html"
