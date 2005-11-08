@@ -41,7 +41,7 @@
 #
 ##############################################################
 
-software_revision="by shalbum 0.12 - http://sourceforge.net/projects/shalbum - last revision 2005 November 4"
+software_revision="by shalbum 0.13 - http://sourceforge.net/projects/shalbum - last revision 2005 November 8"
 
 #######
 # Input
@@ -89,13 +89,15 @@ fi;
 
 if [ $mhd != "yes" ]; then
     # Default options
-    vga_res=800                     # max width/heigth of final image
-    th_res=250                      # max width/height of thumbnail
+    vga_res=640                     # max width/heigth of final image
+    th_res=200                      # max width/height of thumbnail
     table_width=800                 # number of HTML table columns
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
-    print_number=no                 # boolean to print number found in filename
-    print_filename=no               # boolean to print filename under thumbnail
+    pic_label_type="conf"           # number, filename, conf, none
+        # _config syntax for pic label
+        #     FILENAME1.JPG=some description for this pic
+        #     FILENAME2.JPG=other description for other pic
     author="Eduardo Sztokbant"      # site author's name
     e_mail='du@du.eti.br'           # site author's e-mail
     author2=""                      # site #2 author (blank for none)
@@ -139,8 +141,10 @@ else
     table_width=520                 # number of HTML table columns
     n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
-    print_number=yes                # boolean to print number found in filename
-    print_filename=no               # boolean to print filename under thumbnail
+    pic_label_type="number"         # number, filename, conf, none
+        # _config syntax for pic label
+        #     FILENAME1.JPG=some description for this pic
+        #     FILENAME2.JPG=other description for other pic
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
                                     # site author's e-mail
@@ -613,24 +617,27 @@ for file in $all_files; do
 	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a><br />' >> $idx_filename
     fi
     
-    # try to guess pic number following IMG_####.JPG or DSC#####.JPG (Sony) pattern
-    if [ "$print_number" = "yes" ]; then
-	if [ "`echo $file | grep _`" = "$file" ]; then
+    if [ "$pic_label_type" != "none" ]; then
+        if [ "$pic_label_type" = "number" ]; then
+            # try to guess pic number
+            # following IMG_####.JPG or DSC#####.JPG (Sony) pattern
+	    if [ "`echo $file | grep _`" = "$file" ]; then
 		num_sep="_"
-	elif [ "`echo $file | grep c`" = "$file" ]; then
+	    elif [ "`echo $file | grep c`" = "$file" ]; then
 		num_sep="c"
-	else
+	    else
 		num_sep="C"
-	fi
-	number=`echo $file | cut -d "." -f 1 | cut -d "$num_sep" -f 2`
-	echo "<font face='${font_face}' size='2'><b>$number</b></font>" >> $idx_filename
-	pic_subtitle=$number
-    elif [ "$print_filename" = "yes" ]; then
-    	echo "<font face='${font_face}' size='2'><b>$file</b></font>" >> $idx_filename
-	pic_subtitle=$file
-    else
-	pic_subtitle=""
-    fi;
+	    fi
+	    number=`echo $file | cut -d "." -f 1 | cut -d "$num_sep" -f 2`
+	    pic_subtitle=$number
+	elif [ "$pic_label_type" = "filename" ]; then
+	    pic_subtitle=$file
+	elif [ "$pic_label_type" = "conf" ]; then
+	    pic_subtitle="`grep $file _config | cut -d '=' -f 2`"
+	fi;
+
+	echo "<font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
+    fi
 
     # multi-pages
     if [ $multi_html = "yes" ]; then
