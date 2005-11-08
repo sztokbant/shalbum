@@ -89,8 +89,8 @@ fi;
 
 if [ $mhd != "yes" ]; then
     # Default options
-    vga_res=640                     # max width/heigth of final image
-    th_res=200                      # max width/height of thumbnail
+    vga_res=800                     # max width/heigth of final image
+    th_res=250                      # max width/height of thumbnail
     table_width=800                 # number of HTML table columns
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
@@ -124,7 +124,8 @@ if [ $mhd != "yes" ]; then
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
-    slideshow_time="3"              # seconds per pic in slideshow mode zero=off
+    slideshow_time="5"              # seconds per pic in slideshow mode zero=off
+
     # HTML layout
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -174,7 +175,8 @@ else
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
-    slideshow_time="3"              # seconds per pic in slideshow mode zero=off
+    slideshow_time="5"              # seconds per pic in slideshow mode zero=off
+
     # HTML layout
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -607,14 +609,14 @@ for file in $all_files; do
 
     if [ $multi_html = "yes" ]; then
 	html_compliant_filename "${file}.html"
-	echo '<table><tr><td><a href="'${html_compliant_filename}'">' >> $idx_filename
+	echo "<table><tr><td width='${th_res}'><a href='${html_compliant_filename}'>" >> $idx_filename
 	html_compliant_filename "${th_file}"
-	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'" /></a><br />' >> $idx_filename
+	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     else
 	html_compliant_filename "${vga_file}"
-	echo '<table><tr><td><a href="'${html_compliant_filename}'" target="'${file}'"><img border="0" ' >> $idx_filename
+	echo "<table><tr><td width='${th_res}'><a href='${html_compliant_filename}' target='${file}'><img border='0' " >> $idx_filename
 	html_compliant_filename "${th_file}"
-	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a><br />' >> $idx_filename
+	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     fi
     
     if [ "$pic_label_type" != "none" ]; then
@@ -636,8 +638,10 @@ for file in $all_files; do
 	    pic_subtitle="`grep $file _config | cut -d '=' -f 2`"
 	fi;
 
-	echo "<font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
+	echo "</td></tr><tr><td width='${th_res}'><font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
     fi
+
+    echo '</td></tr></table></td>' >> $idx_filename
 
     # multi-pages
     if [ $multi_html = "yes" ]; then
@@ -664,8 +668,6 @@ for file in $all_files; do
 	    create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page" "$slideshow_time"
 	fi
     fi
-
-    echo '</td></tr></table></td>' >> $idx_filename
 
     col_counter=$(($col_counter + 1))
 
