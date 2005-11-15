@@ -1,0 +1,152 @@
+# _options: shalbum conf file
+#
+# - Copy this file to your album's directory and modify it as you wish.
+# - Missing options in this file will assume default values.
+# - It's safer to write options between quotes.
+
+# title (default: Album)
+# your album's title
+title="Album"
+
+# date (default: "")
+# your album's date or subtitle
+date=""
+
+# mhd (default: "no")
+# use secondary set of default options
+mhd="no"
+
+# vga_res (default: 800)
+# max width/heigth of final image
+vga_res=800
+
+# th_res (default: 250)
+# max width/height of thumbnail
+th_res=250
+
+# table_width (default: 800)
+# width of HTML tables
+table_width=800
+
+# n_rows (default: 10)
+# number of table rows per thumbnails index page
+n_rows=10
+
+# n_columns (default: 3)
+# number of table columns
+n_columns=3
+
+# pic_label_type (default: "conf")
+# from where to get picture subtitles
+#   "none":      no subtitles at all
+#   "number":    try to guess a number from file name
+#   "filename":  simply write down file name
+#   "conf":      grab from _subtitles file
+#       _subtitles file syntax for pic label
+#         FILENAME1.JPG=some description for this pic
+#         FILENAME2.JPG=other description for other pic
+pic_label_type="conf"
+
+# author (default: "Eduardo Sztokbant" ;)
+# site author's name
+author="Eduardo Sztokbant"
+
+# e_mail (default: "du@du.eti.br")
+# site author's e-mail
+e_mail='du@du.eti.br'
+
+# author2 (default: "")
+# site #2 author (blank for none)
+author2=""
+
+# e_mail2 (default: "")
+# site #2 author's e-mail
+e_mail2=""
+
+# watermark (default: "no")
+# boolean to stamp watermarks
+watermark="no"
+
+# watermark_th_src (default: "$HOME/.shalbum/watermark_th.png")
+# source for thumbnail watermark
+watermark_th_src="$HOME/.shalbum/watermark_th.png"
+
+# watermark_vga_src (default: "$HOME/.shalbum/watermark_vga.png")
+# source for final image watermark
+watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
+
+# watermark_dissolve (default: 60)
+# final image watermark dissolve percent
+watermark_dissolve=60
+
+# thframe (default: "yes")
+# enable thumbnail frame
+thframe="yes"
+
+# thframesize (default: 2)
+# size of thumbnail frame
+thframesize=2
+
+# vgaframe (default: yes)
+# enable final image frame
+vgaframe="yes"
+
+# vgaframesize (default: 3)
+# size of final image frame
+vgaframesize=3
+
+# th_quality (default: 75)
+# thumbnail percentage quality
+th_quality=75
+
+# vga_quality (default: 75)
+# final image percentage quality
+vga_quality=75
+
+# back_link (default: "")
+# link to go back, useful if you have a master index for your albuns
+back_link=""
+
+# backlink_label (default: "")
+# back link label for album list site
+backlink_label=""
+
+# backlink_label_thumbs (default: "&lt;&lt;&lt; thumbnails")
+# back link label for thumbnails page
+backlink_label_thumbs="&lt;&lt;&lt; thumbnails"
+
+# credits_str (default: "")
+# credit information
+credits_str=""
+
+# support_shalbum (default: "yes")
+# print link to shalbum site
+support_shalbum="yes"
+
+# w3c_ok_banner (default: "yes")
+# print "W3C HTML 4.01 compliant" banner
+w3c_ok_banner="yes"
+
+# multi_html (default: "yes")
+# use one html page per picture? (otherwise simply links to image file)
+multi_html="yes"
+
+# th_on_multi (default: "yes")
+# show thumbnail for next/last pics when in multi-page?
+th_on_multi="yes"
+
+# slideshow_time (default: "5")
+# seconds per pic in slideshow mode zero=off
+slideshow_time="5"
+
+# HTML layout
+color_text="#ffffff"           # default: "#ffffff"
+color_bgcolor="#000000"        # default: "#000000"
+color_link="#ffffff"           # default: "#ffffff"
+color_vlink="#888888"          # default: "#888888"
+color_alink="#ff0000"          # default: "#ff0000"
+font_face="Arial, Helvetica"   # default: "Arial, Helvetica"
+
+# LS_COMMAND (default: "ls -t -r")
+# ls command parameters for 'for' loops, the default is probably ok
+LS_COMMAND="ls -t -r"

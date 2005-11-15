@@ -25,23 +25,46 @@
 # this file.
 # Requires ImageMagick.
 #
-# Usage (from pics dir):
-#  $ shalbum "Album Title" "Sub-title/Date" mhd
+# Usage (from your pictures directory), using default options:
+#  $ shalbum "Album Title" "Subtitle/Date"
+#
+# For secodary default set of options (mhd) run:
+#  $ shalbum "Album Title" "Subtitle/Date" mhd
+#
 # or:
 #  $ echo "Album Title" > _title
 #  $ echo "Date" > _date
-#  $ touch _mhd
 #  $ shalbum
 #
-# To regenerate only the index files:
-#  $ shalbum index
+# for secondary default set of options run
+#  $ touch _mhd
+# before running shalbum.
 #
-# 'mhd' is optional. Use it to opt for "Mostly Harmless Decisions" (aka
-# "secondary set of options" ;)
+# You can alternatively bypass default options creating your own
+# _options file and puting it in your pictures directory. You can base
+# upon a commented _options file commonly distributed with shalbum.
+#
+#  $ cp _options /my/pictures/directory
+#  <make some changes to it>
+#  $ cd /my/pictures/directory
+#  $ shalbum
+#
+# You have also the option of including your own customized comments
+# under each picture using a _subtitles file in your pictures
+# directory. The syntax of this file must be as follows:
+#
+#     FILENAME1.JPG=some description for this pic
+#     FILENAME2.JPG=other description for other pic
+#
+# Note you "pic_label_type" must be set to "conf" for shalbum to
+# consider your _subtitles file.
+#
+# To update only the HTML files:
+#  $ shalbum index
 #
 ##############################################################
 
-software_revision="by shalbum 0.13 - http://sourceforge.net/projects/shalbum - last revision 2005 November 8"
+software_revision="by shalbum 0.13 - http://sourceforge.net/projects/shalbum - last revision 2005 November 14"
 
 #######
 # Input
@@ -91,13 +114,10 @@ if [ $mhd != "yes" ]; then
     # Default options
     vga_res=800                     # max width/heigth of final image
     th_res=250                      # max width/height of thumbnail
-    table_width=800                 # number of HTML table columns
+    table_width=800                 # width of HTML tables
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
     pic_label_type="conf"           # number, filename, conf, none
-        # _config syntax for pic label
-        #     FILENAME1.JPG=some description for this pic
-        #     FILENAME2.JPG=other description for other pic
     author="Eduardo Sztokbant"      # site author's name
     e_mail='du@du.eti.br'           # site author's e-mail
     author2=""                      # site #2 author (blank for none)
@@ -139,13 +159,10 @@ else
     # Mostly Harmless Decisions (secondary options, activated with flag 'mhd')
     vga_res=500                     # max width/heigth of final image
     th_res=140                      # max width/height of thumbnail
-    table_width=520                 # number of HTML table columns
+    table_width=520                 # width of HTML tables
     n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
     pic_label_type="number"         # number, filename, conf, none
-        # _config syntax for pic label
-        #     FILENAME1.JPG=some description for this pic
-        #     FILENAME2.JPG=other description for other pic
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
                                     # site author's e-mail
@@ -187,6 +204,11 @@ else
 
     LS_COMMAND="ls"                 # ls command parameters
 fi;
+
+# read user-defined options
+if [ -e _options ]; then
+    source _options
+fi
 
 ###############
 # Aux functions
@@ -306,26 +328,25 @@ create_page_for_pic()
     echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><center>" >> $html_file
 
     # reference to index
-    echo "<table border='0' width='$table_width'><tr><td width='20%'>" >> $html_file
+    echo "<table border='0' width='$table_width'><tr><td width='33%'>" >> $html_file
     if [ "$index_page" = "1" ]; then
-	echo "<p align='left'><a href='index.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
+	echo "<a href='index.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a>" >> $html_file
     else
-	echo "<p align='left'><a href='index${index_page}.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a></p>" >> $html_file
+	echo "<a href='index${index_page}.html'><b><font face='${font_face}' size='2'>${backlink_label_thumbs}</font></b></a>" >> $html_file
     fi
-    echo "</td><td width='60%'><!-- empty --></td><td width='20%'></td></tr></table>" >> $html_file
 
     # left top arrow
-    echo "<table border='0' width='$table_width'><tr>" >> $html_file
+    echo "</td><td width='34%'>&nbsp;</td><td width='33%'>&nbsp;</td></tr><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
 	html_compliant_filename "${before}.html"
-	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'><font face='${font_face}'>&lt;&lt;</font></a></td>" >> $html_file
+	echo "<td align='left' width='33%'><a href='${html_compliant_filename}'><font face='${font_face}'>&lt;&lt;</font></a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
     fi
 
     # slideshow
-    echo "<td align='center' width='80%'>" >> $html_file
+    echo "<td align='center' width='34%'>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	if [ "${refresh}" != "" ]; then
 	    html_compliant_filename "${pic}.html"
@@ -635,7 +656,9 @@ for file in $all_files; do
 	elif [ "$pic_label_type" = "filename" ]; then
 	    pic_subtitle=$file
 	elif [ "$pic_label_type" = "conf" ]; then
-	    pic_subtitle="`grep $file _config | cut -d '=' -f 2`"
+	    if [ -e _subtitles ]; then
+		pic_subtitle="`grep \"${file}=\" _subtitles | cut -d '=' -f 2`"
+	    fi
 	fi;
 
 	echo "</td></tr><tr><td width='${th_res}'><font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
