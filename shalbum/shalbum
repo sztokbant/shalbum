@@ -159,7 +159,7 @@ fi;
 
 # read user-defined options
 if [ -e _options ]; then
-    source _options
+    . _options
 fi
 
 ###############
@@ -442,16 +442,21 @@ fi
 if [ "$images" = "" ]; then
     echo "No pictures in `pwd`"
     exit
-else
-    echo "Creating album"
-    echo "  title:    \"$title\""
-    echo "  subtitle: \"$date\""
-    echo "  mhd:      $mhd"
-    echo "Image types found in current dir: [$image_types ]"
-fi;
+fi
 
 total_files="`ls $images | wc -l`"
-echo "# of images found in current dir: $(($total_files))"
+
+echo "Creating album"
+echo "  title:    \"$title\""
+echo "  subtitle: \"$date\""
+if [ -e _options ]; then
+    echo "  _options: found, reading custom options"
+else
+    echo "  _options: not found, using default options"
+fi
+echo "  mhd:      $mhd"
+echo "  images:   $(($total_files))"
+echo "  type(s): $image_types"
 
 # handle file names with white spaces and order by modify time
 all_files="`$LS_COMMAND $images`"
