@@ -1,10 +1,25 @@
-shalbum - http://sourceforge.net/projects/shalbum
+              shalbum - http://sourceforge.net/projects/shalbum
+              =================================================
+                     document updated: 04-December-2005
 
-Bourne shell script to create an HTML album from the image files in
-current directory.
-Customization can be achieved by editing the "Options" session in
-this file.
-Requires ImageMagick.
+1.) About shalbum
+2.) Using shalbum
+3.) Note for non-Unix users (e.g. Windows)
+
+
+1.) About shalbum
+
+- Pure bourne shell script to create HTML photo galleries.
+
+- Default options can be overridden with an _options file in the image
+  directory.
+
+- Requires ImageMagick.
+
+----------------------------------------------------------------------
+
+2.) Using shalbum
+
 
 Usage (from your pictures directory), using default options:
  $ shalbum "Album Title" "Subtitle/Date"
@@ -43,3 +58,20 @@ consider your _subtitles file.
 To update only the HTML files:
  $ shalbum index
 
+----------------------------------------------------------------------
+
+3.) Note for non-Unix users (e.g. Windows)
+
+It is known that shalbum runs very well on any Unix platform
+containing ImageMagick and a bourne shell interpreter. I myself
+already run it on Linux, FreeBSD and MacOS X. I also know about people
+running shalbum on Microsoft Windows systems over CygWin, a Linux-like
+environment for Windows.
+
+Instructions on installing CygWin can be found at CygWin official
+website - http://www.cygwin.com. Don't forget to Install a bourne
+shell compatible interpreter and ImageMagick. I believe just selecting
+'ImageMagick' and 'bash' packages during CygWin installation is
+enough.
+
+Once CygWin is installed shalbum shall run like on any other Unix.
