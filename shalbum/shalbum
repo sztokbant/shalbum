@@ -16,7 +16,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-software_revision="by shalbum 1.0RC1 - http://sourceforge.net/projects/shalbum - last revision 2005 November 16"
+software_revision="by shalbum 1.0RC4 - http://sourceforge.net/projects/shalbum - last revision 2005 December 12"
 
 #######
 # Input
@@ -72,8 +72,6 @@ if [ $mhd != "yes" ]; then
     pic_label_type="conf"           # number, filename, conf, none
     author="Eduardo Sztokbant"      # site author's name
     e_mail='du@du.eti.br'           # site author's e-mail
-    author2=""                      # site #2 author (blank for none)
-    e_mail2=""                      # site #2 author's e-mail
     watermark="no"                  # boolean to stamp watermarks
     watermark_th_src="$HOME/.shalbum/watermark_th.png"
                                     # source for thumbnail watermark
@@ -117,9 +115,8 @@ else
     pic_label_type="number"         # number, filename, conf, none
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
+    third_title="Meia Hora Depois"  # string to be added to album's title
                                     # site author's e-mail
-    author2=""                      # site #2 author (blank for none)
-    e_mail2=""                      # site #2 author's e-mail
     watermark="yes"                 # boolean to stamp watermarks
     watermark_th_src="$HOME/.shalbum/watermark_th.png"
                                     # source for thumbnail watermark
@@ -157,14 +154,36 @@ else
     LS_COMMAND="ls"                 # ls command parameters
 fi;
 
+quiet="no"                          # supress output
+
 # read user-defined options
 if [ -e _options ]; then
     . _options
 fi
 
+
 ###############
 # Aux functions
 ###############
+
+print_info()
+{
+    if [ "$quiet" != "yes" ]; then
+	echo $*
+    fi
+}
+
+printf_info()
+{
+    if [ "$quiet" != "yes" ]; then
+	printf $*
+    fi
+}
+
+print_err()
+{
+    echo $*
+}
 
 create_pages_index()
 {
@@ -201,7 +220,6 @@ create_pages_index()
 add_credits_footer()
 {
     if  [ "$author" != "" ] ||
-	[ "$author2" != "" ] ||
 	[ "$support_shalbum" = "yes" ] ||
 	[ "$w3c_ok_banner" = "yes" ]; then
 	
@@ -226,13 +244,6 @@ add_credits_footer()
 	    echo "<p><font size='1' face='${font_face}'><b>$credits_str $author</b></font><br />" >> $1
 	    echo "<a href='mailto:$e_mail'><font size='1' face='${font_face}'><b>$e_mail</b></font></a></p>" >> $1
 	fi
-	
-        # Author2
-	if [ "$author2" != "" ]; then
-	    echo "<p><font size='1' face='${font_face}'><b>$author2</b></font><br />" >> $1
-	    echo "<a href='mailto:$e_mail2'><font size='1' face='${font_face}'><b>$e_mail2</b></font></a></p>" >> $1
-	fi
-	echo "</td>" >> $1
 	
 	echo '</tr></table>' >> $1
 	echo "<!-- credits end -->" >> $1
@@ -440,23 +451,23 @@ if [ "`ls *.[Tt][Ii][Ff][Ff] 2>/dev/null`" != "" ]; then
 fi
 
 if [ "$images" = "" ]; then
-    echo "No pictures in `pwd`"
+    print_err "No pictures in `pwd`"
     exit
 fi
 
 total_files="`ls $images | wc -l`"
 
-echo "Creating album"
-echo "  title:    \"$title\""
-echo "  subtitle: \"$date\""
+print_info "Creating album"
+print_info "  title:    \"$title\""
+print_info "  subtitle: \"$date\""
 if [ -e _options ]; then
-    echo "  _options: found, reading custom options"
+    print_info "  _options: found, reading custom options"
 else
-    echo "  _options: not found, using default options"
+    print_info "  _options: not found, using default options"
 fi
-echo "  mhd:      $mhd"
-echo "  images:   $(($total_files))"
-echo "  type(s): $image_types"
+print_info "  mhd:      $mhd"
+print_info "  images:   $(($total_files))"
+print_info "  type(s): $image_types"
 
 # handle file names with white spaces and order by modify time
 all_files="`$LS_COMMAND $images`"
@@ -485,35 +496,35 @@ if [ "$only_index" != "yes" ]; then
 
     # generate watermarks
     if [ $watermark = "yes" ]; then
-	echo -n "Creating watermarks: "
+	print_info -n "Creating watermarks: "
 	# temporary resized watermarks
 	watermark_th="./tmp/watermark_${th_res}.png"
 	watermark_vga="./tmp/watermark_${vga_res}.png"
 	
-	echo -n "[tn""${th_res}]"
+	print_info -n "[tn""${th_res}]"
 	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
 	
-	echo -n "[pic""${vga_res}]"
+	print_info -n "[pic""${vga_res}]"
 	convert -sharpen 3 -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
 	
-	echo " ok!"
+	print_info " ok!"
     fi; # $watermark = yes
     
-    echo "Creating pictures: "
+    print_info "Creating pictures: "
     processed=0
     for file in $all_files; do
 	processed=$(($processed+1))
 	processed100=$(($processed*100))
 	percent=$(($processed100/$total_files))
 	
-	printf "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
-	echo -n "[tn""${th_res}]"
+	printf_info "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
+	print_info -n "[tn""${th_res}]"
 	th_file="th_""$file"
 
 	convert "$file" -resize ${th_res}x${th_res} thumbnails/"$th_file"
 
 	if [ $watermark = "yes" ]; then
-	    echo -n "[wmark]"
+	    print_info -n "[wmark]"
 	    composite -gravity SouthEast $watermark_th thumbnails/"$th_file" thumbnails/"$th_file"
 	fi;
 
@@ -523,13 +534,13 @@ if [ "$only_index" != "yes" ]; then
 	    convert thumbnails/"$th_file" -strip -quality ${th_quality} thumbnails/"$th_file"
 	fi;
 
-	echo -n "[pic""${vga_res}]"
+	print_info -n "[pic""${vga_res}]"
 	vga_file="vga_""$file"
 	
 	convert "$file" -resize ${vga_res}x${vga_res} vga/"$vga_file"
 	
 	if [ $watermark = "yes" ]; then
-	    echo -n "[wmark]"
+	    print_info -n "[wmark]"
 	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga vga/"$vga_file" vga/"$vga_file"
 	fi;
 
@@ -539,7 +550,7 @@ if [ "$only_index" != "yes" ]; then
 	    convert vga/"$vga_file" -strip -quality ${vga_quality} vga/"$vga_file"
 	fi;
 	
-	echo " ok!"
+	print_info " ok!"
     done;
     
     if [ $watermark = "yes" ]; then
@@ -551,7 +562,7 @@ fi; # !only_index
 # Part II: the index files
 ##########################
 
-echo -n "Generating indexes..."
+print_info -n "Generating indexes..."
 
 idx_basename='index'
 idx_counter=1
@@ -707,7 +718,7 @@ echo '<style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </sty
 # echo title
 echo -n "<title>" >> $idx_header
 if [ $mhd = "yes" ]; then
-    echo -n "Meia Hora Depois - " >> $idx_header
+    echo -n "${third_title} - " >> $idx_header
 fi;
 echo -n "$title" >> $idx_header
 if [ "$date" != "" ]; then
@@ -727,7 +738,7 @@ echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink
 echo "<!-- body title -->" >> $idx_header
 echo '<table width="'$table_width'"><tr><td>' >> $idx_header
 if [ $mhd = "yes" ]; then
-    echo "<font face='${font_face}' size='3'><b>Meia Hora Depois</b></font><br />" >> $idx_header
+    echo "<font face='${font_face}' size='3'><b>${third_title}</b></font><br />" >> $idx_header
 fi;
 echo "<font face='${font_face}' size='5'><b>$title</b></font>" >> $idx_header
 if [ "$date" != "" ]; then
@@ -808,13 +819,13 @@ if [ $neighbors -eq 0 ]; then
 fi;
 ################################### /CREATION #################################
 
-echo " ok!"
+print_info " ok!"
 
 ##################
 # Part III: export
 ##################
 
-echo -n "Exporting: "
+print_info -n "Exporting: "
 
 if [ "$only_index" != yes ]; then
 
@@ -823,9 +834,9 @@ if [ "$only_index" != yes ]; then
     fi;
     mkdir album
 
-    echo -n "[tnails]"
+    print_info -n "[tnails]"
     mv thumbnails album
-    echo -n "[pics]"
+    print_info -n "[pics]"
     mv vga album
 
     # cleanup
@@ -835,13 +846,13 @@ if [ "$only_index" != yes ]; then
 
 fi; # !only_index
 
-echo -n "[idx]"
+print_info -n "[idx]"
 mkdir -p album
 rm "album/""$idx_basename"*.html 2>/dev/null
 mv "$idx_basename"*.html album
 
 if [ $multi_html = "yes" ]; then
-    echo -n '[multi-idx]'
+    print_info -n '[multi-idx]'
     for file in $all_files; do
 	mv "${file}.html" album
 	if [ "${slideshow_time}" != "0" ]; then
@@ -850,6 +861,6 @@ if [ $multi_html = "yes" ]; then
     done
 fi
 
-echo " ok!"
+print_info " ok!"
 
 exit

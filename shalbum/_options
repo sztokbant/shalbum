@@ -55,14 +55,6 @@ author="Eduardo Sztokbant"
 # site author's e-mail
 e_mail='du@du.eti.br'
 
-# author2 (default: "")
-# site #2 author (blank for none)
-author2=""
-
-# e_mail2 (default: "")
-# site #2 author's e-mail
-e_mail2=""
-
 # watermark (default: "no")
 # boolean to stamp watermarks
 watermark="no"
@@ -150,3 +142,5 @@ font_face="Arial, Helvetica"   # default: "Arial, Helvetica"
 # LS_COMMAND (default: "ls -t -r")
 # ls command parameters for 'for' loops, the default is probably ok
 LS_COMMAND="ls -t -r"
+
+quiet="no"                     # supress output
