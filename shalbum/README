@@ -1,6 +1,6 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
-                     document updated: 04-December-2005
+                     document updated: 12-December-2005
 
 1.) About shalbum
 2.) Using shalbum
@@ -11,10 +11,10 @@
 
 - Pure bourne shell script to create HTML photo galleries.
 
-- Default options can be overridden with an _options file in the image
+- Default options can be overridden with an _options file in the images
   directory.
 
-- Requires ImageMagick.
+- Requires ImageMagick - http://www.imagemagick.com.
 
 ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@
 Usage (from your pictures directory), using default options:
  $ shalbum "Album Title" "Subtitle/Date"
 
-For secodary default set of options (mhd) run:
+For secodary default set of options - Mostly Harmless Decisions (mhd) run:
  $ shalbum "Album Title" "Subtitle/Date" mhd
 
 or:
@@ -32,7 +32,7 @@ or:
  $ echo "Date" > _date
  $ shalbum
 
-for secondary default set of options run
+for secondary default set of options, Mostly Harmless Decisions (mhd) run:
  $ touch _mhd
 before running shalbum.
 
@@ -41,7 +41,7 @@ _options file and puting it in your pictures directory. You can base
 upon a commented _options file commonly distributed with shalbum.
 
  $ cp _options /my/pictures/directory
- <make some changes to it>
+ <make some changes to it with your preferred editor>
  $ cd /my/pictures/directory
  $ shalbum
 
@@ -65,7 +65,7 @@ To update only the HTML files:
 It is known that shalbum runs very well on any Unix platform
 containing ImageMagick and a bourne shell interpreter. I myself
 already run it on Linux, FreeBSD and MacOS X. I also know about people
-running shalbum on Microsoft Windows systems over CygWin, a Linux-like
+running shalbum on Microsoft Windows systems with CygWin, a Linux-like
 environment for Windows.
 
 Instructions on installing CygWin can be found at CygWin official
