@@ -42,9 +42,8 @@ else
 fi
 
 # process command-line options
-while getopts d:himqt: c
-  do
-  case $c in
+while getopts d:himqt: opt; do
+  case $opt in
       # title
       t)  cl_title="$OPTARG"
 	  ;;
@@ -79,7 +78,6 @@ while getopts d:himqt: c
 	  ;;
   esac
 done
-shift `expr $OPTIND - 1`
 
 # define default-options
 if [ $mhd != "yes" ]; then
