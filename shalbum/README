@@ -22,7 +22,8 @@
 
 usage: from your pictures directory run
     shalbum [-t title] [-d date] [-m] [-i] [-q]
-
+    shalbum -h
+-h        help screen
 -t title  specify gallery title
 -d date   specify gallery date/subtitle
 -m        selects mhd secondary set of default options

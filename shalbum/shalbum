@@ -69,7 +69,7 @@ while getopts d:himqt: c
       *)  echo "usage: from your pictures directory run"
 	  echo "    shalbum [-t title] [-d date] [-m] [-i] [-q]"
 	  echo "    shalbum -h"
-	  echo "-h        this help screen"
+	  echo "-h        help screen"
 	  echo "-t title  specify gallery title"
 	  echo "-d date   specify gallery date/subtitle"
 	  echo "-m        selects mhd secondary set of default options"
