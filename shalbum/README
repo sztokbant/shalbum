@@ -20,15 +20,9 @@
 
 2.) Using shalbum
 
+From your pictures directory:
 
-Usage (from your pictures directory), using default options:
- $ shalbum "Album Title" "Subtitle/Date"
-
-For secodary default set of options - Mostly Harmless Decisions (mhd) run:
- $ shalbum "Album Title" "Subtitle/Date" mhd
-
-or:
- $ echo "Album Title" > _title
+ $ echo "Gallery Title" > _title
  $ echo "Date" > _date
  $ shalbum
 
@@ -52,11 +46,11 @@ directory. The syntax of this file must be as follows:
     FILENAME1.JPG=some description for this pic
     FILENAME2.JPG=other description for other pic
 
-Note you "pic_label_type" must be set to "conf" for shalbum to
-consider your _subtitles file.
+Note that "pic_label_type" in your _options file must be set to "conf"
+for shalbum to consider your _subtitles file.
 
 To update only the HTML files:
- $ shalbum index
+ $ shalbum --index
 
 ----------------------------------------------------------------------
 

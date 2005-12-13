@@ -16,47 +16,69 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-software_revision="by shalbum 1.0RC4 - http://sourceforge.net/projects/shalbum - last revision 2005 December 12"
+software_revision="by shalbum 1.0RC4 - http://sourceforge.net/projects/shalbum - last revision 2005 December 13"
 
 #######
 # Input
 #######
 
-if [ $# -le 1 ]; then
-    if [ -e _title ]; then
-	title="`cat _title`"
-    else
-	title="Album"
-    fi;
+check_opt() {
+    opt_found="N"
+    for opt in $2; do
+        if [ "$1" = "$opt" ]; then
+            opt_found="Y"
+            break
+        fi
+    done
+}
 
-    if [ -e _date ]; then
-	date="`cat _date`"
-    else
-	date=""
-    fi;
+# help screen
+check_opt "--help" "$*"
+if [ "$opt_found" = "Y" ]; then
+    echo 'Using shalbum'
+    echo ''
+    echo 'From your pictures directory:'
+    echo ''
+    echo ' $ echo "Gallery Title" > _title'
+    echo ' $ echo "Date" > _date'
+    echo ' $ shalbum'
+    echo ''
+    echo 'for secondary default set of options, Mostly Harmless Decisions (mhd) run:'
+    echo ' $ touch _mhd'
+    echo 'before running shalbum.'
+    echo ''
+    echo 'You can alternatively bypass default options creating your own'
+    echo '_options file and puting it in your pictures directory. You can base'
+    echo 'upon a commented _options file commonly distributed with shalbum.'
+    echo ''
+    echo ' $ cp _options /my/pictures/directory'
+    echo ' <make some changes to it with your preferred editor>'
+    echo ' $ cd /my/pictures/directory'
+    echo ' $ shalbum'
+    echo ''
+    echo 'You have also the option of including your own customized comments'
+    echo 'under each picture using a _subtitles file in your pictures'
+    echo 'directory. The syntax of this file must be as follows:'
+    echo ''
+    echo '    FILENAME1.JPG=some description for this pic'
+    echo '    FILENAME2.JPG=other description for other pic'
+    echo ''
+    echo 'Note that "pic_label_type" in your _options file must be set to "conf"'
+    echo 'for shalbum to consider your _subtitles file.'
+    echo ''
+    echo 'To update only the HTML files:'
+    echo ' $ shalbum --index'
+    echo ''
+    exit
+fi
 
-    if [ -e _mhd ]; then
+# check mhd
+check_opt "--mhd" "$*"
+if [ "$opt_found" = "Y" ] || [ -e _mhd ]; then
 	mhd="yes"
-    else
-	mhd="no"
-    fi;
-
-    if [ "$1" = "index" ]; then
-	only_index="yes"
-    else
-	only_index="no"
-    fi;
-
 else
-    title="$1"
-    date="$2"
-
-    if [ "$3" = "mhd" ]; then
-	mhd="yes"
-    else
 	mhd="no"
-    fi;
-fi;
+fi
 
 #########
 # Options
@@ -161,6 +183,12 @@ if [ -e _options ]; then
     . _options
 fi
 
+check_opt "--index" "$*"
+if [ "$opt_found" = "Y" ]; then
+    only_index="yes"
+else
+    only_index="no"
+fi;
 
 ###############
 # Aux functions
