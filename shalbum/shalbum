@@ -74,7 +74,7 @@ while getopts d:himqt: opt; do
 	  echo "-m        selects mhd secondary set of default options"
 	  echo "-i        don't resize images, only build the HTML files"
 	  echo "-q        quiet mode, supress output"
-	  exit
+	  exit 1
 	  ;;
   esac
 done
@@ -496,7 +496,7 @@ fi
 
 if [ "$images" = "" ]; then
     print_err "No pictures in `pwd`"
-    exit
+    exit 2
 fi
 
 total_files="`ls $images | wc -l`"
@@ -907,4 +907,4 @@ fi
 
 print_info " ok!"
 
-exit
+exit 0
