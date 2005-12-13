@@ -55,6 +55,9 @@ author="Eduardo Sztokbant"
 # site author's e-mail
 e_mail='du@du.eti.br'
 
+# string to be added to album's title (default: "")
+third_title=""
+
 # watermark (default: "no")
 # boolean to stamp watermarks
 watermark="no"
@@ -143,4 +146,8 @@ font_face="Arial, Helvetica"   # default: "Arial, Helvetica"
 # ls command parameters for 'for' loops, the default is probably ok
 LS_COMMAND="ls -t -r"
 
-quiet="no"                     # supress output
+# supress output (default: no)
+quiet="no"
+
+# only create HTML files (default: no)
+only_index="no"

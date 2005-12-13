@@ -22,70 +22,68 @@ software_revision="by shalbum 1.0RC4 - http://sourceforge.net/projects/shalbum -
 # Input
 #######
 
-check_opt() {
-    opt_found="N"
-    for opt in $2; do
-        if [ "$1" = "$opt" ]; then
-            opt_found="Y"
-            break
-        fi
-    done
-}
-
-# help screen
-check_opt "--help" "$*"
-if [ "$opt_found" = "Y" ]; then
-    echo 'Using shalbum'
-    echo ''
-    echo 'From your pictures directory:'
-    echo ''
-    echo ' $ echo "Gallery Title" > _title'
-    echo ' $ echo "Date" > _date'
-    echo ' $ shalbum'
-    echo ''
-    echo 'for secondary default set of options, Mostly Harmless Decisions (mhd) run:'
-    echo ' $ touch _mhd'
-    echo 'before running shalbum.'
-    echo ''
-    echo 'You can alternatively bypass default options creating your own'
-    echo '_options file and puting it in your pictures directory. You can base'
-    echo 'upon a commented _options file commonly distributed with shalbum.'
-    echo ''
-    echo ' $ cp _options /my/pictures/directory'
-    echo ' <make some changes to it with your preferred editor>'
-    echo ' $ cd /my/pictures/directory'
-    echo ' $ shalbum'
-    echo ''
-    echo 'You have also the option of including your own customized comments'
-    echo 'under each picture using a _subtitles file in your pictures'
-    echo 'directory. The syntax of this file must be as follows:'
-    echo ''
-    echo '    FILENAME1.JPG=some description for this pic'
-    echo '    FILENAME2.JPG=other description for other pic'
-    echo ''
-    echo 'Note that "pic_label_type" in your _options file must be set to "conf"'
-    echo 'for shalbum to consider your _subtitles file.'
-    echo ''
-    echo 'To update only the HTML files:'
-    echo ' $ shalbum --index'
-    echo ''
-    exit
-fi
-
-# check mhd
-check_opt "--mhd" "$*"
-if [ "$opt_found" = "Y" ] || [ -e _mhd ]; then
-	mhd="yes"
+# read options specified in _title, _date and _mhd files (deprecated)
+if [ -e _title ]; then
+    title="`cat _title`"
 else
-	mhd="no"
+    title="Album"
 fi
 
-#########
-# Options
-#########
+if [ -e _date ]; then
+    date="`cat _date`"
+else
+    date=""
+fi
 
+if [ -e _mhd ]; then
+    mhd="yes"
+else
+    mhd="no"
+fi
+
+# process command-line options
+while getopts d:himqt: c
+  do
+  case $c in
+      # title
+      t)  cl_title="$OPTARG"
+	  ;;
+
+      # date/subtitle
+      d)  cl_date="$OPTARG"
+	  ;;
+
+      # mhd
+      m)  mhd="yes"
+	  ;;
+
+      # index
+      i)  cl_only_index="yes"
+	  ;;
+
+      # quiet
+      q)  cl_quiet="yes"
+	  ;;
+
+      # help screen
+      *)  echo "usage: from your pictures directory run"
+	  echo "    shalbum [-t title] [-d date] [-m] [-i] [-q]"
+	  echo "    shalbum -h"
+	  echo "-h        this help screen"
+	  echo "-t title  specify gallery title"
+	  echo "-d date   specify gallery date/subtitle"
+	  echo "-m        selects mhd secondary set of default options"
+	  echo "-i        don't resize images, only build the HTML files"
+	  echo "-q        quiet mode, supress output"
+	  exit
+	  ;;
+  esac
+done
+shift `expr $OPTIND - 1`
+
+# define default-options
 if [ $mhd != "yes" ]; then
-    # Default options
+    # first set of default options
     vga_res=800                     # max width/heigth of final image
     th_res=250                      # max width/height of thumbnail
     table_width=800                 # width of HTML tables
@@ -94,6 +92,7 @@ if [ $mhd != "yes" ]; then
     pic_label_type="conf"           # number, filename, conf, none
     author="Eduardo Sztokbant"      # site author's name
     e_mail='du@du.eti.br'           # site author's e-mail
+    third_title=""                  # string to be added to album's title
     watermark="no"                  # boolean to stamp watermarks
     watermark_th_src="$HOME/.shalbum/watermark_th.png"
                                     # source for thumbnail watermark
@@ -128,7 +127,8 @@ if [ $mhd != "yes" ]; then
 
     LS_COMMAND="ls -t -r"           # ls command parameters
 else
-    # Mostly Harmless Decisions (secondary options, activated with flag 'mhd')
+    # Mostly Harmless Decisions
+    # secondary set of default options, selected with "-m" in command-line
     vga_res=500                     # max width/heigth of final image
     th_res=140                      # max width/height of thumbnail
     table_width=520                 # width of HTML tables
@@ -137,8 +137,8 @@ else
     pic_label_type="number"         # number, filename, conf, none
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
-    third_title="Meia Hora Depois"  # string to be added to album's title
                                     # site author's e-mail
+    third_title="Meia Hora Depois"  # string to be added to album's title
     watermark="yes"                 # boolean to stamp watermarks
     watermark_th_src="$HOME/.shalbum/watermark_th.png"
                                     # source for thumbnail watermark
@@ -177,18 +177,29 @@ else
 fi;
 
 quiet="no"                          # supress output
+only_index="no"                     # only create HTML files
 
 # read user-defined options
 if [ -e _options ]; then
     . _options
 fi
 
-check_opt "--index" "$*"
-if [ "$opt_found" = "Y" ]; then
-    only_index="yes"
-else
-    only_index="no"
-fi;
+# options chosen from command-line if specified
+if [ "$cl_title" != "" ]; then
+    title="$cl_title"
+fi
+
+if [ "$cl_date" != "" ]; then
+    date="$cl_date"
+fi
+
+if [ "$cl_quiet" != "" ]; then
+    quiet="$cl_quiet"
+fi
+
+if [ "$cl_only_index" != "" ]; then
+    only_index="$cl_only_index"
+fi
 
 ###############
 # Aux functions
@@ -752,7 +763,7 @@ echo '<style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </sty
 
 # echo title
 echo -n "<title>" >> $idx_header
-if [ $mhd = "yes" ]; then
+if [ "$third_title" != "" ]; then
     echo -n "${third_title} - " >> $idx_header
 fi;
 echo -n "$title" >> $idx_header
@@ -772,7 +783,7 @@ echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink
 # body title
 echo "<!-- body title -->" >> $idx_header
 echo '<table width="'$table_width'"><tr><td>' >> $idx_header
-if [ $mhd = "yes" ]; then
+if [ "$third_title" != "" ]; then
     echo "<font face='${font_face}' size='3'><b>${third_title}</b></font><br />" >> $idx_header
 fi;
 echo "<font face='${font_face}' size='5'><b>$title</b></font>" >> $idx_header

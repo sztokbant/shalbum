@@ -1,6 +1,6 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
-                     document updated: 12-December-2005
+                     document updated: 13-December-2005
 
 1.) About shalbum
 2.) Using shalbum
@@ -20,15 +20,14 @@
 
 2.) Using shalbum
 
-From your pictures directory:
+usage: from your pictures directory run
+    shalbum [-t title] [-d date] [-m] [-i] [-q]
 
- $ echo "Gallery Title" > _title
- $ echo "Date" > _date
- $ shalbum
-
-for secondary default set of options, Mostly Harmless Decisions (mhd) run:
- $ touch _mhd
-before running shalbum.
+-t title  specify gallery title
+-d date   specify gallery date/subtitle
+-m        selects mhd secondary set of default options
+-i        don't resize images, only build the HTML files
+-q        quiet mode, supress output
 
 You can alternatively bypass default options creating your own
 _options file and puting it in your pictures directory. You can base
@@ -37,7 +36,7 @@ upon a commented _options file commonly distributed with shalbum.
  $ cp _options /my/pictures/directory
  <make some changes to it with your preferred editor>
  $ cd /my/pictures/directory
- $ shalbum
+ $ shalbum [options...]
 
 You have also the option of including your own customized comments
 under each picture using a _subtitles file in your pictures
@@ -48,9 +47,6 @@ directory. The syntax of this file must be as follows:
 
 Note that "pic_label_type" in your _options file must be set to "conf"
 for shalbum to consider your _subtitles file.
-
-To update only the HTML files:
- $ shalbum --index
 
 ----------------------------------------------------------------------
 
