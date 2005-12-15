@@ -16,7 +16,10 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-software_revision="by shalbum 1.0RC4 - http://sourceforge.net/projects/shalbum - last revision 2005 December 13"
+software_revision="shalbum 1.0RC5 - http://sourceforge.net/projects/shalbum - rev 2005 December 15"
+
+# TODO-LIST:
+#   - HTML files should be created insite ${tmp_dir}
 
 #######
 # Input
@@ -42,7 +45,7 @@ else
 fi
 
 # process command-line options
-while getopts d:himqt: opt; do
+while getopts d:himqt:v opt; do
   case $opt in
       # title
       t)  cl_title="$OPTARG"
@@ -64,11 +67,16 @@ while getopts d:himqt: opt; do
       q)  cl_quiet="yes"
 	  ;;
 
+      v)  echo ${software_revision}
+	  exit 1
+	  ;;
+
       # help screen
       *)  echo "usage: from your pictures directory run"
 	  echo "    shalbum [-t title] [-d date] [-m] [-i] [-q]"
 	  echo "    shalbum -h"
 	  echo "-h        help screen"
+	  echo "-v        show shalbum version and exit"
 	  echo "-t title  specify gallery title"
 	  echo "-d date   specify gallery date/subtitle"
 	  echo "-m        selects mhd secondary set of default options"
@@ -176,6 +184,7 @@ fi;
 
 quiet="no"                          # supress output
 only_index="no"                     # only create HTML files
+tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 
 # read user-defined options
 if [ -e _options ]; then
@@ -439,7 +448,7 @@ create_page_for_pic()
     add_credits_footer $html_file
 
     echo "</center></body></html>" >> $html_file
-    echo '<!-- '$software_revision' -->' >> $html_file
+    echo '<!-- created with '$software_revision' -->' >> $html_file
 }
 
 html_compliant_filename()
@@ -522,28 +531,22 @@ IFS='\
 # Part I: process image files
 #############################
 
-if [ "$only_index" != "yes" ]; then
-    if [ -e thumbnails ]; then
-	rm -rf thumbnails
-    fi;
-    mkdir thumbnails
-    
-    if [ -e vga ]; then
-	rm -rf vga
-    fi;
-    mkdir vga
-    
-    if [ -e tmp ]; then
-	rm -rf tmp
-    fi;
-    mkdir tmp
+# delete previous temporary files
+if [ -e ${tmp_dir} ]; then
+    rm -rf ${tmp_dir}
+fi
+mkdir ${tmp_dir}
 
+if [ "$only_index" != "yes" ]; then
+    mkdir ${tmp_dir}/thumbnails
+    mkdir ${tmp_dir}/vga
+    
     # generate watermarks
     if [ $watermark = "yes" ]; then
 	printn_info "Creating watermarks: "
 	# temporary resized watermarks
-	watermark_th="./tmp/watermark_${th_res}.png"
-	watermark_vga="./tmp/watermark_${vga_res}.png"
+	watermark_th="${tmp_dir}/watermark_${th_res}.png"
+	watermark_vga="${tmp_dir}/watermark_${vga_res}.png"
 	
 	printn_info "[tn""${th_res}]"
 	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
@@ -565,33 +568,33 @@ if [ "$only_index" != "yes" ]; then
 	printn_info "[tn""${th_res}]"
 	th_file="th_""$file"
 
-	convert "$file" -resize ${th_res}x${th_res} thumbnails/"$th_file"
+	convert "$file" -resize ${th_res}x${th_res} ${tmp_dir}/thumbnails/"$th_file"
 
 	if [ $watermark = "yes" ]; then
 	    printn_info "[wmark]"
-	    composite -gravity SouthEast $watermark_th thumbnails/"$th_file" thumbnails/"$th_file"
+	    composite -gravity SouthEast $watermark_th ${tmp_dir}/thumbnails/"$th_file" ${tmp_dir}/thumbnails/"$th_file"
 	fi;
 
 	if [ $thframe = "yes" ]; then
-	    montage thumbnails/"$th_file" -mode concatenate -frame $thframesize -strip -quality ${th_quality} thumbnails/"$th_file"
+	    montage ${tmp_dir}/thumbnails/"$th_file" -mode concatenate -frame $thframesize -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
 	else
-	    convert thumbnails/"$th_file" -strip -quality ${th_quality} thumbnails/"$th_file"
+	    convert ${tmp_dir}/thumbnails/"$th_file" -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
 	fi;
 
 	printn_info "[pic""${vga_res}]"
 	vga_file="vga_""$file"
 	
-	convert "$file" -resize ${vga_res}x${vga_res} vga/"$vga_file"
+	convert "$file" -resize ${vga_res}x${vga_res} ${tmp_dir}/vga/"$vga_file"
 	
 	if [ $watermark = "yes" ]; then
 	    printn_info "[wmark]"
-	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga vga/"$vga_file" vga/"$vga_file"
+	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga ${tmp_dir}/vga/"$vga_file" ${tmp_dir}/vga/"$vga_file"
 	fi;
 
 	if [ $vgaframe = "yes" ]; then
-	    montage vga/"$vga_file" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} vga/"$vga_file"
+	    montage ${tmp_dir}/vga/"$vga_file" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
 	else
-	    convert vga/"$vga_file" -strip -quality ${vga_quality} vga/"$vga_file"
+	    convert ${tmp_dir}/vga/"$vga_file" -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
 	fi;
 	
 	print_info " ok!"
@@ -806,7 +809,7 @@ create_pages_index $idx_footer
 add_credits_footer $idx_footer
 
 echo '</center></body></html>' >> $idx_footer
-echo '<!-- '$software_revision' -->' >> $idx_footer
+echo '<!-- created with '$software_revision' -->' >> $idx_footer
 ############################## /FOOTER ##############################
 
 ################################### CREATION #################################
@@ -873,19 +876,24 @@ printn_info "Exporting: "
 
 if [ "$only_index" != yes ]; then
 
+    # remove previous backup and backup existing album
+    if [ -e album.bak ]; then
+	rm -rf album.bak
+    fi
+
     if [ -e album ]; then
-	rm -rf album
+	mv album album.bak
     fi;
     mkdir album
 
     printn_info "[tnails]"
-    mv thumbnails album
+    mv ${tmp_dir}/thumbnails album
     printn_info "[pics]"
-    mv vga album
+    mv ${tmp_dir}/vga album
 
     # cleanup
-    if [ -e tmp ]; then
-	rm -rf tmp
+    if [ -e ${tmp_dir} ]; then
+	rm -rf ${tmp_dir}
     fi;
 
 fi; # !only_index
