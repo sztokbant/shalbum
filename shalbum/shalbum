@@ -121,6 +121,7 @@ if [ $mhd != "yes" ]; then
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
+    long_description="yes"          # attach long description to pic page?
     slideshow_time="5"              # seconds per pic in slideshow mode zero=off
     order_by="time"                 # how to order the images
 
@@ -168,6 +169,7 @@ else
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
+    long_description="yes"          # attach long description to pic page?
     slideshow_time="5"              # seconds per pic in slideshow mode zero=off
     order_by="name"                 # how to order the images
 
@@ -410,6 +412,16 @@ create_page_for_pic()
 	echo "<td align='right'></td>" >> $html_file
     fi
     echo "</tr></table>" >> $html_file
+
+    # long description if appropriate
+    if [ "$long_description" = "yes" ]; then
+        long_description_file="$1""-description.html"
+	if [ -e $long_description_file ]; then
+	    echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
+	    cat $long_description_file >> $html_file
+	    echo "</td></tr></table>" >> $html_file
+	fi
+    fi
 
     # thumbnails with links
     if [ "$th_on_multi" = yes ]; then

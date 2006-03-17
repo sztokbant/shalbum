@@ -130,6 +130,11 @@ multi_html="yes"
 # show thumbnail for next/last pics when in multi-page?
 th_on_multi="yes"
 
+# attach long description to pic page? (default: "yes")
+# if shalbum finds a file called <pic-file-name>-description.html it
+# attaches it to the picture page
+long_description="yes"
+
 # slideshow_time (default: "5")
 # seconds per pic in slideshow mode zero=off
 slideshow_time="5"
