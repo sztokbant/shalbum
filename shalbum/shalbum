@@ -896,12 +896,12 @@ if [ "$only_index" != yes ]; then
     printn_info "[pics]"
     mv ${tmp_dir}/vga album
 
-    # cleanup
-    if [ -e ${tmp_dir} ]; then
-	rm -rf ${tmp_dir}
-    fi;
-
 fi; # !only_index
+
+# cleanup
+if [ -e ${tmp_dir} ]; then
+    rm -rf ${tmp_dir}
+fi;
 
 printn_info "[idx]"
 mkdir -p album
