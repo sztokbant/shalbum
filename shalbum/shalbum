@@ -16,7 +16,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-software_revision="shalbum 1.0RC5 - http://sourceforge.net/projects/shalbum - rev 2005 December 15"
+software_revision="shalbum 1.0RC6 - http://sourceforge.net/projects/shalbum - rev 2006 March 17"
 
 # TODO-LIST:
 #   - HTML files should be created insite ${tmp_dir}
@@ -122,6 +122,7 @@ if [ $mhd != "yes" ]; then
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
     slideshow_time="5"              # seconds per pic in slideshow mode zero=off
+    order_by="time"                 # how to order the images
 
     # HTML layout
     color_text="#ffffff"
@@ -130,8 +131,6 @@ if [ $mhd != "yes" ]; then
     color_vlink="#888888"
     color_alink="#ff0000"
     font_face="Arial, Helvetica"
-
-    LS_COMMAND="ls -t -r"           # ls command parameters
 else
     # Mostly Harmless Decisions
     # secondary set of default options, selected with "-m" in command-line
@@ -170,6 +169,7 @@ else
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
     slideshow_time="5"              # seconds per pic in slideshow mode zero=off
+    order_by="name"                 # how to order the images
 
     # HTML layout
     color_text="#ffffff"
@@ -178,8 +178,6 @@ else
     color_vlink="#888888"
     color_alink="#ff0000"
     font_face="Arial, Helvetica"
-
-    LS_COMMAND="ls"                 # ls command parameters
 fi;
 
 quiet="no"                          # supress output
@@ -523,6 +521,13 @@ print_info "  images:   $(($total_files))"
 print_info "  type(s): $image_types"
 
 # handle file names with white spaces and order by modify time
+LS_COMMAND=""
+if [ "$order_by" = "name" ]; then
+    LS_COMMAND="ls"
+else # time
+    LS_COMMAND="ls -t -r"
+fi
+
 all_files="`$LS_COMMAND $images`"
 IFS='\
 '

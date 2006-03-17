@@ -134,6 +134,10 @@ th_on_multi="yes"
 # seconds per pic in slideshow mode zero=off
 slideshow_time="5"
 
+# how to order the images (default: time)
+# available options: [time | name]
+order_by="time"
+
 # HTML layout
 color_text="#ffffff"           # default: "#ffffff"
 color_bgcolor="#000000"        # default: "#000000"
@@ -141,10 +145,6 @@ color_link="#ffffff"           # default: "#ffffff"
 color_vlink="#888888"          # default: "#888888"
 color_alink="#ff0000"          # default: "#ff0000"
 font_face="Arial, Helvetica"   # default: "Arial, Helvetica"
-
-# LS_COMMAND (default: "ls -t -r")
-# ls command parameters for 'for' loops, the default is probably ok
-LS_COMMAND="ls -t -r"
 
 # supress output (default: no)
 quiet="no"
