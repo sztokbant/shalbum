@@ -1,0 +1,12 @@
+version 1.0-RC6
+	New Features:
+	* New option "long_description", default yes
+	  If shalbum finds a file called <pic-file-name>-description.html,
+	  it is attached to that picture's page.
+
+	Bug Fixes:
+	* Tmp dir wasn't being removed on "-i" mode
+
+	Improvements:
+	* Removed "LS_COMMAND" option and replaced it by an "order_by"
+	  option that can be either "name" or "time".

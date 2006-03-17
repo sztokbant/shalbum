@@ -186,6 +186,15 @@ quiet="no"                          # supress output
 only_index="no"                     # only create HTML files
 tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 
+
+# handle file names with white spaces and order by modify time
+LS_COMMAND=""
+if [ "$order_by" = "name" ]; then
+    LS_COMMAND="ls"
+else # time
+    LS_COMMAND="ls -t -r"
+fi
+
 # read user-defined options
 if [ -e _options ]; then
     . _options
@@ -531,14 +540,6 @@ fi
 print_info "  mhd:      $mhd"
 print_info "  images:   $(($total_files))"
 print_info "  type(s): $image_types"
-
-# handle file names with white spaces and order by modify time
-LS_COMMAND=""
-if [ "$order_by" = "name" ]; then
-    LS_COMMAND="ls"
-else # time
-    LS_COMMAND="ls -t -r"
-fi
 
 all_files="`$LS_COMMAND $images`"
 IFS='\
