@@ -1,0 +1,29 @@
+              shalbum - http://sourceforge.net/projects/shalbum
+              =================================================
+                          INSTALLATION INSTRUCTIONS
+                       document updated: 20-March-2006
+
+
+Just issue 'make install', simple as that!
+
+shalbum will be installed to default PREFIX '/usr/local'. You can
+override this by adding 'PREFIX=/the/path/you/want' to the make
+command-line.
+
+To uninstall run 'make uninstall', pointing the correct PREFIX if
+appropriate.
+
+----------------------------------------------------------------------
+
+Installed Files
+
+
+$(PREFIX)/bin
+  shalbum             The script itself.
+
+
+$(PREFIX)/share/shalbum
+  README              General shalbum instructions
+  _options            Sample configuration file
+  watermark_th.png    Sample watermark for thumbnail
+  watermark_vga.png   Sample watermark for final image
