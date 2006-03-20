@@ -1,6 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
-                     document updated: 19-December-2005
+                                   README
+                       document updated: 20-March-2006
 
 1.) About shalbum
 2.) Using shalbum
@@ -76,4 +77,4 @@ Once CygWin is installed shalbum shall run like on any other Unix.
 Feel free to contact me if you have any questions or problems running
 shalbum:
 
-  Eduardo Sztokbant <du@du.eti.br> - shalbum author
+  Eduardo Sztokbant <du at du.eti.br> - shalbum author
