@@ -16,7 +16,9 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-software_revision="shalbum 1.0RC7 - http://sourceforge.net/projects/shalbum - rev 2006 March 19"
+sw_version="1.0RC8"
+sw_rev_date="2006 March 20"
+software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - rev $sw_rev_date"
 
 # TODO-LIST:
 #   - HTML files should be created insite ${tmp_dir}
@@ -45,7 +47,7 @@ else
 fi
 
 # process command-line options
-while getopts d:himqt:v opt; do
+while getopts a:d:e:himqr:t:vT:V: opt; do
   case $opt in
       # title
       t)  cl_title="$OPTARG"
@@ -53,6 +55,26 @@ while getopts d:himqt:v opt; do
 
       # date/subtitle
       d)  cl_date="$OPTARG"
+	  ;;
+
+      # third title
+      r)  cl_third="$OPTARG"
+	  ;;
+
+      # author's name
+      a)  cl_author="$OPTARG"
+	  ;;
+
+      # author's e-mail
+      e)  cl_email="$OPTARG"
+	  ;;
+
+      # thumbnail resolution
+      T)  cl_th_res="$OPTARG"
+	  ;;
+
+      # vga resolution
+      V)  cl_vga_res="$OPTARG"
 	  ;;
 
       # mhd
@@ -72,15 +94,22 @@ while getopts d:himqt:v opt; do
 	  ;;
 
       # help screen
-      *)  echo "usage: from your pictures directory run"
-	  echo "    shalbum [-t title] [-d date] [-m] [-i] [-q]"
+      *)  echo ${software_revision}
+	  echo "usage: from a directory with image files run"
+	  echo "    shalbum [-t title] [-d date] [-r title] [-a author] [-e e-mail] [-T num]"
+	  echo "      [-V num] [-m] [-i] [-q]"
 	  echo "    shalbum -h"
 	  echo "-h        help screen"
 	  echo "-v        show shalbum version and exit"
 	  echo "-t title  specify gallery title"
 	  echo "-d date   specify gallery date/subtitle"
+	  echo "-r title  specify gallery third title"
+	  echo "-a name   specify gallery author's name"
+	  echo "-e e-mail specify gallery author's e-mail"
+	  echo "-T num    specify thumbnail resolution"
+	  echo "-V num    specify vga resolution"
 	  echo "-m        selects mhd secondary set of default options"
-	  echo "-i        don't resize images, only build the HTML files"
+	  echo "-i        don't resize images, only rebuild the HTML files"
 	  echo "-q        quiet mode, supress output"
 	  exit 1
 	  ;;
@@ -210,6 +239,26 @@ fi
 
 if [ "$cl_date" != "" ]; then
     date="$cl_date"
+fi
+
+if [ "$cl_third" != "" ]; then
+    third_title="$cl_third"
+fi
+
+if [ "$cl_author" != "" ]; then
+    author="$cl_author"
+fi
+
+if [ "$cl_email" != "" ]; then
+    e_mail="$cl_email"
+fi
+
+if [ "$cl_th_res" != "" ]; then
+    th_res="$cl_th_res"
+fi
+
+if [ "$cl_vga_res" != "" ]; then
+    vga_res="$cl_vga_res"
 fi
 
 if [ "$cl_quiet" != "" ]; then
@@ -535,6 +584,9 @@ total_files="`ls $images | wc -l`"
 print_info "Creating album"
 print_info "  title:    \"$title\""
 print_info "  subtitle: \"$date\""
+print_info "  third:    \"$third_title\""
+print_info "  author:   \"$author\""
+print_info "  e-mail:   \"$e_mail\""
 if [ -e _options ]; then
     print_info "  _options: found, reading custom options"
 else
