@@ -1,3 +1,8 @@
+version 1.0-RC8
+	Improvements:
+	* Added a Makefile for installation/uninstallation and an INSTALL
+	  file with instructions.
+
 version 1.0-RC7
 	Bug Fixes:
 	* order_by approach corrected
