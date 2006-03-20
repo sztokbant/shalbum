@@ -4,14 +4,17 @@
                        document updated: 20-March-2006
 
 
+Installing
+
+
 Just issue 'make install', simple as that!
 
-shalbum will be installed to default PREFIX '/usr/local'. You can
+shalbum will be installed in '/usr/local', the default PREFIX. You can
 override this by adding 'PREFIX=/the/path/you/want' to the make
 command-line.
 
-To uninstall run 'make uninstall', pointing the correct PREFIX if
-appropriate.
+Don't forget shalbum requires your system to have ImageMagick version
+6.2 or greater installed.
 
 ----------------------------------------------------------------------
 
@@ -27,3 +30,11 @@ $(PREFIX)/share/shalbum
   _options            Sample configuration file
   watermark_th.png    Sample watermark for thumbnail
   watermark_vga.png   Sample watermark for final image
+
+----------------------------------------------------------------------
+
+Uninstalling
+
+
+To uninstall shalbum run 'make uninstall', pointing the installation
+PREFIX if different from the default.

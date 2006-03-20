@@ -23,6 +23,7 @@ install:
 	cp watermark_th.png $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/watermark_th.png
 	cp watermark_vga.png $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/watermark_vga.png
 	cp README $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/README
+	@echo shalbum installed successfully!
 
 uninstall:
 	-rm -f $(PREFIX)/bin/shalbum
