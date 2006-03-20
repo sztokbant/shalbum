@@ -16,7 +16,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-software_revision="shalbum 1.0RC6 - http://sourceforge.net/projects/shalbum - rev 2006 March 17"
+software_revision="shalbum 1.0RC7 - http://sourceforge.net/projects/shalbum - rev 2006 March 19"
 
 # TODO-LIST:
 #   - HTML files should be created insite ${tmp_dir}
@@ -187,17 +187,20 @@ only_index="no"                     # only create HTML files
 tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 
 
-# handle file names with white spaces and order by modify time
-LS_COMMAND=""
-if [ "$order_by" = "name" ]; then
-    LS_COMMAND="ls"
-else # time
-    LS_COMMAND="ls -t -r"
-fi
-
 # read user-defined options
 if [ -e _options ]; then
     . _options
+fi
+
+# handle file names with white spaces and order by modify time
+if [ "$order_by" = "name" ]; then
+    LS_COMMAND="ls"
+elif [ "$order_by" = "time" ]; then
+    LS_COMMAND="ls -t -r"
+fi
+
+if [ "$LS_COMMAND" = "" ]; then
+    LS_COMMAND="ls -t -r"
 fi
 
 # options chosen from command-line if specified

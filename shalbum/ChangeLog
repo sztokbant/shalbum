@@ -1,3 +1,11 @@
+version 1.0-RC7
+	Bug Fixes:
+	* order_by approach corrected
+
+	Improvement:
+	* Deprecated LS_COMMAND option backward compatibility support
+	  implemented.
+	
 version 1.0-RC6
 	New Features:
 	* New option "long_description", default yes
