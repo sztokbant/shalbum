@@ -16,8 +16,8 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.0RC8"
-sw_rev_date="2006 March 20"
+sw_version="1.0RC9"
+sw_rev_date="2006 March 21"
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - rev $sw_rev_date"
 
 # TODO-LIST:
@@ -47,26 +47,51 @@ else
 fi
 
 # process command-line options
-while getopts a:d:e:himqr:t:vT:V: opt; do
+while getopts a:d:e:himqr:t:vC:R:T:V:W: opt; do
   case $opt in
-      # title
-      t)  cl_title="$OPTARG"
+      # author's name
+      a)  cl_author="$OPTARG"
 	  ;;
 
       # date/subtitle
       d)  cl_date="$OPTARG"
 	  ;;
 
+      # author's e-mail
+      e)  cl_email="$OPTARG"
+	  ;;
+
+      # index
+      i)  cl_only_index="yes"
+	  ;;
+
+      # mhd
+      m)  mhd="yes"
+	  ;;
+
+      # quiet
+      q)  cl_quiet="yes"
+	  ;;
+
       # third title
       r)  cl_third="$OPTARG"
 	  ;;
 
-      # author's name
-      a)  cl_author="$OPTARG"
+      # title
+      t)  cl_title="$OPTARG"
 	  ;;
 
-      # author's e-mail
-      e)  cl_email="$OPTARG"
+      # version
+      v)  echo ${software_revision}
+	  exit 1
+	  ;;
+
+      # number of columns
+      C)  cl_n_columns="$OPTARG"
+	  ;;
+
+      # number of rows
+      R)  cl_n_rows="$OPTARG"
 	  ;;
 
       # thumbnail resolution
@@ -77,40 +102,33 @@ while getopts a:d:e:himqr:t:vT:V: opt; do
       V)  cl_vga_res="$OPTARG"
 	  ;;
 
-      # mhd
-      m)  mhd="yes"
-	  ;;
-
-      # index
-      i)  cl_only_index="yes"
-	  ;;
-
-      # quiet
-      q)  cl_quiet="yes"
-	  ;;
-
-      v)  echo ${software_revision}
-	  exit 1
+      # table width
+      W)  cl_table_width="$OPTARG"
 	  ;;
 
       # help screen
       *)  echo ${software_revision}
 	  echo "usage: from a directory with image files run"
-	  echo "    shalbum [-t title] [-d date] [-r title] [-a author] [-e e-mail] [-T num]"
-	  echo "      [-V num] [-m] [-i] [-q]"
-	  echo "    shalbum -h"
-	  echo "-h        help screen"
-	  echo "-v        show shalbum version and exit"
-	  echo "-t title  specify gallery title"
-	  echo "-d date   specify gallery date/subtitle"
-	  echo "-r title  specify gallery third title"
-	  echo "-a name   specify gallery author's name"
-	  echo "-e e-mail specify gallery author's e-mail"
-	  echo "-T num    specify thumbnail resolution"
-	  echo "-V num    specify vga resolution"
-	  echo "-m        selects mhd secondary set of default options"
-	  echo "-i        don't resize images, only rebuild the HTML files"
-	  echo "-q        quiet mode, supress output"
+	  echo "    shalbum [options]"
+	  echo ""
+	  echo " -h        help screen"
+	  echo " -v        show shalbum version and exit"
+	  echo ""
+	  echo " -t title  specify gallery title"
+	  echo " -d date   specify gallery date/subtitle"
+	  echo " -r title  specify gallery third title"
+	  echo " -a name   specify gallery author's name"
+	  echo " -e e-mail specify gallery author's e-mail"
+	  echo ""
+	  echo " -V num    specify vga resolution"
+	  echo " -T num    specify thumbnail resolution"
+	  echo " -W num    specify table width"
+	  echo " -R num    specify number of rows"
+	  echo " -C num    specify number of columns"
+	  echo ""
+	  echo " -m        selects mhd secondary set of default options"
+	  echo " -i        don't resize images, only rebuild the HTML files"
+	  echo " -q        quiet mode, supress output"
 	  exit 1
 	  ;;
   esac
@@ -253,12 +271,24 @@ if [ "$cl_email" != "" ]; then
     e_mail="$cl_email"
 fi
 
+if [ "$cl_vga_res" != "" ]; then
+    vga_res="$cl_vga_res"
+fi
+
 if [ "$cl_th_res" != "" ]; then
     th_res="$cl_th_res"
 fi
 
-if [ "$cl_vga_res" != "" ]; then
-    vga_res="$cl_vga_res"
+if [ "$cl_table_width" != "" ]; then
+    table_width="$cl_table_width"
+fi
+
+if [ "$cl_n_rows" != "" ]; then
+    n_rows="$cl_n_rows"
+fi
+
+if [ "$cl_n_columns" != "" ]; then
+    n_columns="$cl_n_columns"
 fi
 
 if [ "$cl_quiet" != "" ]; then
