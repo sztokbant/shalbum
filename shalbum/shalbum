@@ -47,7 +47,7 @@ else
 fi
 
 # process command-line options
-while getopts a:d:e:himqr:t:vC:R:T:V:W: opt; do
+while getopts a:d:e:himqr:t:vC:O:R:S:T:V:W: opt; do
   case $opt in
       # author's name
       a)  cl_author="$OPTARG"
@@ -90,8 +90,24 @@ while getopts a:d:e:himqr:t:vC:R:T:V:W: opt; do
       C)  cl_n_columns="$OPTARG"
 	  ;;
 
+      # order by
+      O)  if [ "$OPTARG" = "time" ]; then
+	    cl_order_by="time"
+	  elif [ "$OPTARG" = "name" ]; then
+	    cl_order_by="name"
+	  else
+	    echo "error: unexpected -O input value"
+	    echo "valid values: [time|name]"
+	    exit 1
+	  fi
+	  ;;
+
       # number of rows
       R)  cl_n_rows="$OPTARG"
+	  ;;
+
+      # slideshow time
+      S)  cl_slideshow_time="$OPTARG"
 	  ;;
 
       # thumbnail resolution
@@ -125,6 +141,8 @@ while getopts a:d:e:himqr:t:vC:R:T:V:W: opt; do
 	  echo " -W num    specify table width"
 	  echo " -R num    specify number of rows"
 	  echo " -C num    specify number of columns"
+	  echo " -O opt    image sorting option; either \"time\" or \"name\""
+	  echo " -S secs   seconds per pic in slideshow mode; zero=off"
 	  echo ""
 	  echo " -m        selects mhd secondary set of default options"
 	  echo " -i        don't resize images, only rebuild the HTML files"
@@ -239,17 +257,6 @@ if [ -e _options ]; then
     . _options
 fi
 
-# handle file names with white spaces and order by modify time
-if [ "$order_by" = "name" ]; then
-    LS_COMMAND="ls"
-elif [ "$order_by" = "time" ]; then
-    LS_COMMAND="ls -t -r"
-fi
-
-if [ "$LS_COMMAND" = "" ]; then
-    LS_COMMAND="ls -t -r"
-fi
-
 # options chosen from command-line if specified
 if [ "$cl_title" != "" ]; then
     title="$cl_title"
@@ -291,12 +298,31 @@ if [ "$cl_n_columns" != "" ]; then
     n_columns="$cl_n_columns"
 fi
 
+if [ "$cl_order_by" != "" ]; then
+    order_by="$cl_order_by"
+fi
+
+if [ "$cl_slideshow_time" != "" ]; then
+    slideshow_time="$cl_slideshow_time"
+fi
+
 if [ "$cl_quiet" != "" ]; then
     quiet="$cl_quiet"
 fi
 
 if [ "$cl_only_index" != "" ]; then
     only_index="$cl_only_index"
+fi
+
+# handle file names with white spaces and order by modify time
+if [ "$order_by" = "name" ]; then
+    LS_COMMAND="ls"
+elif [ "$order_by" = "time" ]; then
+    LS_COMMAND="ls -t -r"
+fi
+
+if [ "$LS_COMMAND" = "" ]; then
+    LS_COMMAND="ls -t -r"
 fi
 
 ###############
