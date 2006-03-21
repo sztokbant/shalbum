@@ -124,7 +124,7 @@ while getopts a:d:e:himqr:t:vC:O:R:S:T:V:W: opt; do
 
       # help screen
       *)  echo ${software_revision}
-	  echo "usage: from a directory with image files run"
+	  echo "Usage: from a directory with image files run"
 	  echo "    shalbum [options]"
 	  echo ""
 	  echo " -h        help screen"
@@ -147,6 +147,8 @@ while getopts a:d:e:himqr:t:vC:O:R:S:T:V:W: opt; do
 	  echo " -m        selects mhd secondary set of default options"
 	  echo " -i        don't resize images, only rebuild the HTML files"
 	  echo " -q        quiet mode, supress output"
+	  echo ""
+	  echo "More options can be customized by using an _options file."
 	  exit 1
 	  ;;
   esac
