@@ -1,3 +1,14 @@
+version 1.0-RC10-pre
+	Improvements:
+	* New sample watermarks!
+
+version 1.0-RC9
+	New Features:
+	* Heaps of command-line options implemented!
+
+	Improvements:
+	* Documentation improvements
+
 version 1.0-RC8
 	Improvements:
 	* Added a Makefile for installation/uninstallation and an INSTALL
