@@ -24,6 +24,11 @@ vga_res=800
 # max width/height of thumbnail
 th_res=250
 
+# huge_res (default: 0 = disabled)
+# max width/height of huge image
+# "copy" to make a copy from the original
+huge_res=0
+
 # table_width (default: 800)
 # width of HTML tables
 table_width=800
@@ -90,6 +95,14 @@ vgaframe="yes"
 # size of final image frame
 vgaframesize=3
 
+# hugeframe (default: yes)
+# enable huge image frame
+hugeframe="no"
+
+# hugeframesize (default: 3)
+# size of huge image frame
+hugeframesize=3
+
 # th_quality (default: 75)
 # thumbnail percentage quality
 th_quality=75
@@ -97,6 +110,10 @@ th_quality=75
 # vga_quality (default: 75)
 # final image percentage quality
 vga_quality=75
+
+# huge_quality (default: 75)
+# final image percentage quality
+huge_quality=75
 
 # back_link (default: "")
 # link to go back, useful if you have a master index for your albuns

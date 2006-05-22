@@ -1,3 +1,9 @@
+version-1.0-RC11 (22-May-2006)
+	Improvements:
+	* New huge_file option that adds to the album a 3rd image for
+	  every single picture. This image can be also a copy of the
+	  original.
+	
 version 1.0-RC10
 	Improvements:
 	* New sample watermarks pointing to shalbum site.

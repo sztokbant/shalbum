@@ -16,8 +16,8 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.0RC9"
-sw_rev_date="2006 March 21"
+sw_version="1.0RC11"
+sw_rev_date="2006 May 22"
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - rev $sw_rev_date"
 
 # TODO-LIST:
@@ -47,7 +47,7 @@ else
 fi
 
 # process command-line options
-while getopts a:d:e:himqr:t:vC:O:R:S:T:V:W: opt; do
+while getopts a:d:e:himqr:t:vC:H:O:R:S:T:V:W: opt; do
   case $opt in
       # author's name
       a)  cl_author="$OPTARG"
@@ -88,6 +88,10 @@ while getopts a:d:e:himqr:t:vC:O:R:S:T:V:W: opt; do
 
       # number of columns
       C)  cl_n_columns="$OPTARG"
+	  ;;
+
+      # huge image resolution
+      H)  cl_huge_res="$OPTARG"
 	  ;;
 
       # order by
@@ -138,6 +142,7 @@ while getopts a:d:e:himqr:t:vC:O:R:S:T:V:W: opt; do
 	  echo ""
 	  echo " -V num    specify vga resolution"
 	  echo " -T num    specify thumbnail resolution"
+	  echo " -H num    specify huge image resolution (\"copy\" to keep same)"
 	  echo " -W num    specify table width"
 	  echo " -R num    specify number of rows"
 	  echo " -C num    specify number of columns"
@@ -159,6 +164,7 @@ if [ $mhd != "yes" ]; then
     # first set of default options
     vga_res=800                     # max width/heigth of final image
     th_res=250                      # max width/height of thumbnail
+    huge_res=0                      # max width/height of huge image
     table_width=800                 # width of HTML tables
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
@@ -176,8 +182,11 @@ if [ $mhd != "yes" ]; then
     thframesize=2                   # size of thumbnail frame
     vgaframe="yes"                  # enable final image frame
     vgaframesize=3                  # size of final image frame
+    hugeframe="no"                  # enable huge image frame
+    hugeframesize=3                 # size of huge image frame
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
+    huge_quality=75                 # huge image percentage quality
     back_link=""                    # link to go back
     backlink_label=""               # back link label for album list site
     backlink_label_thumbs="&lt;&lt;&lt; thumbnails"
@@ -204,6 +213,7 @@ else
     # secondary set of default options, selected with "-m" in command-line
     vga_res=500                     # max width/heigth of final image
     th_res=140                      # max width/height of thumbnail
+    huge_res=0                      # max width/height of huge image
     table_width=520                 # width of HTML tables
     n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
@@ -222,8 +232,11 @@ else
     thframesize=2                   # size of thumbnail frame
     vgaframe="yes"                  # enable final image frame
     vgaframesize=3                  # size of final image frame
+    hugeframe="no"                  # enable huge image frame
+    hugeframesize=3                 # size of huge image frame
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
+    huge_quality=75                 # huge image percentage quality
     back_link="http://www.meiahoradepois.com/fotos.htm"
                                     # link to go back
     backlink_label="&lt;&lt;&lt; &iacute;ndice"
@@ -286,6 +299,10 @@ fi
 
 if [ "$cl_th_res" != "" ]; then
     th_res="$cl_th_res"
+fi
+
+if [ "$cl_huge_res" != "" ]; then
+    huge_res="$cl_huge_res"
 fi
 
 if [ "$cl_table_width" != "" ]; then
@@ -508,8 +525,20 @@ create_page_for_pic()
 
     # pic
     echo "<table border='0' width='$table_width'><tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
+
+    # link to huge image
+    if [ "$huge_res" != "0" ]; then
+	html_compliant_filename "huge/huge_${pic}"
+	echo "<a href='huge/huge_${pic}'>" >> $html_file
+    fi
+
     html_compliant_filename "vga/vga_${pic}"
-    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
+    echo "<img src='${html_compliant_filename}' border='0' alt='' />" >> $html_file
+
+    if [ "$huge_res" != "0" ]; then
+	echo "</a>" >> $html_file
+    fi
+
     echo "</td></tr>" >> $html_file
     echo "</table>" >> $html_file
 
@@ -671,6 +700,10 @@ mkdir ${tmp_dir}
 if [ "$only_index" != "yes" ]; then
     mkdir ${tmp_dir}/thumbnails
     mkdir ${tmp_dir}/vga
+
+    if [ "$huge_res" != "0" ]; then
+	mkdir ${tmp_dir}/huge
+    fi
     
     # generate watermarks
     if [ $watermark = "yes" ]; then
@@ -678,13 +711,25 @@ if [ "$only_index" != "yes" ]; then
 	# temporary resized watermarks
 	watermark_th="${tmp_dir}/watermark_${th_res}.png"
 	watermark_vga="${tmp_dir}/watermark_${vga_res}.png"
+
+	if [ "$huge_res" != "0" ] && [ "$huge_res" != "copy" ]; then
+	    watermark_huge="${tmp_dir}/watermark_${huge_res}.png"
+	fi
 	
+	# thumbnail watermark
 	printn_info "[tn""${th_res}]"
 	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
 	
+	# vga watermark
 	printn_info "[pic""${vga_res}]"
 	convert -sharpen 3 -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
-	
+
+	# huge watermark (same as vga)
+	if [ "$huge_res" != "0" ] && [ "$huge_res" != "copy" ]; then
+	    printn_info "[huge""${huge_res}]"
+	    convert -sharpen 3 -size ${huge_res}x${huge_res} $watermark_vga_src -resize ${huge_res}x${huge_res} +profile "*" $watermark_huge
+	fi
+	    
 	print_info " ok!"
     fi; # $watermark = yes
     
@@ -696,6 +741,8 @@ if [ "$only_index" != "yes" ]; then
 	percent=$(($processed100/$total_files))
 	
 	printf_info "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
+
+	# thumbnail
 	printn_info "[tn""${th_res}]"
 	th_file="th_""$file"
 
@@ -712,6 +759,7 @@ if [ "$only_index" != "yes" ]; then
 	    convert ${tmp_dir}/thumbnails/"$th_file" -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
 	fi;
 
+	# vga
 	printn_info "[pic""${vga_res}]"
 	vga_file="vga_""$file"
 	
@@ -728,11 +776,35 @@ if [ "$only_index" != "yes" ]; then
 	    convert ${tmp_dir}/vga/"$vga_file" -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
 	fi;
 	
+	# huge
+	if [ "$huge_res" != 0 ]; then
+	    huge_file="huge_""$file"
+	    if [ "$huge_res" != "copy" ]; then
+		printn_info "[huge""${huge_res}]"
+	    
+		convert "$file" -resize ${huge_res}x${huge_res} ${tmp_dir}/huge/"$huge_file"
+
+		if [ $watermark = "yes" ]; then
+		    printn_info "[wmark]"
+		    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_huge ${tmp_dir}/huge/"$huge_file" ${tmp_dir}/huge/"$huge_file"
+		fi;
+
+		if [ $hugeframe = "yes" ]; then
+		    montage ${tmp_dir}/huge/"$huge_file" -mode concatenate -frame $hugeframesize -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
+		else
+		    convert ${tmp_dir}/huge/"$huge_file" -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
+		fi;
+	    else
+		printn_info "[hugecp]"
+		cp "$file" ${tmp_dir}/huge/"$huge_file"
+	    fi
+	fi
+
 	print_info " ok!"
     done;
     
     if [ $watermark = "yes" ]; then
-	rm $watermark_vga $watermark_th
+	rm $watermark_vga $watermark_th $watermark_huge
     fi;
 fi; # !only_index
 
@@ -1021,6 +1093,10 @@ if [ "$only_index" != yes ]; then
     mv ${tmp_dir}/thumbnails album
     printn_info "[pics]"
     mv ${tmp_dir}/vga album
+    if [ "$huge_res" != "0" ]; then
+	printn_info "[huge]"
+	mv ${tmp_dir}/huge album
+    fi
 
 fi; # !only_index
 
