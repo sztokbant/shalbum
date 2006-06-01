@@ -19,7 +19,7 @@
 
 sw_version="1.0RC11"
 sw_rev_date='$Date::             $'
-software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - rev $sw_rev_date"
+software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
 # TODO-LIST:
 #   - HTML files should be created insite ${tmp_dir}
