@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 sw_version="1.0RC11"
-sw_rev_date="2006 Jun 1"
+sw_rev_date="$LastChangedDate$"
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - rev $sw_rev_date"
 
 # TODO-LIST:
