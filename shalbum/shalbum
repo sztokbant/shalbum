@@ -785,7 +785,11 @@ if [ "$only_index" != "yes" ]; then
 	printn_info "[tn""${th_res}]"
 	th_file="th_""$file"
 
-	convert "$file" -rotate $rotate $flip -resize ${th_res}x${th_res} ${tmp_dir}/thumbnails/"$th_file"
+	if [ $thframe = "yes" ]; then
+	    convert "$file" -rotate $rotate $flip -resize ${th_res}x${th_res} ${tmp_dir}/thumbnails/"$th_file"
+	else
+	    convert "$file" -rotate $rotate $flip -resize ${th_res}x${th_res} -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
+	fi
 
 	if [ $watermark = "yes" ]; then
 	    printn_info "[wmark]"
@@ -794,15 +798,17 @@ if [ "$only_index" != "yes" ]; then
 
 	if [ $thframe = "yes" ]; then
 	    montage ${tmp_dir}/thumbnails/"$th_file" -mode concatenate -frame $thframesize -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
-	else
-	    convert ${tmp_dir}/thumbnails/"$th_file" -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
 	fi;
 
 	# vga
 	printn_info "[pic""${vga_res}]"
 	vga_file="vga_""$file"
 	
-	convert "$file" -rotate $rotate $flip -resize ${vga_res}x${vga_res} ${tmp_dir}/vga/"$vga_file"
+	if [ $vgaframe = "yes" ]; then
+	    convert "$file" -rotate $rotate $flip -resize ${vga_res}x${vga_res} ${tmp_dir}/vga/"$vga_file"
+	else
+	    convert "$file" -rotate $rotate $flip -resize ${vga_res}x${vga_res} -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
+	fi
 	
 	if [ $watermark = "yes" ]; then
 	    printn_info "[wmark]"
@@ -811,8 +817,6 @@ if [ "$only_index" != "yes" ]; then
 
 	if [ $vgaframe = "yes" ]; then
 	    montage ${tmp_dir}/vga/"$vga_file" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
-	else
-	    convert ${tmp_dir}/vga/"$vga_file" -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
 	fi;
 	
 	# huge
@@ -821,7 +825,11 @@ if [ "$only_index" != "yes" ]; then
 	    if [ "$huge_res" != "copy" ]; then
 		printn_info "[huge""${huge_res}]"
 	    
-		convert "$file" -rotate $rotate $flip -resize ${huge_res}x${huge_res} ${tmp_dir}/huge/"$huge_file"
+		if [ $hugeframe = "yes" ]; then
+		    convert "$file" -rotate $rotate $flip -resize ${huge_res}x${huge_res} ${tmp_dir}/huge/"$huge_file"
+		else
+		    convert "$file" -rotate $rotate $flip -resize ${huge_res}x${huge_res} -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
+		fi
 
 		if [ $watermark = "yes" ]; then
 		    printn_info "[wmark]"
@@ -830,8 +838,6 @@ if [ "$only_index" != "yes" ]; then
 
 		if [ $hugeframe = "yes" ]; then
 		    montage ${tmp_dir}/huge/"$huge_file" -mode concatenate -frame $hugeframesize -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
-		else
-		    convert ${tmp_dir}/huge/"$huge_file" -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
 		fi;
 	    else
 		printn_info "[hugecp]"
