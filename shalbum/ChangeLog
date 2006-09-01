@@ -1,4 +1,10 @@
-version-1.0-RC11 (22-May-2006)
+version 1.0 (1-Sep-2006)
+	Improvements:
+	* New exim_rotate option (default: "yes") to auto-rotate JPEG images
+	  with EXIM orientation information.
+	* thframe and vgaframe options now default to "no"
+
+version 1.0-RC11 (22-May-2006)
 	Improvements:
 	* New huge_file option that adds to the album a 3rd image for
 	  every single picture. This image can be also a copy of the
