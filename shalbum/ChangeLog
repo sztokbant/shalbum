@@ -1,7 +1,7 @@
 version 1.0 (1-Sep-2006)
 	Improvements:
-	* New exim_rotate option (default: "yes") to auto-rotate JPEG images
-	  with EXIM orientation information.
+	* New exif_rotate option (default: "yes") to auto-rotate JPEG images
+	  with EXIF orientation information.
 	* thframe and vgaframe options now default to "no"
 
 version 1.0-RC11 (22-May-2006)
