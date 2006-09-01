@@ -79,17 +79,17 @@ watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
 # final image watermark dissolve percent
 watermark_dissolve=60
 
-# thframe (default: "yes")
+# thframe (default: "no")
 # enable thumbnail frame
-thframe="yes"
+thframe="no"
 
 # thframesize (default: 2)
 # size of thumbnail frame
 thframesize=2
 
-# vgaframe (default: yes)
+# vgaframe (default: "no")
 # enable final image frame
-vgaframe="yes"
+vgaframe="no"
 
 # vgaframesize (default: 3)
 # size of final image frame
@@ -114,6 +114,10 @@ vga_quality=75
 # huge_quality (default: 75)
 # final image percentage quality
 huge_quality=75
+
+# exif_rotate (default: "yes")
+# try to rotate image according to exif info
+exif_rotate="yes"
 
 # back_link (default: "")
 # link to go back, useful if you have a master index for your albuns

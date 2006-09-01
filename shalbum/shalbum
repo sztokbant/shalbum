@@ -17,12 +17,12 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.0RC11"
+sw_version="1.0"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
 # TODO-LIST:
-#   - HTML files should be created insite ${tmp_dir}
+#   - HTML files should be created inside ${tmp_dir}
 
 #######
 # Input
@@ -179,15 +179,16 @@ if [ $mhd != "yes" ]; then
     watermark_vga_src="$HOME/.shalbum/watermark_vga.png"
                                     # source for final image watermark
     watermark_dissolve=60           # final image watermark dissolve percent
-    thframe="yes"                   # enable thumbnail frame
+    thframe="no"                    # enable thumbnail frame
     thframesize=2                   # size of thumbnail frame
-    vgaframe="yes"                  # enable final image frame
+    vgaframe="no"                   # enable final image frame
     vgaframesize=3                  # size of final image frame
     hugeframe="no"                  # enable huge image frame
     hugeframesize=3                 # size of huge image frame
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
     huge_quality=75                 # huge image percentage quality
+    exif_rotate="yes"               # try to rotate image according to exif info
     back_link=""                    # link to go back
     backlink_label=""               # back link label for album list site
     backlink_label_thumbs="&lt;&lt;&lt; thumbnails"
@@ -238,6 +239,7 @@ else
     th_quality=75                   # thumbnail percentage quality
     vga_quality=75                  # final image percentage quality
     huge_quality=75                 # huge image percentage quality
+    exif_rotate="yes"               # try to rotate image according to exif info
     back_link="http://www.meiahoradepois.com/fotos.htm"
                                     # link to go back
     backlink_label="&lt;&lt;&lt; &iacute;ndice"
@@ -743,11 +745,47 @@ if [ "$only_index" != "yes" ]; then
 	
 	printf_info "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
 
+        #   1       2      3     4       5           6          7         8
+        #
+        # 888888 888888     88 88    8888888888 88                 88 8888888888
+        # 88         88     88 88    88  88     88  88         88  88     88  88
+        # 8888     8888   8888 8888  88         8888888888 8888888888         88
+        # 88         88     88 88
+        # 88         88 888888 888888
+
+	# Rotate image according to JPEG EXIF orientation information
+	# based on http://jpegclub.org/exif_orientation.html
+	if [ ${exif_rotate} = "yes" ]; then
+	    case `identify -format "%[EXIF:Orientation]" "$file"` in
+		2) rotate="180"
+		   flip="-flip"
+		   ;;
+		3) rotate="180"
+		   ;;
+		4) flip="-flip"
+		   ;;
+		5) rotate="90"
+		   flip="-flip"
+		   ;;
+		6) rotate="90"
+		   ;;
+		7) rotate="270"
+		   flip="-flip"
+		   ;;
+		8) rotate="270"
+		   ;;
+		*) rotate="0"
+		   ;;
+	    esac
+	else
+	    rotate="0"
+	fi
+
 	# thumbnail
 	printn_info "[tn""${th_res}]"
 	th_file="th_""$file"
 
-	convert "$file" -resize ${th_res}x${th_res} ${tmp_dir}/thumbnails/"$th_file"
+	convert "$file" -rotate $rotate $flip -resize ${th_res}x${th_res} ${tmp_dir}/thumbnails/"$th_file"
 
 	if [ $watermark = "yes" ]; then
 	    printn_info "[wmark]"
@@ -764,7 +802,7 @@ if [ "$only_index" != "yes" ]; then
 	printn_info "[pic""${vga_res}]"
 	vga_file="vga_""$file"
 	
-	convert "$file" -resize ${vga_res}x${vga_res} ${tmp_dir}/vga/"$vga_file"
+	convert "$file" -rotate $rotate $flip -resize ${vga_res}x${vga_res} ${tmp_dir}/vga/"$vga_file"
 	
 	if [ $watermark = "yes" ]; then
 	    printn_info "[wmark]"
@@ -783,7 +821,7 @@ if [ "$only_index" != "yes" ]; then
 	    if [ "$huge_res" != "copy" ]; then
 		printn_info "[huge""${huge_res}]"
 	    
-		convert "$file" -resize ${huge_res}x${huge_res} ${tmp_dir}/huge/"$huge_file"
+		convert "$file" -rotate $rotate $flip -resize ${huge_res}x${huge_res} ${tmp_dir}/huge/"$huge_file"
 
 		if [ $watermark = "yes" ]; then
 		    printn_info "[wmark]"
