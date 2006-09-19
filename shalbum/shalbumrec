@@ -1,0 +1,87 @@
+#!/bin/sh
+#  $Id: $
+
+#  Copyright 2006 Eduardo Sztokbant <du@du.eti.br>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
+dirname="master_album"               # dir name for master album
+global_title="My Albums"             # title for master album
+th_res="150"                         # thumbnail resolution
+
+# HTML layout
+color_text="#ffffff"
+color_bgcolor="#000000"
+color_link="#ffffff"
+color_vlink="#888888"
+color_alink="#ff0000"
+font_face="Arial, Helvetica"
+
+IFS='
+'
+
+dot_dirname=".${dirname}"
+mkdir -p "${dot_dirname}"
+
+# create albums
+for dir in `ls`; do
+    if [ -d "$dir" ]; then
+	echo "- Entering '$dir' directory..."
+
+	cd "$dir"
+   	${shalbum}
+   	cd - 1>/dev/null
+   	mv "$dir/album" "${dot_dirname}/$dir"
+    fi
+done
+
+# create thumbnails and master index.html file
+cd "${dot_dirname}"
+
+echo "<html>" > index.html
+echo "<head>" >> index.html
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> index.html
+echo "<style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> index.html
+echo "<title>${global_title}</title>" >> index.html
+echo "</head>" >> index.html
+echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face='${font_face}'>" >> index.html
+echo "<font size='5'><b>${global_title}</b></font>" >> index.html
+echo "<table>" >> index.html
+
+for dir in `ls`; do
+    if [ -d "$dir" ]; then
+	cd "$dir"
+	FIRST="`grep img index.html | head -1 | cut -d \\\" -f 6`"
+	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d ^ -f 2`"
+	DATE="`grep '<!-- shalbumrec:date' index.html | cut -d ^ -f 2`"
+
+	echo "Generating thumbnail for '$dir'"
+	convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
+
+	echo "<tr><td valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='thumbnails/th_${dir}.jpg'></a></td><td valign='top'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr>" >> ../index.html
+	cd - 1>/dev/null
+    fi
+done
+
+echo "</table>" >> index.html
+echo "</font></body></html>" >> index.html
+
+mkdir -p "thumbnails"
+mv th_*.jpg "thumbnails"
+cd ..
+mv "${dot_dirname}" "${dirname}"
+
+echo "Done!"
