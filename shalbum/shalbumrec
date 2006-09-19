@@ -74,7 +74,17 @@ IFS='
 '
 
 dot_dirname=".${dirname}"
+dot_dirname_bak="${dot_dirname}.bak"
 mkdir -p "${dot_dirname}"
+
+if [ -e "${dirname}" ]; then
+    if [ -e "${dot_dirname_bak}" ]; then
+	echo -n "Cleaning up previous backup directory..."
+	rm -rf "${dot_dirname_bak}"
+	echo "done!"
+    fi
+    mv "${dirname}" "${dot_dirname_bak}"
+fi
 
 # create albums
 for dir in `ls`; do
@@ -84,7 +94,9 @@ for dir in `ls`; do
 	cd "$dir"
    	${shalbum}
    	cd - 1>/dev/null
-   	mv "$dir/album" "${dot_dirname}/$dir"
+	mkdir -p "${dot_dirname}/$dir"
+   	mv "$dir/album/"* "${dot_dirname}/$dir"
+	rmdir "$dir/album"
     fi
 done
 
@@ -128,6 +140,8 @@ echo "</center></body></html>" >> index.html
 mkdir -p "thumbnails"
 mv th_*.jpg "thumbnails"
 cd ..
-mv "${dot_dirname}" "${dirname}"
+mkdir "${dirname}"
+mv "${dot_dirname}/"* "${dirname}"
+rmdir "${dot_dirname}"
 
 echo "Done!"
