@@ -20,7 +20,14 @@
 shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
 dirname="master_album"               # dir name for master album
 global_title="My Albums"             # title for master album
+
+table_width="800"                    # width of HTML tables
 th_res="150"                         # thumbnail resolution
+
+author="Eduardo Sztokbant"           # site author's name
+e_mail='du@du.eti.br'                # site author's e-mail
+support_shalbum="yes"                # print link to shalbum site
+w3c_ok_banner="yes"                  # print "W3C HTML 4.01 compliant" banner
 
 # HTML layout
 color_text="#ffffff"
@@ -29,6 +36,39 @@ color_link="#ffffff"
 color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
+
+add_credits_footer()
+{
+    if  [ "$author" != "" ] ||
+	[ "$support_shalbum" = "yes" ] ||
+	[ "$w3c_ok_banner" = "yes" ]; then
+	
+	echo "<!-- credits begin -->" >> $1
+	echo '<table width="'$table_width'"><tr>' >> $1
+
+	echo '<td width="50%" align="left" valign="top">' >> $1
+        # support shalbum!
+	if [ "$support_shalbum" = "yes" ]; then
+	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='http://sourceforge.net/projects/shalbum' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
+	fi
+	
+        # W3C HTML 4.01 compliant banner
+	if [ "$w3c_ok_banner" = "yes" ]; then
+	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
+	fi
+	echo "</td>" >> $1
+	
+	echo '<td width="50%" align="right" valign="top">' >> $1
+        # Author
+	if [ "$author" != "" ]; then
+	    echo "<p><font size='1' face='${font_face}'><b>$credits_str $author</b></font><br />" >> $1
+	    echo "<a href='mailto:$e_mail'><font size='1' face='${font_face}'><b>$e_mail</b></font></a></p>" >> $1
+	fi
+	
+	echo '</tr></table>' >> $1
+	echo "<!-- credits end -->" >> $1
+    fi
+}
 
 IFS='
 '
@@ -51,15 +91,18 @@ done
 # create thumbnails and master index.html file
 cd "${dot_dirname}"
 
-echo "<html>" > index.html
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > index.html
+echo "<html>" >> index.html
 echo "<head>" >> index.html
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> index.html
 echo "<style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> index.html
 echo "<title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
-echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><font face='${font_face}'>" >> index.html
-echo "<font size='5'><b>${global_title}</b></font>" >> index.html
-echo "<table>" >> index.html
+echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><center>" >> index.html
+echo "<table width='$table_width'><tr><td>" >> index.html
+echo "<font size='5' face='${font_face}'><b>${global_title}</b></font>" >> index.html
+echo "</td></tr></table>" >> index.html
+echo "<table width='$table_width'>" >> index.html
 
 for dir in `ls`; do
     if [ -d "$dir" ]; then
@@ -71,13 +114,16 @@ for dir in `ls`; do
 	echo "Generating thumbnail for '$dir'"
 	convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
 
-	echo "<tr><td valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='thumbnails/th_${dir}.jpg'></a></td><td valign='top'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr>" >> ../index.html
+	echo "<tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='thumbnails/th_${dir}.jpg'></a></td><td valign='top'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr>" >> ../index.html
 	cd - 1>/dev/null
     fi
 done
 
 echo "</table>" >> index.html
-echo "</font></body></html>" >> index.html
+
+add_credits_footer index.html
+
+echo "</center></body></html>" >> index.html
 
 mkdir -p "thumbnails"
 mv th_*.jpg "thumbnails"
