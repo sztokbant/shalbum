@@ -23,7 +23,7 @@ global_title="My Albums"             # title for master album
 
 table_width="800"                    # width of HTML tables
 th_res="150"                         # thumbnail resolution
-n_columns="2"                        # number of table columns
+n_columns="3"                        # number of table columns
 
 author="Eduardo Sztokbant"           # site author's name
 e_mail='du@du.eti.br'                # site author's e-mail
@@ -124,8 +124,8 @@ for dir in `ls`; do
     if [ -d "$dir" ]; then
 	cd "$dir"
 	FIRST="`grep img index.html | head -1 | cut -d \\\" -f 6`"
-	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d ^ -f 2`"
-	DATE="`grep '<!-- shalbumrec:date' index.html | cut -d ^ -f 2`"
+	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d ¬ -f 2`"
+	DATE="`grep '<!-- shalbumrec:date' index.html | cut -d ¬ -f 2`"
 
 	echo "Generating thumbnail for '$dir'"
 	convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
