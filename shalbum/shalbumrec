@@ -23,6 +23,7 @@ global_title="My Albums"             # title for master album
 
 table_width="800"                    # width of HTML tables
 th_res="150"                         # thumbnail resolution
+n_columns="2"                        # number of table columns
 
 author="Eduardo Sztokbant"           # site author's name
 e_mail='du@du.eti.br'                # site author's e-mail
@@ -116,6 +117,9 @@ echo "<font size='5' face='${font_face}'><b>${global_title}</b></font>" >> index
 echo "</td></tr></table>" >> index.html
 echo "<table width='$table_width'>" >> index.html
 
+col_percentage=$((100/$n_columns))
+col_counter="0"
+
 for dir in `ls`; do
     if [ -d "$dir" ]; then
 	cd "$dir"
@@ -126,10 +130,25 @@ for dir in `ls`; do
 	echo "Generating thumbnail for '$dir'"
 	convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
 
-	echo "<tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='thumbnails/th_${dir}.jpg'></a></td><td valign='top'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr>" >> ../index.html
+	if [ $col_counter -eq 0 ]; then
+	    echo "<tr>" >> ../index.html
+	fi
+
+	echo "<td width='${col_percentage}%'><table><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='thumbnails/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
+
+	col_counter="$(($col_counter+1))"
+	if [ $col_counter -eq $n_columns ]; then
+	    echo "</tr>" >> ../index.html
+	    col_counter="0"
+	fi
+
 	cd - 1>/dev/null
     fi
 done
+
+if [ ! $col_counter -eq 0 ]; then
+    echo "</tr>" >> index.html
+fi
 
 echo "</table>" >> index.html
 
