@@ -1,7 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                           INSTALLATION INSTRUCTIONS
-                       document updated: 20-March-2006
+                     document updated: 22-September-2006
 
 
 Installing
@@ -23,11 +23,13 @@ Installed Files
 
 $(PREFIX)/bin
   shalbum             The script itself.
-
+  shalbumrec          Another script to recursively run shalbum through
+                      sub-directories.
 
 $(PREFIX)/share/shalbum
   README              General shalbum instructions
-  _options            Sample configuration file
+  .shalbum            Sample shalbum configuration file
+  .shalbumrec         Sample shalbum configuration file
   watermark_th.png    Sample watermark for thumbnail
   watermark_vga.png   Sample watermark for final image
 

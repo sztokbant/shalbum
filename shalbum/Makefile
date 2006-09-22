@@ -20,7 +20,7 @@ install:
 	mkdir -p $(PREFIX)/share/shalbum
 	cp shalbum $(PREFIX)/bin && chmod 755 $(PREFIX)/bin/shalbum
 	cp shalbumrec $(PREFIX)/bin && chmod 755 $(PREFIX)/bin/shalbumrec
-	cp _options $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/_options
+	cp .shalbum $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/.shalbum
 	cp .shalbumrec $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/.shalbumrec
 	cp watermark_th.png $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/watermark_th.png
 	cp watermark_vga.png $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/watermark_vga.png
@@ -30,7 +30,7 @@ install:
 uninstall:
 	-rm -f $(PREFIX)/bin/shalbum
 	-rm -f $(PREFIX)/bin/shalbumrec
-	-rm -f $(PREFIX)/share/shalbum/_options
+	-rm -f $(PREFIX)/share/shalbum/.shalbum
 	-rm -f $(PREFIX)/share/shalbum/.shalbumrec
 	-rm -f $(PREFIX)/share/shalbum/watermark_th.png
 	-rm -f $(PREFIX)/share/shalbum/watermark_vga.png

@@ -13,7 +13,7 @@
 
 - Pure bourne shell script to create HTML photo galleries.
 
-- Default options can be overridden with an _options file in the images
+- Default options can be overridden with a .shalbum file in the images
   directory.
 
 - Requires ImageMagick - http://www.imagemagick.com.
@@ -52,10 +52,10 @@ Usage: from a directory with image files run
  -q        quiet mode, supress output
 
 You can alternatively bypass default options creating your own
-_options file and puting it in your pictures directory. You can base
-upon a commented _options file commonly distributed with shalbum.
+.shalbum file and puting it in your pictures directory. You can base
+upon a commented .shalbum file commonly distributed with shalbum.
 
- $ cp _options /my/pictures/directory
+ $ cp .shalbum /my/pictures/directory
  <make some changes to it with your preferred editor>
  $ cd /my/pictures/directory
  $ shalbum [options...]
@@ -67,7 +67,7 @@ directory. The syntax of this file must be as follows:
     FILENAME1.JPG=some description for this pic
     FILENAME2.JPG=other description for other pic
 
-Note that "pic_label_type" in your _options file must be set to "conf"
+Note that "pic_label_type" in your .shalbum file must be set to "conf"
 for shalbum to consider your _subtitles file.
 
 If you want even more descriptive comments enable the

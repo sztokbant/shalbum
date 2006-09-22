@@ -23,6 +23,7 @@ software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum
 
 # TODO-LIST:
 #   - HTML files should be created inside ${tmp_dir}
+#   - Max height configuration option
 
 #######
 # Input
@@ -165,7 +166,7 @@ while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
 	  echo " -i        don't resize images, only rebuild the HTML files"
 	  echo " -q        quiet mode, supress output"
 	  echo ""
-	  echo "More options can be customized by using an _options file."
+	  echo "More options can be customized by using a .shalbum file."
 	  exit 1
 	  ;;
   esac
@@ -282,8 +283,12 @@ tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 
 
 # read user-defined options
+# deprecated
 if [ -e _options ]; then
     . _options
+fi
+if [ -e .shalbum ]; then
+    . .shalbum
 fi
 
 # options chosen from command-line if specified
