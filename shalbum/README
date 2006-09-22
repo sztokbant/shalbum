@@ -44,6 +44,9 @@ Usage: from a directory with image files run
  -O opt    image sorting option; either \"time\" or \"name\"
  -S secs   seconds per pic in slideshow mode; zero=off
 
+ -b link   link to go back
+ -l label  back link label for album list site
+
  -m        selects mhd secondary set of default options
  -i        don't resize images, only rebuild the HTML files
  -q        quiet mode, supress output

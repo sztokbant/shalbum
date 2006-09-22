@@ -48,10 +48,14 @@ else
 fi
 
 # process command-line options
-while getopts a:d:e:himqr:t:vC:H:O:R:S:T:V:W: opt; do
+while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
   case $opt in
       # author's name
       a)  cl_author="$OPTARG"
+	  ;;
+
+      # # link to go back
+      b)  cl_back_link="$OPTARG"
 	  ;;
 
       # date/subtitle
@@ -64,6 +68,10 @@ while getopts a:d:e:himqr:t:vC:H:O:R:S:T:V:W: opt; do
 
       # index
       i)  cl_only_index="yes"
+	  ;;
+
+      # back link label for album list site
+      l)  cl_backlink_label="$OPTARG"
 	  ;;
 
       # mhd
@@ -149,6 +157,9 @@ while getopts a:d:e:himqr:t:vC:H:O:R:S:T:V:W: opt; do
 	  echo " -C num    specify number of columns"
 	  echo " -O opt    image sorting option; either \"time\" or \"name\""
 	  echo " -S secs   seconds per pic in slideshow mode; zero=off"
+	  echo ""
+	  echo " -b link   link to go back"
+	  echo " -l label  back link label for album list site"
 	  echo ""
 	  echo " -m        selects mhd secondary set of default options"
 	  echo " -i        don't resize images, only rebuild the HTML files"
@@ -306,6 +317,14 @@ fi
 
 if [ "$cl_huge_res" != "" ]; then
     huge_res="$cl_huge_res"
+fi
+
+if [ "$cl_back_link" != "" ]; then
+    back_link="$cl_back_link"
+fi
+
+if [ "$cl_backlink_label" != "" ]; then
+    backlink_label="$cl_backlink_label"
 fi
 
 if [ "$cl_table_width" != "" ]; then

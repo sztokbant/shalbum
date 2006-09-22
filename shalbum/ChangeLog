@@ -1,3 +1,9 @@
+version-1.1-pre
+	New Features:
+	* shalbumrec script to run shalbum recursively through directories.
+	* new -b and -l options to set back-link address and label.
+	
+
 version 1.0 (1-Sep-2006)
 	Improvements:
 	* New exif_rotate option (default: "yes") to auto-rotate JPEG images

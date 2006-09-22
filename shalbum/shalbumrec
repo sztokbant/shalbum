@@ -21,6 +21,36 @@ shalbumrec_version="beta"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
 
+while getopts  b:hl:v opt; do
+  case $opt in
+      # link to go back
+      b)  cl_back_link="$OPTARG"
+	  ;;
+
+      # back link label for album list site
+      l)  cl_backlink_label="$OPTARG"
+	  ;;
+
+      # version
+      v)  echo ${shalbumrec_revision}
+	  exit 1
+	  ;;
+
+      # help screen
+      *)  echo ${shalbumrec_revision}
+	  echo "Usage: from a directory containing sub-directories with image files run"
+	  echo "    shalbumrec [options]"
+	  echo ""
+	  echo " -h        help screen"
+	  echo " -v        show shalbum version and exit"
+	  echo ""
+	  echo " -b link   link to go back"
+	  echo " -l label  back link label for album list site"
+	  exit 1
+	  ;;
+  esac
+done
+
 shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
 dirname="master_album"               # dir name for master album
 global_title="My Albums"             # title for master album
@@ -34,6 +64,9 @@ e_mail='du@du.eti.br'                # site author's e-mail
 support_shalbum="yes"                # print link to shalbum site
 w3c_ok_banner="yes"                  # print "W3C HTML 4.01 compliant" banner
 
+back_link=""                         # link to go back
+backlink_label=""                    # back link label for album list site
+
 # HTML layout
 color_text="#ffffff"
 color_bgcolor="#000000"
@@ -41,6 +74,14 @@ color_link="#ffffff"
 color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
+
+if [ "$cl_back_link" != "" ]; then
+    back_link="$cl_back_link"
+fi
+
+if [ "$cl_backlink_label" != "" ]; then
+    backlink_label="$cl_backlink_label"
+fi
 
 add_credits_footer()
 {
@@ -97,7 +138,11 @@ for dir in `ls`; do
 	echo "- Entering '$dir' directory..."
 
 	cd "$dir"
-   	${shalbum}
+	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
+	    ${shalbum} -b "${back_link}" -l "${backlink_label}"
+	else
+	    ${shalbum}
+	fi
    	cd - 1>/dev/null
 	mkdir -p "${dot_dirname}/$dir"
    	mv "$dir/album/"* "${dot_dirname}/$dir"
