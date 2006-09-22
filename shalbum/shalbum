@@ -54,7 +54,7 @@ while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
       a)  cl_author="$OPTARG"
 	  ;;
 
-      # # link to go back
+      # link to go back
       b)  cl_back_link="$OPTARG"
 	  ;;
 
