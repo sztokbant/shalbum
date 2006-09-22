@@ -17,6 +17,10 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+shalbumrec_version="beta"
+shalbumrec_revision_date='$Date:: 2006-09-20 #$'
+shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
+
 shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
 dirname="master_album"               # dir name for master album
 global_title="My Albums"             # title for master album
@@ -155,6 +159,7 @@ echo "</table>" >> index.html
 add_credits_footer index.html
 
 echo "</center></body></html>" >> index.html
+echo "<!-- created with $shalbumrec_revision -->" >> index.html
 
 mkdir -p "thumbnails"
 mv th_*.jpg "thumbnails"
