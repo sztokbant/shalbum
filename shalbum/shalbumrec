@@ -1,5 +1,5 @@
 #!/bin/sh
-#  $Id: $
+#  $Id$
 
 #  Copyright 2006 Eduardo Sztokbant <du@du.eti.br>
 #
@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbumrec_version="beta"
-shalbumrec_revision_date='$Date:: 2006-09-20 #$'
+shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
 
 shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
