@@ -1,0 +1,75 @@
+# path of shalbum script
+# default: "/usr/local/bin/shalbum"
+shalbum="/usr/local/bin/shalbum"
+
+# dir name for master album
+# default: "master_album"
+dirname="master_album"
+
+# subdir for thumbnails
+# default: "masterth"
+th_dirname="masterth"
+
+# title for master album
+# default: "My Albums"
+global_title="My Albums"
+
+# width of HTML tables
+# default: "800"
+table_width="800"
+
+# thumbnail resolution
+# default: "150"
+th_res="150"
+
+# number of table columns
+# default: "3"
+n_columns="3"
+
+# site author's name
+# default: "Eduardo Sztokbant"
+author="Eduardo Sztokbant"
+
+# site author's e-mail
+# default: "du@du.eti.br"
+e_mail='du@du.eti.br'
+
+# print link to shalbum site
+# default: "yes"
+support_shalbum="yes"
+
+# print "W3C HTML 4.01 compliant" banner
+# default: "yes"
+w3c_ok_banner="yes"
+
+# link to go back
+# default: ""
+back_link=""
+
+# back link label for album list site
+# default: ""
+backlink_label=""
+
+# only create HTML files
+# default: "no"
+only_index="no"
+
+# HTML layout
+
+# default: "#ffffff"
+color_text="#ffffff"
+
+# default: "#000000"
+color_bgcolor="#000000"
+
+# default: "#ffffff"
+color_link="#ffffff"
+
+# default: "#888888"
+color_vlink="#888888"
+
+# default: "#ff0000"
+color_alink="#ff0000"
+
+# default: "Arial, Helvetica"
+font_face="Arial, Helvetica"

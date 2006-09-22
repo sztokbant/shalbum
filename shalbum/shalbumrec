@@ -17,6 +17,9 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# TODO-LIST
+#   - Allow user to chose icon picture in .shalbum
+
 shalbumrec_version="beta"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
@@ -52,6 +55,8 @@ while getopts  b:hil:v opt; do
 	  echo " -l label  back link label for album list site"
 	  echo ""
 	  echo " -i        don't resize shalbum images, only rebuild the HTML files"
+	  echo ""
+	  echo "More options can be customized by using a .shalbumrec file."
 	  exit 1
 	  ;;
   esac
@@ -83,6 +88,11 @@ color_link="#ffffff"
 color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
+
+# read user-defined options
+if [ -e .shalbumrec ]; then
+    . .shalbumrec
+fi
 
 if [ "$cl_back_link" != "" ]; then
     back_link="$cl_back_link"
