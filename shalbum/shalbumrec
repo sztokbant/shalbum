@@ -21,10 +21,14 @@ shalbumrec_version="beta"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
 
-while getopts  b:hl:v opt; do
+while getopts  b:hil:v opt; do
   case $opt in
       # link to go back
       b)  cl_back_link="$OPTARG"
+	  ;;
+
+      # index
+      i)  cl_only_index="yes"
 	  ;;
 
       # back link label for album list site
@@ -46,6 +50,8 @@ while getopts  b:hl:v opt; do
 	  echo ""
 	  echo " -b link   link to go back"
 	  echo " -l label  back link label for album list site"
+	  echo ""
+	  echo " -i        don't resize shalbum images, only rebuild the HTML files"
 	  exit 1
 	  ;;
   esac
@@ -53,6 +59,7 @@ done
 
 shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
 dirname="master_album"               # dir name for master album
+th_dirname="masterth"                # subdir for thumbnails
 global_title="My Albums"             # title for master album
 
 table_width="800"                    # width of HTML tables
@@ -66,6 +73,8 @@ w3c_ok_banner="yes"                  # print "W3C HTML 4.01 compliant" banner
 
 back_link=""                         # link to go back
 backlink_label=""                    # back link label for album list site
+
+only_index="no"                      # only create HTML files
 
 # HTML layout
 color_text="#ffffff"
@@ -81,6 +90,10 @@ fi
 
 if [ "$cl_backlink_label" != "" ]; then
     backlink_label="$cl_backlink_label"
+fi
+
+if [ "$cl_only_index" != "" ]; then
+    only_index="$cl_only_index"
 fi
 
 add_credits_footer()
@@ -119,39 +132,47 @@ add_credits_footer()
 IFS='
 '
 
-dot_dirname=".${dirname}"
-dot_dirname_bak="${dot_dirname}.bak"
-mkdir -p "${dot_dirname}"
-
-if [ -e "${dirname}" ]; then
-    if [ -e "${dot_dirname_bak}" ]; then
+dirname_bak="${dirname}.bak"
+if [ -e "${dirname}" ] && [ "${only_index}" != "yes" ]; then
+    # remove previous backup and backup current $dirname
+    if [ -e "${dirname_bak}" ]; then
 	echo -n "Cleaning up previous backup directory..."
-	rm -rf "${dot_dirname_bak}"
+	rm -rf "${dirname_bak}"
 	echo "done!"
     fi
-    mv "${dirname}" "${dot_dirname_bak}"
+    mv "${dirname}" "${dirname_bak}"
 fi
+
+mkdir -p "${dirname}"
 
 # create albums
 for dir in `ls`; do
-    if [ -d "$dir" ]; then
+    if [ -d "$dir" ] && [ "$dir" != "$dirname" ] && [ "$dir" != "$dirname_bak" ]; then
 	echo "- Entering '$dir' directory..."
 
 	cd "$dir"
 	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
-	    ${shalbum} -b "${back_link}" -l "${backlink_label}"
+	    if [ "${only_index}" = "yes" ]; then
+		${shalbum} -b "${back_link}" -l "${backlink_label}" -i
+	    else
+		${shalbum} -b "${back_link}" -l "${backlink_label}"
+	    fi
 	else
-	    ${shalbum}
+	    if [ "${only_index}" = "yes" ]; then
+		${shalbum} -i
+	    else
+		${shalbum}
+	    fi
 	fi
    	cd - 1>/dev/null
-	mkdir -p "${dot_dirname}/$dir"
-   	mv "$dir/album/"* "${dot_dirname}/$dir"
+	mkdir -p "${dirname}/$dir"
+   	mv "$dir/album/"* "${dirname}/$dir"
 	rmdir "$dir/album"
     fi
 done
 
 # create thumbnails and master index.html file
-cd "${dot_dirname}"
+cd "${dirname}"
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > index.html
 echo "<html>" >> index.html
@@ -170,7 +191,7 @@ col_percentage=$((100/$n_columns))
 col_counter="0"
 
 for dir in `ls`; do
-    if [ -d "$dir" ]; then
+    if [ -d "$dir" ] && [ "$dir" != "${th_dirname}" ]; then
 	cd "$dir"
 	FIRST="`grep img index.html | head -1 | cut -d \\\" -f 6`"
 	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d ¬ -f 2`"
@@ -183,7 +204,7 @@ for dir in `ls`; do
 	    echo "<tr>" >> ../index.html
 	fi
 
-	echo "<td width='${col_percentage}%'><table><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='thumbnails/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "<td width='${col_percentage}%'><table><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
 	col_counter="$(($col_counter+1))"
 	if [ $col_counter -eq $n_columns ]; then
@@ -206,11 +227,8 @@ add_credits_footer index.html
 echo "</center></body></html>" >> index.html
 echo "<!-- created with $shalbumrec_revision -->" >> index.html
 
-mkdir -p "thumbnails"
-mv th_*.jpg "thumbnails"
+mkdir -p "${th_dirname}"
+mv th_*.jpg "${th_dirname}"
 cd ..
-mkdir "${dirname}"
-mv "${dot_dirname}/"* "${dirname}"
-rmdir "${dot_dirname}"
 
 echo "Done!"
