@@ -187,3 +187,8 @@ quiet="no"
 
 # only create HTML files (default: no)
 only_index="no"
+
+# shalbumrec_index_pic (default: <nothing>)
+# alter this to tell shalbumrec which pic you want to represent this album
+# (do NOT quote filename)
+shalbumrec_index_pic=

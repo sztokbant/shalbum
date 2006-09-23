@@ -6,6 +6,8 @@ version-1.1-pre
 	  [th|vga|huge]_res variables as image's max height.
 	* new "img_align" config option, possible values "center" and "optimal"
 	  to control image alignment in its column on index page.
+	* new "shalbumrec_index_pic" config option in .shalbum to tell
+	  shalbumrec which pic to represent this album in shalbumrec.
 
 	Improvements:
 	* _options renamed to .shalbum (deprecated _option still works)

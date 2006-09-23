@@ -202,8 +202,19 @@ col_counter="0"
 
 for dir in `ls`; do
     if [ -d "$dir" ] && [ "$dir" != "${th_dirname}" ]; then
+	# attempt to get index pic specified by user
+	FIRST=""
+	if [ -e ../$dir/.shalbum ]; then
+	    FIRST="`grep shalbumrec_index_pic ../$dir/.shalbum | cut -d '=' -f 2`"
+	elif [ -e ../$dir/_options ]; then
+	    FIRST="`grep shalbumrec_index_pic ../$dir/_options | cut -d '=' -f 2`"
+	fi
+
 	cd "$dir"
-	FIRST="`grep img index.html | head -1 | cut -d \\\" -f 6`"
+	if [ "$FIRST" = "" ]; then
+	    FIRST="`grep img index.html | head -1 | cut -d \\\" -f 6`"
+	fi
+
 	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d ¬ -f 2`"
 	DATE="`grep '<!-- shalbumrec:date' index.html | cut -d ¬ -f 2`"
 
