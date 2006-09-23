@@ -13,21 +13,26 @@ version-1.1-pre
 	
 
 version 1.0 (1-Sep-2006)
-	Improvements:
+	New Features:
 	* New exif_rotate option (default: "yes") to auto-rotate JPEG images
 	  with EXIF orientation information.
+
+	Improvements:
 	* thframe and vgaframe options now default to "no"
 	* small performance improvement when not using picture borders
 
+
 version 1.0-RC11 (22-May-2006)
-	Improvements:
+	New Features:
 	* New huge_file option that adds to the album a 3rd image for
 	  every single picture. This image can be also a copy of the
 	  original.
 	
+
 version 1.0-RC10
 	Improvements:
 	* New sample watermarks pointing to shalbum site.
+
 
 version 1.0-RC9
 	New Features:
@@ -36,10 +41,12 @@ version 1.0-RC9
 	Improvements:
 	* Documentation improvements
 
+
 version 1.0-RC8
 	Improvements:
 	* Added a Makefile for installation/uninstallation and an INSTALL
 	  file with instructions.
+
 
 version 1.0-RC7
 	Bug Fixes:
@@ -49,6 +56,7 @@ version 1.0-RC7
 	* Deprecated LS_COMMAND option backward compatibility support
 	  implemented.
 	
+
 version 1.0-RC6
 	New Features:
 	* New option "long_description", default yes
