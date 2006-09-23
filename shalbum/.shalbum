@@ -34,9 +34,10 @@ huge_res=0
 # (this may conflict with watermarks)
 limit_by_height="no"
 
-# center_img_in_idx (default: "yes")
-# if "yes", img will be centralized in its column on index page
-center_img_in_idx="yes"
+# img_align (default: "optimal")
+# if "center", img will be centralized in its column on index page; if
+# "optimal" img will be aligned left on 1st col, right on last and center on the rest.
+img_align="optimal"
 
 # table_width (default: 800)
 # width of HTML tables

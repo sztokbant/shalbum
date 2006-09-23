@@ -184,8 +184,11 @@ if [ $mhd != "yes" ]; then
     table_width=800                 # width of HTML tables
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
-    center_img_in_idx="yes"         # if "yes", img will be centralized in its
-                                    # column on index page
+    img_align="optimal"             # if "center", img will be centralized in its
+                                    # column on index page; if
+                                    # "optimal" img will be aligned
+                                    # left on 1st col, right on last
+                                    # and center on the rest.
     pic_label_type="conf"           # number, filename, conf, none
     author="Eduardo Sztokbant"      # site author's name
     e_mail='du@du.eti.br'           # site author's e-mail
@@ -240,8 +243,11 @@ else
     table_width=520                 # width of HTML tables
     n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
-    center_img_in_idx="no"          # if "yes", img will be centralized in its
-                                    # column on index page
+    img_align="optimal"             # if "center", img will be centralized in its
+                                    # column on index page; if
+                                    # "optimal" img will be aligned
+                                    # left on 1st col, right on last
+                                    # and center on the rest.
     pic_label_type="number"         # number, filename, conf, none
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
@@ -941,8 +947,18 @@ for file in $all_files; do
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
 
-    if [ "$center_img_in_idx" = "yes" ]; then
+    if [ "$img_align" = "center" ]; then
 	center_str="align='center'"
+    else
+	if [ "$img_align" = "optimal" ]; then
+	    if [ $col_counter -eq 1 ]; then
+		center_str="align='left'"
+	    elif [ $col_counter -eq $n_columns ]; then
+		center_str="align='right'"
+	    else
+		center_str="align='center'"
+	    fi
+	fi
     fi
 
     if [ $multi_html = "yes" ]; then
