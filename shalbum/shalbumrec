@@ -205,9 +205,9 @@ for dir in `ls`; do
 	# attempt to get index pic specified by user
 	FIRST=""
 	if [ -e ../$dir/.shalbum ]; then
-	    FIRST="`grep shalbumrec_index_pic ../$dir/.shalbum | cut -d '=' -f 2`"
+	    FIRST="`grep shalbumrec_index_pic= ../$dir/.shalbum | cut -d '=' -f 2`"
 	elif [ -e ../$dir/_options ]; then
-	    FIRST="`grep shalbumrec_index_pic ../$dir/_options | cut -d '=' -f 2`"
+	    FIRST="`grep shalbumrec_index_pic= ../$dir/_options | cut -d '=' -f 2`"
 	fi
 
 	cd "$dir"
