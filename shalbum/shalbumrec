@@ -225,7 +225,7 @@ for dir in `ls`; do
 	    echo "<tr>" >> ../index.html
 	fi
 
-	echo "<td width='${col_percentage}%'><table><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "<td valign='top' width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
 	col_counter="$(($col_counter+1))"
 	if [ $col_counter -eq $n_columns ]; then
