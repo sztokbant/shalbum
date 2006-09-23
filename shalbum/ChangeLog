@@ -10,7 +10,7 @@ version-1.1 (23-Sep-2006)
 	  shalbumrec which pic to represent this album in shalbumrec.
 
 	Improvements:
-	* _options renamed to .shalbum (deprecated _option still works)
+	* _options renamed to .shalbum (deprecated _options still works)
 	* other minor code tweaks
 	
 
