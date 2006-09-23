@@ -178,6 +178,13 @@ if [ $mhd != "yes" ]; then
     vga_res=800                     # max width/heigth of final image
     th_res=250                      # max width/height of thumbnail
     huge_res=0                      # max width/height of huge image
+    limit_by_height="no"            # if "yes", *_res values will be
+                                    # considered 'max height' values
+                                    # (this may conflict with watermarks).
+
+    center_img_in_idx="no"          # if "yes", img will be centralized in its
+                                    # column on index page
+
     table_width=800                 # width of HTML tables
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
@@ -228,6 +235,13 @@ else
     vga_res=500                     # max width/heigth of final image
     th_res=140                      # max width/height of thumbnail
     huge_res=0                      # max width/height of huge image
+    limit_by_height="no"            # if "yes", *_res values will be
+                                    # considered 'max height' values
+                                    # (this may conflict with watermarks).
+
+    center_img_in_idx="no"          # if "yes", img will be centralized in its
+                                    # column on index page
+
     table_width=520                 # width of HTML tables
     n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
@@ -602,7 +616,7 @@ create_page_for_pic()
     if [ "$th_on_multi" = yes ]; then
 	echo "<table border='0' width='$table_width'><tr>" >> $html_file
         # before
-	echo "<td align='left' valign='top' width='$th_res'>" >> $html_file
+	echo "<td align='left' valign='top'>" >> $html_file
 	if [ "$before" != "[NONE]" ]; then
 	    html_compliant_filename "${before}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
@@ -612,10 +626,10 @@ create_page_for_pic()
 	fi;
 	echo "</td>" >> $html_file
 	
-	echo "<td align='center' valign='top' width='$(($table_width-(2*$th_res)))'></td>" >> $html_file
+	echo "<td align='center' valign='top' width='100%'></td>" >> $html_file
 	
         # after
-	echo "<td align='right' valign='top' width='$th_res'>" >> $html_file
+	echo "<td align='right' valign='top'>" >> $html_file
 	if [ "$after" != "[NONE]" ]; then
 	    html_compliant_filename "${after}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
@@ -809,10 +823,16 @@ if [ "$only_index" != "yes" ]; then
 	printn_info "[tn""${th_res}]"
 	th_file="th_""$file"
 
-	if [ $thframe = "yes" ]; then
-	    convert "$file" -rotate $rotate $flip -resize ${th_res}x${th_res} ${tmp_dir}/thumbnails/"$th_file"
+	if [ "$limit_by_height" = "yes" ]; then
+	    th_resize="x${th_res}"
 	else
-	    convert "$file" -rotate $rotate $flip -resize ${th_res}x${th_res} -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
+	    th_resize="${th_res}x${th_res}"
+	fi
+
+	if [ $thframe = "yes" ]; then
+	    convert "$file" -rotate $rotate $flip -resize ${th_resize} ${tmp_dir}/thumbnails/"$th_file"
+	else
+	    convert "$file" -rotate $rotate $flip -resize ${th_resize} -strip -quality ${th_quality} ${tmp_dir}/thumbnails/"$th_file"
 	fi
 
 	if [ $watermark = "yes" ]; then
@@ -827,11 +847,17 @@ if [ "$only_index" != "yes" ]; then
 	# vga
 	printn_info "[pic""${vga_res}]"
 	vga_file="vga_""$file"
+
+	if [ "$limit_by_height" = "yes" ]; then
+	    vga_resize="x${vga_res}"
+	else
+	    vga_resize="${vga_res}x${vga_res}"
+	fi
 	
 	if [ $vgaframe = "yes" ]; then
-	    convert "$file" -rotate $rotate $flip -resize ${vga_res}x${vga_res} ${tmp_dir}/vga/"$vga_file"
+	    convert "$file" -rotate $rotate $flip -resize ${vga_resize} ${tmp_dir}/vga/"$vga_file"
 	else
-	    convert "$file" -rotate $rotate $flip -resize ${vga_res}x${vga_res} -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
+	    convert "$file" -rotate $rotate $flip -resize ${vga_resize} -strip -quality ${vga_quality} ${tmp_dir}/vga/"$vga_file"
 	fi
 	
 	if [ $watermark = "yes" ]; then
@@ -848,11 +874,17 @@ if [ "$only_index" != "yes" ]; then
 	    huge_file="huge_""$file"
 	    if [ "$huge_res" != "copy" ]; then
 		printn_info "[huge""${huge_res}]"
+
+		if [ "$limit_by_height" = "yes" ]; then
+		    huge_resize="x${huge_res}"
+		else
+		    huge_resize="${huge_res}x${huge_res}"
+		fi
 	    
 		if [ $hugeframe = "yes" ]; then
-		    convert "$file" -rotate $rotate $flip -resize ${huge_res}x${huge_res} ${tmp_dir}/huge/"$huge_file"
+		    convert "$file" -rotate $rotate $flip -resize ${huge_resize} ${tmp_dir}/huge/"$huge_file"
 		else
-		    convert "$file" -rotate $rotate $flip -resize ${huge_res}x${huge_res} -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
+		    convert "$file" -rotate $rotate $flip -resize ${huge_resize} -strip -quality ${huge_quality} ${tmp_dir}/huge/"$huge_file"
 		fi
 
 		if [ $watermark = "yes" ]; then
@@ -915,14 +947,18 @@ for file in $all_files; do
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
 
+    if [ "$center_img_in_idx" = "yes" ]; then
+	center_str="align='center'"
+    fi
+
     if [ $multi_html = "yes" ]; then
 	html_compliant_filename "${file}.html"
-	echo "<table><tr><td width='${th_res}'><a href='${html_compliant_filename}'>" >> $idx_filename
+	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
 	html_compliant_filename "${th_file}"
 	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     else
 	html_compliant_filename "${vga_file}"
-	echo "<table><tr><td width='${th_res}'><a href='${html_compliant_filename}' target='${file}'><img border='0' " >> $idx_filename
+	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img border='0' " >> $idx_filename
 	html_compliant_filename "${th_file}"
 	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     fi
@@ -948,7 +984,7 @@ for file in $all_files; do
 	    fi
 	fi;
 
-	echo "</td></tr><tr><td width='${th_res}'><font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
+	echo "</td></tr><tr><td width='100%'><font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
     fi
 
     echo '</td></tr></table></td>' >> $idx_filename

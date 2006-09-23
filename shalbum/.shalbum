@@ -1,4 +1,4 @@
-# _options: shalbum conf file
+# .shalbum: shalbum conf file
 #
 # - Copy this file to your album's directory and modify it as you wish.
 # - Missing options in this file will assume default values.
@@ -28,6 +28,15 @@ th_res=250
 # max width/height of huge image
 # "copy" to make a copy from the original
 huge_res=0
+
+# limit_by_height (default: "no")
+# if "yes", *_res values will be considered 'max height' values
+# (this may conflict with watermarks)
+limit_by_height="no"
+
+# center_img_in_idx (default: "no")
+# if "yes", img will be centralized in its column on index page
+center_img_in_idx="no"
 
 # table_width (default: 800)
 # width of HTML tables

@@ -2,9 +2,13 @@ version-1.1-pre
 	New Features:
 	* shalbumrec script to run shalbum recursively through directories.
 	* new -b and -l options to set back-link address and label.
+	* new "limit_by_height" config option to consider
+	  [th|vga|huge]_res variables as image's max height.
+	* new "center_img_in_idx" config option to centralize thumbnail
+	  image in its column on index page.
 
 	Improvements:
-	* _options renamed to .shalbum
+	* _options renamed to .shalbum (deprecated _option still works)
 	
 
 version 1.0 (1-Sep-2006)
