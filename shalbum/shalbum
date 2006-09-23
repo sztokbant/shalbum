@@ -23,7 +23,6 @@ software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum
 
 # TODO-LIST:
 #   - HTML files should be created inside ${tmp_dir}
-#   - Max height configuration option
 
 #######
 # Input
@@ -182,12 +181,11 @@ if [ $mhd != "yes" ]; then
                                     # considered 'max height' values
                                     # (this may conflict with watermarks).
 
-    center_img_in_idx="no"          # if "yes", img will be centralized in its
-                                    # column on index page
-
     table_width=800                 # width of HTML tables
     n_rows=10                       # number of table rows
     n_columns=3                     # number of table columns
+    center_img_in_idx="yes"         # if "yes", img will be centralized in its
+                                    # column on index page
     pic_label_type="conf"           # number, filename, conf, none
     author="Eduardo Sztokbant"      # site author's name
     e_mail='du@du.eti.br'           # site author's e-mail
@@ -239,12 +237,11 @@ else
                                     # considered 'max height' values
                                     # (this may conflict with watermarks).
 
-    center_img_in_idx="no"          # if "yes", img will be centralized in its
-                                    # column on index page
-
     table_width=520                 # width of HTML tables
     n_rows=16                       # number of table rows
     n_columns=3                     # number of table columns
+    center_img_in_idx="no"          # if "yes", img will be centralized in its
+                                    # column on index page
     pic_label_type="number"         # number, filename, conf, none
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
@@ -937,12 +934,9 @@ for file in $all_files; do
     # rows & columns
     if [ $col_counter -eq 1 ]; then
 	echo "<!-- row begins -->" >> $idx_filename
-	echo "<tr><td width='${col_percentage}%' align='left' valign='top'>" >> $idx_filename
-    elif [ $col_counter -eq $n_columns ]; then
-	echo "<td width='${col_percentage}%' align='right' valign='top'>" >> $idx_filename
-    else
-	echo "<td width='${col_percentage}%' align='center' valign='top'>" >> $idx_filename
+	echo "<tr>" >> $idx_filename
     fi;
+    echo "<td width='${col_percentage}%' valign='top'>" >> $idx_filename
 
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
