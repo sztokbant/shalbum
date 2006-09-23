@@ -20,7 +20,7 @@
 # TODO-LIST
 #   - Allow user to chose icon picture in .shalbum
 
-shalbumrec_version="beta"
+shalbumrec_version="1.1"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
 
