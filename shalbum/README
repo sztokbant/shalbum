@@ -5,8 +5,9 @@
 
 1.) About shalbum
 2.) Using shalbum
-3.) Note for non-Unix users (e.g. Windows)
-4.) Support
+3.) Using shalbum recursively (shalbumrec)
+4.) Note for non-Unix users (e.g. Windows)
+5.) Support
 
 
 1.) About shalbum
@@ -76,7 +77,24 @@ file for each picture you want to add more info.
 
 ----------------------------------------------------------------------
 
-3.) Note for non-Unix users (e.g. Windows)
+3.) Using shalbum recursively (shalbumrec)
+
+Usage: from a directory containing sub-directories with image files run
+    shalbumrec [options]
+
+ -h        help screen
+ -v        show shalbum version and exit
+
+ -b link   link to go back
+ -l label  back link label for album list site
+
+ -i        don't resize shalbum images, only rebuild the HTML files
+
+More options can be customized by using a .shalbumrec file.
+
+----------------------------------------------------------------------
+
+4.) Note for non-Unix users (e.g. Windows)
 
 It is known that shalbum runs very well on any Unix platform
 containing ImageMagick and a bourne shell interpreter. I myself
@@ -94,7 +112,7 @@ Once CygWin is installed shalbum shall run like on any other Unix.
 
 ----------------------------------------------------------------------
 
-4.) Support
+5.) Support
 
 Feel free to contact me if you have any questions or problems running
 shalbum:
