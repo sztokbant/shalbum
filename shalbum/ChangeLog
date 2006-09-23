@@ -9,6 +9,7 @@ version-1.1-pre
 
 	Improvements:
 	* _options renamed to .shalbum (deprecated _option still works)
+	* other minor code tweaks
 	
 
 version 1.0 (1-Sep-2006)
