@@ -1,4 +1,4 @@
-version-1.2-pre
+version-1.2 (29-Sep-2006)
 	Improvements:
 	* Great performance improvement: smaller files are being created
 	  from immediately superior image instead of the original file itself.
