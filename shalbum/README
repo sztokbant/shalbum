@@ -6,8 +6,9 @@
 1.) About shalbum
 2.) Using shalbum
 3.) Using shalbum recursively (shalbumrec)
-4.) Note for non-Unix users (e.g. Windows)
-5.) Support
+4.) Speed issues
+5.) Note for non-Unix users (e.g. Windows)
+6.) Support
 
 
 1.) About shalbum
@@ -94,7 +95,24 @@ More options can be customized by using a .shalbumrec file.
 
 ----------------------------------------------------------------------
 
-4.) Note for non-Unix users (e.g. Windows)
+4.) Speed issues
+
+Version 1.2 of shalbum uses a much faster algorithm for resizing
+pictures. Basing the creation of a single picture on its immediately
+size-superior one other than on the original file, it runs about twice
+as fast than version 1.1.
+
+Hints:
+
+- Building an optimized version of libjpeg might improve shalbum
+performance converting JPEG images. A simple experiment here showed a
+"-march=pentium4 -O3 -pipe -fomit-frame-pointer" version of libjpeg
+making shalbum about 4% faster than a simple "-O -pipe" one. Feel free
+to experiment.
+
+----------------------------------------------------------------------
+
+5.) Note for non-Unix users (e.g. Windows)
 
 It is known that shalbum runs very well on any Unix platform
 containing ImageMagick and a bourne shell interpreter. I myself
@@ -112,7 +130,7 @@ Once CygWin is installed shalbum shall run like on any other Unix.
 
 ----------------------------------------------------------------------
 
-5.) Support
+6.) Support
 
 Feel free to contact me if you have any questions or problems running
 shalbum:
