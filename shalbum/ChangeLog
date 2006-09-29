@@ -1,3 +1,9 @@
+version-1.2-pre
+	Improvements:
+	* Great performance improvement: smaller files are being created
+	  from immediately superior image instead of the original file itself.
+
+
 version-1.1 (23-Sep-2006)
 	New Features:
 	* shalbumrec script to run shalbum recursively through directories.
