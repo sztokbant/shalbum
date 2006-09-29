@@ -17,7 +17,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.1"
+sw_version="1.2"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
@@ -392,14 +392,14 @@ fi
 # Aux functions
 ###############
 
-print_info()
+println_info()
 {
     if [ "$quiet" != "yes" ]; then
 	echo "$*"
     fi
 }
 
-printn_info()
+print_info()
 {
     if [ "$quiet" != "yes" ]; then
 	echo -n "$*"
@@ -712,20 +712,20 @@ fi
 
 total_files="`ls $images | wc -l`"
 
-print_info "Creating album"
-print_info "  title:    \"$title\""
-print_info "  subtitle: \"$date\""
-print_info "  third:    \"$third_title\""
-print_info "  author:   \"$author\""
-print_info "  e-mail:   \"$e_mail\""
+println_info "Creating album"
+println_info "  title:    \"$title\""
+println_info "  subtitle: \"$date\""
+println_info "  third:    \"$third_title\""
+println_info "  author:   \"$author\""
+println_info "  e-mail:   \"$e_mail\""
 if [ -e _options ]; then
-    print_info "  _options: found, reading custom options"
+    println_info "  _options: found, reading custom options"
 else
-    print_info "  _options: not found, using default options"
+    println_info "  _options: not found, using default options"
 fi
-print_info "  mhd:      $mhd"
-print_info "  images:   $(($total_files))"
-print_info "  type(s): $image_types"
+println_info "  mhd:      $mhd"
+println_info "  images:   $(($total_files))"
+println_info "  type(s): $image_types"
 
 all_files="`$LS_COMMAND $images`"
 IFS='\
@@ -751,7 +751,7 @@ if [ "$only_index" != "yes" ]; then
     
     # generate watermarks
     if [ $watermark = "yes" ]; then
-	printn_info "Creating watermarks: "
+	print_info "Creating watermarks: "
 	# temporary resized watermarks
 	watermark_th="${tmp_dir}/watermark_${th_res}.png"
 	watermark_vga="${tmp_dir}/watermark_${vga_res}.png"
@@ -761,23 +761,23 @@ if [ "$only_index" != "yes" ]; then
 	fi
 	
 	# thumbnail watermark
-	printn_info "[tn""${th_res}]"
+	print_info "[tn""${th_res}]"
 	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
 	
 	# vga watermark
-	printn_info "[pic""${vga_res}]"
+	print_info "[pic""${vga_res}]"
 	convert -sharpen 3 -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
 
 	# huge watermark (same as vga)
 	if [ "$huge_res" != "0" ] && [ "$huge_res" != "copy" ]; then
-	    printn_info "[huge""${huge_res}]"
+	    print_info "[huge""${huge_res}]"
 	    convert -sharpen 3 -size ${huge_res}x${huge_res} $watermark_vga_src -resize ${huge_res}x${huge_res} +profile "*" $watermark_huge
 	fi
 	    
-	print_info " ok!"
+	println_info " ok!"
     fi; # $watermark = yes
     
-    print_info "Creating pictures: "
+    println_info "Creating pictures: "
     processed=0
     for file in $all_files; do
 	processed=$(($processed+1))
@@ -830,10 +830,10 @@ if [ "$only_index" != "yes" ]; then
 	# huge
 	if [ "$huge_res" != 0 ]; then
 	    if [ "$huge_res" = "copy" ]; then
-		printn_info "[hugecp]"
+		print_info "[hugecp]"
 		cp "$file" "$huge_file"
 	    else
-		printn_info "[huge""${huge_res}]"
+		print_info "[huge""${huge_res}]"
 
 		if [ "$limit_by_height" = "yes" ]; then
 		    huge_resize="x${huge_res}"
@@ -854,7 +854,7 @@ if [ "$only_index" != "yes" ]; then
 	fi
 
 	# vga	
-	printn_info "[pic""${vga_res}]"
+	print_info "[pic""${vga_res}]"
 
 	if [ "$huge_res" != 0 ]; then
 	    file="${huge_file}"
@@ -873,7 +873,7 @@ if [ "$only_index" != "yes" ]; then
 	fi
 	
 	# thumbnail
-	printn_info "[tn""${th_res}]"
+	print_info "[tn""${th_res}]"
 
 	if [ "$limit_by_height" = "yes" ]; then
 	    th_resize="x${th_res}"
@@ -889,7 +889,7 @@ if [ "$only_index" != "yes" ]; then
 
 	# watermarks
 	if [ $watermark = "yes" ]; then
-	    printn_info "[wmark]"
+	    print_info "[wmark]"
 	    if [ "$huge_res" != 0 ] && [ "$huge_res" != "copy" ]; then
 		composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_huge "${huge_file}" "${huge_file}"
 	    fi
@@ -901,21 +901,21 @@ if [ "$only_index" != "yes" ]; then
 
 	# frames
 	if [ "$huge_res" != 0 ] && [ $hugeframe = "yes" ] && [ "$huge_res" != "copy" ]; then
-	    printn_info "[hfr]"
+	    print_info "[hfr]"
 	    montage "${huge_file}" -mode concatenate -frame $hugeframesize -strip -quality ${huge_quality} "${huge_file}"
 	fi
 
 	if [ $vgaframe = "yes" ]; then
-	    printn_info "[vfr]"
+	    print_info "[vfr]"
 	    montage "${vga_file}" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} "${vga_file}"
 	fi;
 	
 	if [ $thframe = "yes" ]; then
-	    printn_info "[tfr]"
+	    print_info "[tfr]"
 	    montage "${th_file}" -mode concatenate -frame $thframesize -strip -quality ${th_quality} "${th_file}"
 	fi;
 
-	print_info " ok!"
+	println_info " ok!"
 
     done;
     
@@ -928,7 +928,7 @@ fi; # !only_index
 # Part II: the index files
 ##########################
 
-printn_info "Generating indexes..."
+print_info "Generating indexes..."
 
 idx_basename='index'
 idx_counter=1
@@ -1196,13 +1196,13 @@ if [ $neighbors -eq 0 ]; then
 fi;
 ################################### /CREATION #################################
 
-print_info " ok!"
+println_info " ok!"
 
 ##################
 # Part III: export
 ##################
 
-printn_info "Exporting: "
+print_info "Exporting: "
 
 if [ "$only_index" != yes ]; then
 
@@ -1216,12 +1216,12 @@ if [ "$only_index" != yes ]; then
     fi;
     mkdir album
 
-    printn_info "[tnails]"
+    print_info "[tnails]"
     mv ${tmp_dir}/thumbnails album
-    printn_info "[pics]"
+    print_info "[pics]"
     mv ${tmp_dir}/vga album
     if [ "$huge_res" != "0" ]; then
-	printn_info "[huge]"
+	print_info "[huge]"
 	mv ${tmp_dir}/huge album
     fi
 
@@ -1232,13 +1232,13 @@ if [ -e ${tmp_dir} ]; then
     rm -rf ${tmp_dir}
 fi;
 
-printn_info "[idx]"
+print_info "[idx]"
 mkdir -p album
 rm "album/""$idx_basename"*.html 2>/dev/null
 mv "$idx_basename"*.html album
 
 if [ $multi_html = "yes" ]; then
-    printn_info '[multi-idx]'
+    print_info '[multi-idx]'
     for file in $all_files; do
 	mv "${file}.html" album
 	if [ "${slideshow_time}" != "0" ]; then
@@ -1247,6 +1247,6 @@ if [ $multi_html = "yes" ]; then
     done
 fi
 
-print_info " ok!"
+println_info " ok!"
 
 exit 0
