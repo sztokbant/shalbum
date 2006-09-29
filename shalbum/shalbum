@@ -760,18 +760,28 @@ if [ "$only_index" != "yes" ]; then
 	    watermark_huge="${tmp_dir}/watermark_${huge_res}.png"
 	fi
 	
+	if [ $limit_by_height = "yes" ]; then
+	    th_resize="x${th_res}"
+	    vga_resize="x${vga_res}"
+	    huge_resize="x${huge_res}"
+	else
+	    th_resize="${th_res}x${th_res}"
+	    vga_resize="${vga_res}x${vga_res}"
+	    huge_resize="${huge_res}x${huge_res}"
+	fi
+
 	# thumbnail watermark
-	print_info "[tn""${th_res}]"
-	convert -sharpen 3 -size ${th_res}x${th_res} $watermark_th_src -resize ${th_res}x${th_res} +profile "*" $watermark_th
+	print_info "[t${th_res}]"
+	convert -sharpen 3 $watermark_th_src -resize ${th_resize} +profile "*" $watermark_th
 	
 	# vga watermark
-	print_info "[pic""${vga_res}]"
-	convert -sharpen 3 -size ${vga_res}x${vga_res} $watermark_vga_src -resize ${vga_res}x${vga_res} +profile "*" $watermark_vga
+	print_info "[v${vga_res}]"
+	convert -sharpen 3 $watermark_vga_src -resize ${vga_resize} +profile "*" $watermark_vga
 
 	# huge watermark (same as vga)
 	if [ "$huge_res" != "0" ] && [ "$huge_res" != "copy" ]; then
-	    print_info "[huge""${huge_res}]"
-	    convert -sharpen 3 -size ${huge_res}x${huge_res} $watermark_vga_src -resize ${huge_res}x${huge_res} +profile "*" $watermark_huge
+	    print_info "[h${huge_res}]"
+	    convert -sharpen 3 $watermark_vga_src -resize ${huge_resize} +profile "*" $watermark_huge
 	fi
 	    
 	println_info " ok!"
@@ -830,10 +840,10 @@ if [ "$only_index" != "yes" ]; then
 	# huge
 	if [ "$huge_res" != 0 ]; then
 	    if [ "$huge_res" = "copy" ]; then
-		print_info "[hugecp]"
+		print_info "[hcp]"
 		cp "$file" "$huge_file"
 	    else
-		print_info "[huge""${huge_res}]"
+		print_info "[h${huge_res}]"
 
 		if [ "$limit_by_height" = "yes" ]; then
 		    huge_resize="x${huge_res}"
@@ -854,7 +864,7 @@ if [ "$only_index" != "yes" ]; then
 	fi
 
 	# vga	
-	print_info "[pic""${vga_res}]"
+	print_info "[v${vga_res}]"
 
 	if [ "$huge_res" != 0 ]; then
 	    file="${huge_file}"
@@ -873,7 +883,7 @@ if [ "$only_index" != "yes" ]; then
 	fi
 	
 	# thumbnail
-	print_info "[tn""${th_res}]"
+	print_info "[t${th_res}]"
 
 	if [ "$limit_by_height" = "yes" ]; then
 	    th_resize="x${th_res}"
@@ -889,29 +899,29 @@ if [ "$only_index" != "yes" ]; then
 
 	# watermarks
 	if [ $watermark = "yes" ]; then
-	    print_info "[wmark]"
+	    print_info "[wm]"
 	    if [ "$huge_res" != 0 ] && [ "$huge_res" != "copy" ]; then
 		composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_huge "${huge_file}" "${huge_file}"
 	    fi
 
 	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga "${vga_file}" "${vga_file}"
 
-	    composite -gravity SouthEast $watermark_th "${th_file}" "${th_file}"
+	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_th "${th_file}" "${th_file}"
 	fi;
 
 	# frames
 	if [ "$huge_res" != 0 ] && [ $hugeframe = "yes" ] && [ "$huge_res" != "copy" ]; then
-	    print_info "[hfr]"
+	    print_info "[hf]"
 	    montage "${huge_file}" -mode concatenate -frame $hugeframesize -strip -quality ${huge_quality} "${huge_file}"
 	fi
 
 	if [ $vgaframe = "yes" ]; then
-	    print_info "[vfr]"
+	    print_info "[vf]"
 	    montage "${vga_file}" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} "${vga_file}"
 	fi;
 	
 	if [ $thframe = "yes" ]; then
-	    print_info "[tfr]"
+	    print_info "[tf]"
 	    montage "${th_file}" -mode concatenate -frame $thframesize -strip -quality ${th_quality} "${th_file}"
 	fi;
 
