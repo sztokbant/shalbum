@@ -1,12 +1,12 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                                    README
-                        document updated: 22-May-2006
+                        document updated: 29-Sep-2006
 
 1.) About shalbum
 2.) Using shalbum
 3.) Using shalbum recursively (shalbumrec)
-4.) Speed issues
+4.) Performance issues
 5.) Note for non-Unix users (e.g. Windows)
 6.) Support
 
@@ -95,20 +95,32 @@ More options can be customized by using a .shalbumrec file.
 
 ----------------------------------------------------------------------
 
-4.) Speed issues
+4.) Performance issues
 
 Version 1.2 of shalbum uses a much faster algorithm for resizing
-pictures. Basing the creation of a single picture on its immediately
-size-superior one other than on the original file, it runs about twice
-as fast than version 1.1.
+pictures. Basing the resizing of a single picture on its immediately
+size-superior rather than on the original file, it runs about twice as
+fast than version 1.1.
 
 Hints:
 
 - Building an optimized version of libjpeg might improve shalbum
-performance converting JPEG images. A simple experiment here showed a
-"-march=pentium4 -O3 -pipe -fomit-frame-pointer" version of libjpeg
-making shalbum about 4% faster than a simple "-O -pipe" one. Feel free
-to experiment.
+performance converting JPEG images. Feel free to make your own
+tests. Here's the result of a simple experiment:
+
+-------------------------------------------+------------+-----------
+ libjpeg build CFLAGS                      | time (sec) | percentage
+-------------------------------------------+------------+-----------
+ -O0                                       | 148.56     |   100%
+-------------------------------------------+------------+-----------
+ -O                                        | 130.60     |    88%
+-------------------------------------------+------------+-----------
+ -O3                                       | 128.34     |    86%
+-------------------------------------------+------------+-----------
+ -O3 -march=pentium4                       | 126.98     |    85%
+-------------------------------------------+------------+-----------
+ -O3 -march=pentium4 -fomit-frame-pointer  | 123.34     |    83%
+-------------------------------------------+------------+-----------
 
 ----------------------------------------------------------------------
 
