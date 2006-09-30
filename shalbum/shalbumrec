@@ -20,7 +20,7 @@
 # TODO-LIST
 #   - Allow user to chose icon picture in .shalbum
 
-shalbumrec_version="1.1"
+shalbumrec_version="1.3"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
 
@@ -88,6 +88,16 @@ color_link="#ffffff"
 color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
+
+# System-wide default options
+if [ -e /etc/shalbum/shalbumrec.conf ]; then
+    . /etc/shalbum/shalbumrec.conf
+fi
+
+# User default options
+if [ -e $HOME/.shalbum/shalbumrec.conf ]; then
+    . $HOME/.shalbum/shalbumrec.conf
+fi
 
 # read user-defined options
 if [ -e .shalbumrec ]; then

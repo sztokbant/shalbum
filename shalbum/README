@@ -53,6 +53,9 @@ Usage: from a directory with image files run
  -i        don't resize images, only rebuild the HTML files
  -q        quiet mode, supress output
 
+You can define your own default options by creating a
+'/etc/shalbum/shalbum.conf' or a '$HOME/.shalbum/shalbum.conf' file.
+
 You can alternatively bypass default options creating your own
 .shalbum file and puting it in your pictures directory. You can base
 upon a commented .shalbum file commonly distributed with shalbum.
@@ -92,6 +95,10 @@ Usage: from a directory containing sub-directories with image files run
  -i        don't resize shalbum images, only rebuild the HTML files
 
 More options can be customized by using a .shalbumrec file.
+
+You can define your own shalbumrec default options by creating a
+'/etc/shalbum/shalbumrec.conf' or a '$HOME/.shalbum/shalbumrec.conf'
+file.
 
 ----------------------------------------------------------------------
 
