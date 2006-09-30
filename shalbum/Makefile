@@ -27,7 +27,7 @@ install:
 	cp README $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/README
 	@echo shalbum installed successfully!
 
-uninstall:
+uninstall deinstall:
 	-rm -f $(PREFIX)/bin/shalbum
 	-rm -f $(PREFIX)/bin/shalbumrec
 	-rm -f $(PREFIX)/share/shalbum/.shalbum
