@@ -62,7 +62,7 @@ while getopts  b:hil:v opt; do
   esac
 done
 
-shalbum="/home/eduardo/bin/shalbum"  # path of shalbum script
+shalbum="/usr/local/bin/shalbum"     # path of shalbum script
 dirname="master_album"               # dir name for master album
 th_dirname="masterth"                # subdir for thumbnails
 global_title="My Albums"             # title for master album
@@ -88,6 +88,11 @@ color_link="#ffffff"
 color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
+
+if [ ! -e $shalbum ]; then
+    echo "'$shalbum' not found. Exiting."
+    exit
+fi
 
 # System-wide default options
 if [ -e /etc/shalbum/shalbumrec.conf ]; then
