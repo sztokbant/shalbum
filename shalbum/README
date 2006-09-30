@@ -97,7 +97,7 @@ More options can be customized by using a .shalbumrec file.
 
 4.) Performance issues
 
-Version 1.2 of shalbum uses a much faster algorithm for resizing
+Version 1.2 of shalbum improved its algorithm for resizing
 pictures. Basing the resizing of a single picture on its immediately
 size-superior rather than on the original file, it runs about twice as
 fast than version 1.1.
@@ -105,22 +105,53 @@ fast than version 1.1.
 Hints:
 
 - Building an optimized version of libjpeg might improve shalbum
-performance converting JPEG images. Feel free to make your own
-tests. Here's the result of a simple experiment:
+performance for converting JPEG images. Feel free to make your own
+tests. Here I present you the benchmarks of some simple experiments:
+
+
+Platform: Pentium D, FreeBSD 6.1, ~150 random JPEGs
+* Up to 17% faster optimizing CFLAGS when building from FreeBSD ports.
 
 -------------------------------------------+------------+-----------
- libjpeg build CFLAGS                      | time (sec) | percentage
+ libjpeg build CFLAGS / CXXFLAGS           | time (sec) | percentage
 -------------------------------------------+------------+-----------
- -O0                                       | 148.56     |   100%
+ -O0                                       |   148.56   |   100%
 -------------------------------------------+------------+-----------
- -O                                        | 130.60     |    88%
+ -O                                        |   130.60   |    88%
 -------------------------------------------+------------+-----------
- -O3                                       | 128.34     |    86%
+ -O3                                       |   128.34   |    86%
 -------------------------------------------+------------+-----------
- -O3 -march=pentium4                       | 126.98     |    85%
+ -O3 -march=pentium4                       |   126.98   |    85%
 -------------------------------------------+------------+-----------
- -O3 -march=pentium4 -fomit-frame-pointer  | 123.34     |    83%
+ -O3 -march=pentium4 -fomit-frame-pointer  |   123.34   |    83%
 -------------------------------------------+------------+-----------
+
+
+Platform: Pentium III, Ubuntu Linux 6.06, ~80 random JPEGs
+* Small performance improvement observed comparing to default package (3%).
+
+-------------------------------------------+------------+-----------
+ libjpeg build CFLAGS / CXXFLAGS           | time (sec) | percentage
+-------------------------------------------+------------+-----------
+ default Ubuntu package                    |    1031    |   100%
+-------------------------------------------+------------+-----------
+ -O3 -march=pentium3 -mtune=pentium3       |            |
+   -fomit-frame-pointer                    |    1054    |    97%
+-------------------------------------------+------------+-----------
+
+
+Platform: AMD Athlon XP, Debian GNU/Linux, ~150 random JPEGs
+* No observable improvement comparing to default package.
+
+-------------------------------------------+------------+-----------
+ libjpeg build CFLAGS / CXXFLAGS           | time (sec) | percentage
+-------------------------------------------+------------+-----------
+ default Debian package                    |     x      |   100%
+-------------------------------------------+------------+-----------
+ -O3 -march=athlon -mtune=athlon           |            |
+   -fomit-frame-pointer                    |     x      |   100%
+-------------------------------------------+------------+-----------
+
 
 ----------------------------------------------------------------------
 
