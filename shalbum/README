@@ -118,24 +118,6 @@ Here I present you the benchmarks of some simple experiments
 optimizing libjpeg on different platforms and systems:
 
 
-Platform: Intel Pentium D, FreeBSD 6.1, ~150 selected JPEGs
-* Up to 17% faster than no optimization; built from FreeBSD ports.
-
--------------------------------------------+------------+-----------
- libjpeg build CFLAGS / CXXFLAGS           | time (sec) | percentage
--------------------------------------------+------------+-----------
- -O0                                       |   148.56   |   100%
--------------------------------------------+------------+-----------
- -O                                        |   130.60   |    88%
--------------------------------------------+------------+-----------
- -O3                                       |   128.34   |    86%
--------------------------------------------+------------+-----------
- -O3 -march=pentium4                       |   126.98   |    85%
--------------------------------------------+------------+-----------
- -O3 -march=pentium4 -fomit-frame-pointer  |   123.34   |    83%
--------------------------------------------+------------+-----------
-
-
 Platform: Intel Pentium III 700MHz, Ubuntu Linux 6.06, 20 selected JPEGs
 * Small performance gain comparing to default package (~5%).
 
@@ -160,6 +142,21 @@ Platform: AMD Athlon XP 2200+, Debian GNU/Linux, 20 selected JPEGs
 -------------------------------------------+------------+-----------
  -O3 -march=athlon-xp -pipe                |            |
  -fomit-frame-pointer -msse -mmmx -m3dnow  |    47.77   |    96%
+ -mfpmath=sse                              |            |
+-------------------------------------------+------------+-----------
+
+
+Platform: Intel Pentium D, FreeBSD 6.1, 20 selected JPEGs
+* Small performance gain comparing to default build (~7%).
+
+-------------------------------------------+------------+-----------
+ libjpeg build CFLAGS / CXXFLAGS           | time (sec) | percentage
+-------------------------------------------+------------+-----------
+ FreeBSD ports defaults:                   |            |
+  -O2 -fno-strict-aliasing -pipe           |   24.757   |   100%
+-------------------------------------------+------------+-----------
+ -O3 -march=pentium4 -pipe                 |            |
+ -fomit-frame-pointer -msse2 -mmmx         |   23.083   |    93% 
  -mfpmath=sse                              |            |
 -------------------------------------------+------------+-----------
 
