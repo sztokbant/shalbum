@@ -14,6 +14,7 @@ version 1.3-pre
 
 	Bug Fixes:
 	* Fixed shalbum path on shalbumrec. Also checking if it exists.
+	* Fixed on shalbumrec 'grep' for index_pic on .shalbum.
 
 
 version 1.2 (29-Sep-2006)
