@@ -23,8 +23,8 @@ table_width="800"
 th_res="150"
 
 # number of table columns
-# default: "3"
-n_columns="3"
+# default: "1"
+n_columns="1"
 
 # site author's name
 # default: "Eduardo Sztokbant"

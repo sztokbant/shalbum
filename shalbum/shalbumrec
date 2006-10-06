@@ -69,7 +69,7 @@ global_title="My Albums"             # title for master album
 
 table_width="800"                    # width of HTML tables
 th_res="150"                         # thumbnail resolution
-n_columns="3"                        # number of table columns
+n_columns="1"                        # number of table columns
 
 author="Eduardo Sztokbant"           # site author's name
 e_mail='du@du.eti.br'                # site author's e-mail
