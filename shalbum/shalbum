@@ -721,6 +721,7 @@ fi
 
 total_files="`ls $images | wc -l`"
 
+println_info "$software_revision"
 println_info "Creating album"
 println_info "  title:    \"$title\""
 println_info "  subtitle: \"$date\""

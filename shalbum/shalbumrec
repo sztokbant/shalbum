@@ -89,6 +89,8 @@ color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
 
+echo $shalbumrec_revision
+
 if [ ! -e $shalbum ]; then
     echo "'$shalbum' not found. Exiting."
     exit

@@ -10,6 +10,7 @@ version 1.3-pre
 	* INSTALL and README documents reviewed.
 	* Sample configuration files renamed to shalbum.conf-sample and
 	  shalbumrec.conf-sample.
+	* Printing shalbum and shalbumrec revision info upon execution.
 
 	Bug Fixes:
 	* Fixed shalbum path on shalbumrec. Also checking if it exists.
