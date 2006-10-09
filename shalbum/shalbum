@@ -728,10 +728,11 @@ println_info "  subtitle: \"$date\""
 println_info "  third:    \"$third_title\""
 println_info "  author:   \"$author\""
 println_info "  e-mail:   \"$e_mail\""
-if [ -e _options ]; then
-    println_info "  _options: found, reading custom options"
+print_info   "  config:   "
+if [ -e _options ] || [ -e .shalbum ]; then
+    println_info "found, reading custom options"
 else
-    println_info "  _options: not found, using default options"
+    println_info "not found, using default options"
 fi
 println_info "  mhd:      $mhd"
 println_info "  images:   $(($total_files))"
