@@ -1,4 +1,7 @@
 version 1.4-pre
+	Improvements:
+	* Looking for ImageMagick's binaries before attempting to run.
+	
 	Bug Fixes:
 	* Fixed config file search output.
 

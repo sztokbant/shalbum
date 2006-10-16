@@ -17,7 +17,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.3"
+sw_version="1.4"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
@@ -753,6 +753,23 @@ fi
 mkdir ${tmp_dir}
 
 if [ "$only_index" != "yes" ]; then
+
+    # check if necessary ImageMagick's binaries are available
+    if [ ! -e "`which convert`" ]; then
+	println_info "ImageMagick's 'convert' not found. Exiting."
+	exit 1
+    fi
+
+    if [ ! -e "`which montage`" ]; then
+	println_info "ImageMagick's 'montage' not found. Exiting."
+	exit 1
+    fi
+
+    if [ ! -e "`which identify`" ]; then
+	println_info "ImageMagick's 'identify' not found. Exiting."
+	exit 1
+    fi
+
     mkdir ${tmp_dir}/thumbnails
     mkdir ${tmp_dir}/vga
 
