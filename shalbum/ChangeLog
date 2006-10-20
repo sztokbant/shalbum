@@ -1,4 +1,4 @@
-version 1.4-pre
+version 1.4 (20-Oct_2006)
 	Improvements:
 	* Looking for ImageMagick's binaries before attempting to run.
 	
