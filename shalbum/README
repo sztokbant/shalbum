@@ -1,7 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                                    README
-                        document updated: 06-Oct-2006
+                        document updated: 02-Dec-2006
 
 1.) About shalbum
 2.) Using shalbum
@@ -37,12 +37,12 @@ Usage: from a directory with image files run
 
  -V num    specify vga resolution
  -T num    specify thumbnail resolution
- -H num    specify huge image resolution (\"copy\" to keep same)
+ -H num    specify huge image resolution ("copy" to keep same)
 
  -W num    specify table width
  -R num    specify number of rows
  -C num    specify number of columns
- -O opt    image sorting option; either \"time\" or \"name\"
+ -O opt    image sorting option; either "time", "name" or "file"
  -S secs   seconds per pic in slideshow mode; zero=off
 
  -b link   link to go back

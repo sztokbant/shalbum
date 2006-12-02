@@ -17,7 +17,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.4"
+sw_version="1.5"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
@@ -108,9 +108,11 @@ while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
 	    cl_order_by="time"
 	  elif [ "$OPTARG" = "name" ]; then
 	    cl_order_by="name"
+	  elif [ "$OPTARG" = "file" ]; then
+	    cl_order_by="file"
 	  else
 	    echo "error: unexpected -O input value"
-	    echo "valid values: [time|name]"
+	    echo "valid values: [time|name|file]"
 	    exit 1
 	  fi
 	  ;;
@@ -155,7 +157,7 @@ while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
 	  echo " -W num    specify table width"
 	  echo " -R num    specify number of rows"
 	  echo " -C num    specify number of columns"
-	  echo " -O opt    image sorting option; either \"time\" or \"name\""
+	  echo " -O opt    image sorting option; either \"time\", \"name\" or \"file\""
 	  echo " -S secs   seconds per pic in slideshow mode; zero=off"
 	  echo ""
 	  echo " -b link   link to go back"
@@ -297,6 +299,7 @@ fi;
 quiet="no"                          # supress output
 only_index="no"                     # only create HTML files
 tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
+default_input_file=".shalbum-input" # default input file if order_by="file"
 
 # System-wide default options
 if [ -e /etc/shalbum/shalbum.conf ]; then
@@ -384,17 +387,6 @@ fi
 
 if [ "$cl_only_index" != "" ]; then
     only_index="$cl_only_index"
-fi
-
-# handle file names with white spaces and order by modify time
-if [ "$order_by" = "name" ]; then
-    LS_COMMAND="ls"
-elif [ "$order_by" = "time" ]; then
-    LS_COMMAND="ls -t -r"
-fi
-
-if [ "$LS_COMMAND" = "" ]; then
-    LS_COMMAND="ls -t -r"
 fi
 
 ###############
@@ -677,49 +669,83 @@ html_compliant_filename()
     html_compliant_filename=`echo $html_compliant_filename | sed -e s/'?'/'%3f'/g`
 }
 
+find_image_type()
+{
+    type="$1"
+
+    if [ "$CAT_COMMAND" != "" ]; then
+	INPUT="$CAT_COMMAND"
+    else
+	INPUT="ls"
+    fi
+
+    if [ "`$INPUT | grep -i \"\\.$type\$\" 2>/dev/null`" != "" ]; then
+	image_types=$image_types" $type"
+    fi
+}
+
+set_images_to_grep()
+{
+    rx_all_image_types=""
+    for type in $image_types; do
+	if [ "$rx_all_image_types" = "" ]; then
+	    rx_all_image_types="("$type"\$"
+	else
+	    rx_all_image_types=${rx_all_image_types}"|"$type"\$"
+	fi
+    done
+
+    if [ "$rx_all_image_types" != "" ]; then
+	rx_all_image_types=${rx_all_image_types}")"
+    fi
+}
+
 #########################
 # Part 0: Look for images
 #########################
 
-images=""
-image_types=""
-
-# JPG
-if [ "`ls *.[Jj][Pp][Gg] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Jj][Pp][Gg]'
-    image_types=$image_types' jpg'
+# handle file names with white spaces and order by modify time
+if [ "$order_by" = "name" ]; then
+    LS_COMMAND="ls"
+elif [ "$order_by" = "time" ]; then
+    LS_COMMAND="ls -t -r"
+elif [ "$order_by" = "file" ]; then
+    if [ -e "$default_input_file" ]; then
+	CAT_COMMAND="cat $default_input_file"
+    else
+	println_info "$default_input_file not found, assuming default input."
+    fi
 fi
 
-# GIF
-if [ "`ls *.[Gg][Ii][Ff] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Gg][Ii][Ff]'
-    image_types=$image_types' gif'
+if [ "$LS_COMMAND" = "" ] && [ "$CAT_COMMAND" = "" ]; then
+    LS_COMMAND="ls -t -r"
 fi
 
-# PNG
-if [ "`ls *.[Pp][Nn][Gg] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Pp][Nn][Gg]'
-    image_types=$image_types' png'
-fi
+find_image_type jpg
+find_image_type gif
+find_image_type png
+find_image_type bmp
+find_image_type tiff
 
-# BMP
-if [ "`ls *.[Bb][Mm][Pp] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Bb][Mm][Pp]'
-    image_types=$image_types' bmp'
-fi
+set_images_to_grep
 
-# TIFF
-if [ "`ls *.[Tt][Ii][Ff][Ff] 2>/dev/null`" != "" ]; then
-    images=$images' *.[Tt][Ii][Ff][Ff]'
-    image_types=$image_types' tiff'
-fi
-
-if [ "$images" = "" ]; then
-    print_err "No pictures in `pwd`"
+if [ "$rx_all_image_types" = "" ]; then
+    print_err "No pictures specified"
     exit 2
 fi
 
-total_files="`ls $images | wc -l`"
+if [ "$LS_COMMAND" != "" ]; then
+    all_files="`$LS_COMMAND | grep -i -E $rx_all_image_types`"
+    input_from="current dir: `pwd`"
+else
+    all_files="`$CAT_COMMAND | grep -i -E $rx_all_image_types`"
+    input_from="$default_input_file file"
+fi
+
+total_files="`ls $all_files | wc -l`"
+
+IFS='\
+'
 
 println_info "$software_revision"
 println_info "Creating album"
@@ -728,6 +754,7 @@ println_info "  subtitle: \"$date\""
 println_info "  third:    \"$third_title\""
 println_info "  author:   \"$author\""
 println_info "  e-mail:   \"$e_mail\""
+println_info "  input:    $input_from"
 print_info   "  config:   "
 if [ -e _options ] || [ -e .shalbum ]; then
     println_info "found, reading custom options"
@@ -738,9 +765,6 @@ println_info "  mhd:      $mhd"
 println_info "  images:   $(($total_files))"
 println_info "  type(s): $image_types"
 
-all_files="`$LS_COMMAND $images`"
-IFS='\
-'
 
 #############################
 # Part I: process image files

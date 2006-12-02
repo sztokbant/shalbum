@@ -171,7 +171,11 @@ long_description="yes"
 slideshow_time="5"
 
 # how to order the images (default: time)
-# available options: [time | name]
+# available options: [time | name | file]
+#
+# If "file" is specified, shalbum will look for .shalbum-input in
+# current dir and use the files listed on it as input in the specified
+# order. The .shalbum-input file should name one image file per line.
 order_by="time"
 
 # HTML layout

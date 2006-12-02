@@ -1,4 +1,14 @@
-version 1.4 (20-Oct_2006)
+version 1.5 (2-Dec-2006)
+	New Features:
+	* New option order_by="file" will consider a .shalbum-input file
+	  in the current dir as desired input in the specified order.
+	  The .shalbum-input file should name one image file per line.
+
+	Improvements:
+	* Refactoring on looking for image files strategy.
+
+
+version 1.4 (20-Oct-2006)
 	Improvements:
 	* Looking for ImageMagick's binaries before attempting to run.
 	
