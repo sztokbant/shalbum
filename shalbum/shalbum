@@ -17,7 +17,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.5"
+sw_version="1.6"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
@@ -48,7 +48,7 @@ else
 fi
 
 # process command-line options
-while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
+while getopts a:b:d:e:hil:mqr:t:vC:GH:IO:R:S:T:V:W: opt; do
   case $opt in
       # author's name
       a)  cl_author="$OPTARG"
@@ -99,8 +99,16 @@ while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
       C)  cl_n_columns="$OPTARG"
 	  ;;
 
+      # choses between ImageMagick and GraphicsMagick
+      G)  cl_magick="GM"
+	  ;;
+
       # huge image resolution
       H)  cl_huge_res="$OPTARG"
+	  ;;
+
+      # choses between ImageMagick and GraphicsMagick
+      I)  cl_magick="IM"
 	  ;;
 
       # order by
@@ -159,6 +167,9 @@ while getopts a:b:d:e:hil:mqr:t:vC:H:O:R:S:T:V:W: opt; do
 	  echo " -C num    specify number of columns"
 	  echo " -O opt    image sorting option; either \"time\", \"name\" or \"file\""
 	  echo " -S secs   seconds per pic in slideshow mode; zero=off"
+	  echo ""
+	  echo " -G        use GraphicsMagick"
+	  echo " -I        use ImageMagick"
 	  echo ""
 	  echo " -b link   link to go back"
 	  echo " -l label  back link label for album list site"
@@ -225,6 +236,8 @@ if [ $mhd != "yes" ]; then
     slideshow_time="5"              # seconds per pic in slideshow mode zero=off
     order_by="time"                 # how to order the images
 
+    magick="AUTO"                   # default: GraphicsMagick, if found
+
     # HTML layout
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -286,6 +299,8 @@ else
     long_description="yes"          # attach long description to pic page?
     slideshow_time="5"              # seconds per pic in slideshow mode zero=off
     order_by="name"                 # how to order the images
+
+    magick="AUTO"                   # default: GraphicsMagick, if found
 
     # HTML layout
     color_text="#ffffff"
@@ -387,6 +402,10 @@ fi
 
 if [ "$cl_only_index" != "" ]; then
     only_index="$cl_only_index"
+fi
+
+if [ "$cl_magick" != "" ]; then
+    magick="$cl_magick"
 fi
 
 ###############
@@ -778,20 +797,41 @@ mkdir ${tmp_dir}
 
 if [ "$only_index" != "yes" ]; then
 
-    # check if necessary ImageMagick's binaries are available
-    if [ ! -e "`which convert`" ]; then
-	println_info "ImageMagick's 'convert' not found. Exiting."
-	exit 1
+    # check for GraphicsMagick or ImageMagick's binaries (Default: GM)
+    if [ "$magick" = "GM" ] || [ "$magick" = "AUTO" ]; then
+	if [ "`which gm`" != "" ]; then
+	    gm="gm"
+	    magick="GM"
+	elif [ "$magick" = "GM" ]; then
+	    println_info "GraphicsMagick not found. Exiting."
+	    exit 1
+	fi
     fi
 
-    if [ ! -e "`which montage`" ]; then
-	println_info "ImageMagick's 'montage' not found. Exiting."
-	exit 1
+    if [ "$magick" = "IM" ] || [ "$magick" = "AUTO" ]; then
+	gm=""
+	magick="IM"
+
+	if [ "`which convert`" = "" ]; then
+	    println_info "ImageMagick's 'convert' not found. Exiting."
+	    exit 1
+	fi
+
+	if [ "`which montage`" = "" ]; then
+	    println_info "ImageMagick's 'montage' not found. Exiting."
+	    exit 1
+	fi
+
+	if [ "`which identify`" = "" ]; then
+	    println_info "ImageMagick's 'identify' not found. Exiting."
+	    exit 1
+	fi
     fi
 
-    if [ ! -e "`which identify`" ]; then
-	println_info "ImageMagick's 'identify' not found. Exiting."
-	exit 1
+    if [ "$magick" = "IM" ]; then
+	println_info "  magick:   ImageMagick"
+    elif [ "$magick" = "GM" ]; then
+	println_info "  magick:   GraphicsMagick"
     fi
 
     mkdir ${tmp_dir}/thumbnails
@@ -824,16 +864,16 @@ if [ "$only_index" != "yes" ]; then
 
 	# thumbnail watermark
 	print_info "[t${th_res}]"
-	convert -sharpen 3 $watermark_th_src -resize ${th_resize} +profile "*" $watermark_th
+	$gm convert -sharpen 3 $watermark_th_src -resize ${th_resize} +profile "*" $watermark_th
 	
 	# vga watermark
 	print_info "[v${vga_res}]"
-	convert -sharpen 3 $watermark_vga_src -resize ${vga_resize} +profile "*" $watermark_vga
+	$gm convert -sharpen 3 $watermark_vga_src -resize ${vga_resize} +profile "*" $watermark_vga
 
 	# huge watermark (same as vga)
 	if [ "$huge_res" != "0" ] && [ "$huge_res" != "copy" ]; then
 	    print_info "[h${huge_res}]"
-	    convert -sharpen 3 $watermark_vga_src -resize ${huge_resize} +profile "*" $watermark_huge
+	    $gm convert -sharpen 3 $watermark_vga_src -resize ${huge_resize} +profile "*" $watermark_huge
 	fi
 	    
 	println_info " ok!"
@@ -859,7 +899,7 @@ if [ "$only_index" != "yes" ]; then
 	# Rotate image according to JPEG EXIF orientation information
 	# based on http://jpegclub.org/exif_orientation.html
 	if [ ${exif_rotate} = "yes" ]; then
-	    case `identify -format "%[EXIF:Orientation]" "$file"` in
+	    case `$gm identify -format "%[EXIF:Orientation]" "$file"` in
 		2) rotate="180"
 		   flip="-flip"
 		   ;;
@@ -904,9 +944,9 @@ if [ "$only_index" != "yes" ]; then
 		fi
 	    
 		if [ $hugeframe = "yes" ]; then
-		    convert "$file" -rotate $rotate $flip -resize ${huge_resize} "$huge_file"
+		    $gm convert "$file" -rotate $rotate $flip -resize ${huge_resize} "$huge_file"
 		else
-		    convert "$file" -rotate $rotate $flip -resize ${huge_resize} -strip -quality ${huge_quality} "$huge_file"
+		    $gm convert "$file" -rotate $rotate $flip -resize ${huge_resize} -quality ${huge_quality} "$huge_file"
 		fi
 
 		# prevent "child" pictures from rotating
@@ -929,9 +969,9 @@ if [ "$only_index" != "yes" ]; then
 	fi
 	
 	if [ $vgaframe = "yes" ]; then
-	    convert "$file" -rotate $rotate $flip -resize ${vga_resize} "$vga_file"
+	    $gm convert "$file" -rotate $rotate $flip -resize ${vga_resize} "$vga_file"
 	else
-	    convert "$file" -rotate $rotate $flip -resize ${vga_resize} -strip -quality ${vga_quality} "$vga_file"
+	    $gm convert "$file" -rotate $rotate $flip -resize ${vga_resize} -quality ${vga_quality} "$vga_file"
 	fi
 	
 	# thumbnail
@@ -944,9 +984,9 @@ if [ "$only_index" != "yes" ]; then
 	fi
 
 	if [ $thframe = "yes" ]; then
-	    convert "${vga_file}" -resize ${th_resize} "${th_file}"
+	    $gm convert "${vga_file}" -resize ${th_resize} "${th_file}"
 	else
-	    convert "${vga_file}" -resize ${th_resize} -strip -quality ${th_quality} "${th_file}"
+	    $gm convert "${vga_file}" -resize ${th_resize} -quality ${th_quality} "${th_file}"
 	fi
 
 	# watermarks
@@ -964,17 +1004,17 @@ if [ "$only_index" != "yes" ]; then
 	# frames
 	if [ "$huge_res" != 0 ] && [ $hugeframe = "yes" ] && [ "$huge_res" != "copy" ]; then
 	    print_info "[hf]"
-	    montage "${huge_file}" -mode concatenate -frame $hugeframesize -strip -quality ${huge_quality} "${huge_file}"
+	    $gm montage "${huge_file}" -mode concatenate -frame $hugeframesize -quality ${huge_quality} "${huge_file}"
 	fi
 
 	if [ $vgaframe = "yes" ]; then
 	    print_info "[vf]"
-	    montage "${vga_file}" -mode concatenate -frame $vgaframesize -strip -quality ${vga_quality} "${vga_file}"
+	    $gm montage "${vga_file}" -mode concatenate -frame $vgaframesize -quality ${vga_quality} "${vga_file}"
 	fi;
 	
 	if [ $thframe = "yes" ]; then
 	    print_info "[tf]"
-	    montage "${th_file}" -mode concatenate -frame $thframesize -strip -quality ${th_quality} "${th_file}"
+	    $gm montage "${th_file}" -mode concatenate -frame $thframesize $STRIPy -quality ${th_quality} "${th_file}"
 	fi;
 
 	println_info " ok!"

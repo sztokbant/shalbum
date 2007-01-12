@@ -1,7 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                                    README
-                        document updated: 02-Dec-2006
+                        document updated: 12-Jan-2007
 
 1.) About shalbum
 2.) Using shalbum
@@ -17,7 +17,8 @@
 
 - Default options can be overridden with configuration files.
 
-- Requires ImageMagick - http://www.imagemagick.com.
+- Requires either ImageMagick - http://www.imagemagick.com - or
+  GraphicsMagick - http://www.graphicsmagick.org.
 
 ----------------------------------------------------------------------
 
@@ -44,6 +45,9 @@ Usage: from a directory with image files run
  -C num    specify number of columns
  -O opt    image sorting option; either "time", "name" or "file"
  -S secs   seconds per pic in slideshow mode; zero=off
+
+ -G        use GraphicsMagick
+ -I        use ImageMagick
 
  -b link   link to go back
  -l label  back link label for album list site
@@ -107,15 +111,19 @@ shalbumrec.conf-sample file distributed with shalbum.
 
 4.) Performance issues
 
-Version 1.2 of shalbum improved its algorithm for resizing
-images. Basing the resizing of a single image on its immediately
-superior-size equivalent rather than on the original file, it runs
-about twice as fast than version 1.1.
+- Version 1.2 of shalbum improved its algorithm for resizing
+  images. Basing the resize of a single image on its immediately
+  superior-size equivalent rather than on the original file, it runs
+  about twice as fast than version 1.1.
 
-Building an optimized version of libjpeg is something that can improve
-shalbum performance. The same should be true for other libs used by
-ImageMagick such as libtiff and libpng. Feel free to make your own
-tests.
+- Version 1.6 of shalbum supports either ImageMagick or GraphicsMagick.
+  Using GM shalbum runs about 30% faster than IM.
+
+- Building an optimized version of libjpeg is something that can
+  improve shalbum's performance. The same should be true for other libs
+  used by ImageMagick such as libtiff and libpng. Feel free to make your
+  own tests.
+
 
 Here I present you the benchmarks of some simple experiments
 optimizing libjpeg on different platforms and systems:
@@ -169,16 +177,16 @@ Platform: Intel Pentium D, FreeBSD 6.1, 20 selected JPEGs
 5.) Note for non-Unix users (e.g. Windows)
 
 It is known that shalbum runs very well on any Unix platform
-containing ImageMagick and a bourne shell interpreter. I myself
-already run it on Linux, FreeBSD and MacOS X. I also know about people
-running shalbum on Microsoft Windows systems over CygWin, a Linux-like
-environment for Windows.
+containing ImageMagick or GraphicsMagick and a bourne shell
+interpreter. I myself already run it on Linux, FreeBSD and MacOS X. I
+also know about people running shalbum on Microsoft Windows systems
+over CygWin, a Linux-like environment for Windows.
 
 Instructions on installing CygWin can be found at CygWin official
 website - http://www.cygwin.com. Don't forget to Install a bourne
-shell compatible interpreter and ImageMagick. I believe just selecting
-'ImageMagick' and 'bash' packages during CygWin installation is
-enough.
+shell compatible interpreter and ImageMagick or GraphicsMagick. I
+believe just selecting 'ImageMagick' (or 'GraphicsMagick') and 'bash'
+packages during CygWin installation is enough.
 
 Once CygWin is installed shalbum shall run like on any other Unix.
 

@@ -1,7 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                           INSTALLATION INSTRUCTIONS
-                        document updated: 06-Oct-2006
+                        document updated: 12-Jan-2007
 
 
 Installing
@@ -13,8 +13,8 @@ shalbum will be installed in '/usr/local', the default PREFIX. You can
 override this by adding 'PREFIX=/the/path/you/want' to the make
 command-line.
 
-Don't forget shalbum requires your system to have ImageMagick version
-6.2 or greater installed.
+Don't forget shalbum requires your system to have GraphicsMagick or
+ImageMagick version 6.2 or greater installed.
 
 ----------------------------------------------------------------------
 
