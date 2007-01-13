@@ -17,11 +17,11 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-shalbumrec_version="1.4"
+shalbumrec_version="1.7"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
 
-while getopts  b:hil:v opt; do
+while getopts b:hil:qvGIQ opt; do
   case $opt in
       # link to go back
       b)  cl_back_link="$OPTARG"
@@ -35,9 +35,25 @@ while getopts  b:hil:v opt; do
       l)  cl_backlink_label="$OPTARG"
 	  ;;
 
+      # quiet
+      q)  cl_quiet="yes"
+	  ;;
+
       # version
       v)  echo ${shalbumrec_revision}
 	  exit 1
+	  ;;
+
+      # choses between ImageMagick and GraphicsMagick
+      G)  cl_magick="GM"
+	  ;;
+
+      # choses between ImageMagick and GraphicsMagick
+      I)  cl_magick="IM"
+	  ;;
+
+      # quiet shalbum
+      Q)  cl_quiet_shalbum="yes"
 	  ;;
 
       # help screen
@@ -51,7 +67,12 @@ while getopts  b:hil:v opt; do
 	  echo " -b link   link to go back"
 	  echo " -l label  back link label for album list site"
 	  echo ""
+	  echo " -G        use GraphicsMagick"
+	  echo " -I        use ImageMagick"
+	  echo ""
 	  echo " -i        don't resize shalbum images, only rebuild the HTML files"
+	  echo " -q        quiet mode, supress output"
+	  echo " -Q        supresses shalbum output"
 	  echo ""
 	  echo "More options can be customized by using a .shalbumrec file."
 	  exit 1
@@ -78,6 +99,8 @@ backlink_label=""                    # back link label for album list site
 
 only_index="no"                      # only create HTML files
 
+magick="AUTO"                        # default: GraphicsMagick, if found
+
 # HTML layout
 color_text="#ffffff"
 color_bgcolor="#000000"
@@ -86,17 +109,8 @@ color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
 
-echo $shalbumrec_revision
-
-if [ ! -e $shalbum ]; then
-    echo "'$shalbum' not found. Exiting."
-    exit 1
-fi
-
-if [ ! -e "`which convert`" ]; then
-    println_info "ImageMagick's 'convert' not found. Exiting."
-    exit 1
-fi
+quiet="no"                           # supress output
+quiet_shalbum="no"                   # supress shalbum output
 
 # System-wide default options
 if [ -e /etc/shalbum/shalbumrec.conf ]; then
@@ -121,9 +135,39 @@ if [ "$cl_backlink_label" != "" ]; then
     backlink_label="$cl_backlink_label"
 fi
 
+if [ "$cl_quiet" != "" ]; then
+    quiet="$cl_quiet"
+fi
+
+if [ "$cl_quiet_shalbum" != "" ]; then
+    quiet_shalbum="$cl_quiet_shalbum"
+fi
+
 if [ "$cl_only_index" != "" ]; then
     only_index="$cl_only_index"
 fi
+
+if [ "$cl_magick" != "" ]; then
+    magick="$cl_magick"
+fi
+
+###############
+# Aux functions
+###############
+
+println_info()
+{
+    if [ "$quiet" != "yes" ]; then
+	echo "$*"
+    fi
+}
+
+print_info()
+{
+    if [ "$quiet" != "yes" ]; then
+	echo -n "$*"
+    fi
+}
 
 add_credits_footer()
 {
@@ -158,6 +202,50 @@ add_credits_footer()
     fi
 }
 
+
+println_info $shalbumrec_revision
+
+if [ "$shalbum" = "" ]; then
+    echo "shalbum not found. Exiting."
+    exit 1
+fi
+
+if [ "$quiet_shalbum" = "yes" ] || [ "$quiet" = "yes" ]; then
+    dash_q="-q"
+fi
+
+if [ "$only_index" = "yes" ]; then
+    dash_i="-i"
+fi
+
+# check for GraphicsMagick or ImageMagick's binaries (Default: GM)
+if [ "$magick" = "GM" ] || [ "$magick" = "AUTO" ]; then
+    if [ "`which gm`" != "" ]; then
+	gm="gm"
+	magick="GM"
+    elif [ "$magick" = "GM" ]; then
+	echo "GraphicsMagick not found. Exiting."
+	exit 1
+    fi
+fi
+
+if [ "$magick" = "IM" ] || [ "$magick" = "AUTO" ]; then
+    gm=""
+    magick="IM"
+
+    if [ "`which convert`" = "" ]; then
+	echo "ImageMagick's 'convert' not found. Exiting."
+	exit 1
+    fi
+fi
+
+if [ "$magick" = "IM" ]; then
+    println_info "  magick:   ImageMagick"
+elif [ "$magick" = "GM" ]; then
+    println_info "  magick:   GraphicsMagick"
+fi
+
+
 IFS='
 '
 
@@ -165,9 +253,9 @@ dirname_bak="${dirname}.bak"
 if [ -e "${dirname}" ] && [ "${only_index}" != "yes" ]; then
     # remove previous backup and backup current $dirname
     if [ -e "${dirname_bak}" ]; then
-	echo -n "Cleaning up previous backup directory..."
+	print_info "Cleaning up previous backup directory..."
 	rm -rf "${dirname_bak}"
-	echo "done!"
+	println_info "done!"
     fi
     mv "${dirname}" "${dirname_bak}"
 fi
@@ -177,21 +265,13 @@ mkdir -p "${dirname}"
 # create albums
 for dir in `ls`; do
     if [ -d "$dir" ] && [ "$dir" != "$dirname" ] && [ "$dir" != "$dirname_bak" ]; then
-	echo "- Entering '$dir' directory..."
+	println_info "- Running shalbum in '$dir' directory"
 
 	cd "$dir"
 	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
-	    if [ "${only_index}" = "yes" ]; then
-		${shalbum} -b "${back_link}" -l "${backlink_label}" -i
-	    else
-		${shalbum} -b "${back_link}" -l "${backlink_label}"
-	    fi
+	    ${shalbum} -b "${back_link}" -l "${backlink_label}" ${dash_i} ${dash_q}
 	else
-	    if [ "${only_index}" = "yes" ]; then
-		${shalbum} -i
-	    else
-		${shalbum}
-	    fi
+	    ${shalbum} ${dash_i} ${dash_q}
 	fi
    	cd - 1>/dev/null
 	mkdir -p "${dirname}/$dir"
@@ -237,8 +317,8 @@ for dir in `ls`; do
 	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d ¬ -f 2`"
 	DATE="`grep '<!-- shalbumrec:date' index.html | cut -d ¬ -f 2`"
 
-	echo "Generating thumbnail for '$dir'"
-	convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
+	println_info "Generating thumbnail for '$dir'"
+	$gm convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
 
 	if [ $col_counter -eq 0 ]; then
 	    echo "<tr>" >> ../index.html
@@ -271,4 +351,4 @@ mkdir -p "${th_dirname}"
 mv th_*.jpg "${th_dirname}"
 cd ..
 
-echo "Done!"
+println_info "Done!"

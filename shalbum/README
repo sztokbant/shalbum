@@ -1,7 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                                    README
-                        document updated: 12-Jan-2007
+                        document updated: 13-Jan-2007
 
 1.) About shalbum
 2.) Using shalbum
@@ -94,7 +94,12 @@ Usage: from a directory containing sub-directories with image files run
  -b link   link to go back
  -l label  back link label for album list site
 
+ -G        use GraphicsMagick
+ -I        use ImageMagick
+
  -i        don't resize shalbum images, only rebuild the HTML files
+ -q        quiet mode, supress output
+ -Q        supresses shalbum output
 
 You can define your own default options by creating a
 '/etc/shalbum/shalbumrec.conf' or a '$HOME/.shalbum/shalbumrec.conf'
