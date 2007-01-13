@@ -806,7 +806,7 @@ if [ "$only_index" != "yes" ]; then
 	    gm="gm"
 	    magick="GM"
 	elif [ "$magick" = "GM" ]; then
-	    println_info "GraphicsMagick not found. Exiting."
+	    echo "GraphicsMagick not found. Exiting."
 	    exit 1
 	fi
     fi
@@ -816,17 +816,17 @@ if [ "$only_index" != "yes" ]; then
 	magick="IM"
 
 	if [ "`which convert`" = "" ]; then
-	    println_info "ImageMagick's 'convert' not found. Exiting."
+	    echo "ImageMagick's 'convert' not found. Exiting."
 	    exit 1
 	fi
 
 	if [ "`which montage`" = "" ]; then
-	    println_info "ImageMagick's 'montage' not found. Exiting."
+	    echo "ImageMagick's 'montage' not found. Exiting."
 	    exit 1
 	fi
 
 	if [ "`which identify`" = "" ]; then
-	    println_info "ImageMagick's 'identify' not found. Exiting."
+	    echo "ImageMagick's 'identify' not found. Exiting."
 	    exit 1
 	fi
     fi
