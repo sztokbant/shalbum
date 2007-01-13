@@ -17,7 +17,10 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.6"
+# time
+start_time="`date +%s`"
+
+sw_version="1.7"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
 
@@ -841,6 +844,9 @@ if [ "$only_index" != "yes" ]; then
 	mkdir ${tmp_dir}/huge
     fi
     
+    # time elapsed
+    img_start_time="`date +%s`"
+
     # generate watermarks
     if [ $watermark = "yes" ]; then
 	print_info "Creating watermarks: "
@@ -1020,7 +1026,10 @@ if [ "$only_index" != "yes" ]; then
 	println_info " ok!"
 
     done;
-    
+
+    # time
+    img_end_time="`date +%s`"
+
     if [ $watermark = "yes" ]; then
 	rm $watermark_vga $watermark_th $watermark_huge
     fi;
@@ -1029,6 +1038,9 @@ fi; # !only_index
 ##########################
 # Part II: the index files
 ##########################
+
+# time
+idx_start_time="`date +%s`"
 
 print_info "Generating indexes..."
 
@@ -1298,6 +1310,9 @@ if [ $neighbors -eq 0 ]; then
 fi;
 ################################### /CREATION #################################
 
+# time
+idx_end_time="`date +%s`"
+
 println_info " ok!"
 
 ##################
@@ -1350,5 +1365,17 @@ if [ $multi_html = "yes" ]; then
 fi
 
 println_info " ok!"
+
+# time
+end_time="`date +%s`"
+
+img_time=$(($img_end_time-$img_start_time))
+idx_time=$(($idx_end_time-$idx_start_time))
+total_time=$(($end_time-$start_time))
+
+print_info "Elapsed:  "
+print_info "img ${img_time}s, "
+print_info "idx ${idx_time}s, "
+println_info "total ${total_time}s"
 
 exit 0
