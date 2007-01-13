@@ -17,9 +17,12 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# time
+start_time="`date +%s`"
+
 shalbumrec_version="1.7"
 shalbumrec_revision_date='$Date::             $'
-shalbumrec_revision="shalbumrec $shalbumrec_version - http://sourceforge.net/projects/shalbum - $shalbumrec_revision_date"
+shalbumrec_revision="shalbumrec $shalbumrec_version - http://shalbum.sf.net - $shalbumrec_revision_date"
 
 while getopts b:hil:qvGIQ opt; do
   case $opt in
@@ -181,7 +184,7 @@ add_credits_footer()
 	echo '<td width="50%" align="left" valign="top">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
-	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='http://sourceforge.net/projects/shalbum' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
+	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='http://shalbum.sf.net' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
 	fi
 	
         # W3C HTML 4.01 compliant banner
@@ -280,7 +283,13 @@ for dir in `ls`; do
     fi
 done
 
+##############################################
 # create thumbnails and master index.html file
+##############################################
+
+# time
+idx_start_time="`date +%s`"
+
 cd "${dirname}"
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > index.html
@@ -347,8 +356,22 @@ add_credits_footer index.html
 echo "</center></body></html>" >> index.html
 echo "<!-- created with $shalbumrec_revision -->" >> index.html
 
+# time
+idx_end_time="`date +%s`"
+
 mkdir -p "${th_dirname}"
 mv th_*.jpg "${th_dirname}"
 cd ..
 
 println_info "Done!"
+
+# time
+end_time="`date +%s`"
+total_time=$(($end_time-$start_time))
+idx_time=$(($idx_end_time-$idx_start_time))
+
+print_info "Elapsed:  "
+print_info "idx/img ${idx_time}s, "
+println_info "total ${total_time}s"
+
+exit 0
