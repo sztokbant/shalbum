@@ -1,4 +1,4 @@
-version 1.7
+version 1.7 (13-Jan-2007)
 	New Features:
 	* shalbum and shalbumrec now calculate and print running time
 	  information.
