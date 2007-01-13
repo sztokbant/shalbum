@@ -22,7 +22,7 @@ start_time="`date +%s`"
 
 sw_version="1.7"
 sw_rev_date='$Date::             $'
-software_revision="shalbum $sw_version - http://sourceforge.net/projects/shalbum - $sw_rev_date"
+software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
 
 # TODO-LIST:
 #   - HTML files should be created inside ${tmp_dir}
@@ -485,7 +485,7 @@ add_credits_footer()
 	echo '<td width="50%" align="left" valign="top">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
-	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='http://sourceforge.net/projects/shalbum' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
+	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='http://shalbum.sf.net' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
 	fi
 	
         # W3C HTML 4.01 compliant banner
