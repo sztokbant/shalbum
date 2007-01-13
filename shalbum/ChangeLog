@@ -1,8 +1,8 @@
 version 1.7
 	New Features:
 	* shalbum now calculates and prints running time info.
-	* New shalbumrec options '-Q' to supress shalbum's output, and
-	  '-q' supress all output.
+	* New shalbumrec options '-Q' to suppress shalbum's output, and
+	  '-q' suppress all output.
 	* shalbumrec now supports GraphicsMagick too.
 
 	Improvements:

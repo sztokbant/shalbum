@@ -179,7 +179,7 @@ while getopts a:b:d:e:hil:mqr:t:vC:GH:IO:R:S:T:V:W: opt; do
 	  echo ""
 	  echo " -m        selects mhd secondary set of default options"
 	  echo " -i        don't resize images, only rebuild the HTML files"
-	  echo " -q        quiet mode, supress output"
+	  echo " -q        quiet mode, suppress output"
 	  echo ""
 	  echo "More options can be customized by using a .shalbum file."
 	  exit 1
@@ -314,7 +314,7 @@ else
     font_face="Arial, Helvetica"
 fi;
 
-quiet="no"                          # supress output
+quiet="no"                          # suppress output
 only_index="no"                     # only create HTML files
 tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 default_input_file=".shalbum-input" # default input file if order_by="file"

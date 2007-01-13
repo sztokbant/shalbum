@@ -54,7 +54,7 @@ Usage: from a directory with image files run
 
  -m        selects mhd secondary set of default options
  -i        don't resize images, only rebuild the HTML files
- -q        quiet mode, supress output
+ -q        quiet mode, suppress output
 
 You can define your own default options by creating a
 '/etc/shalbum/shalbum.conf' or a '$HOME/.shalbum/shalbum.conf'
@@ -98,8 +98,8 @@ Usage: from a directory containing sub-directories with image files run
  -I        use ImageMagick
 
  -i        don't resize shalbum images, only rebuild the HTML files
- -q        quiet mode, supress output
- -Q        supresses shalbum output
+ -q        quiet mode, suppress output
+ -Q        suppress shalbum output
 
 You can define your own default options by creating a
 '/etc/shalbum/shalbumrec.conf' or a '$HOME/.shalbum/shalbumrec.conf'

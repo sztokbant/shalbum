@@ -71,8 +71,8 @@ while getopts b:hil:qvGIQ opt; do
 	  echo " -I        use ImageMagick"
 	  echo ""
 	  echo " -i        don't resize shalbum images, only rebuild the HTML files"
-	  echo " -q        quiet mode, supress output"
-	  echo " -Q        supresses shalbum output"
+	  echo " -q        quiet mode, suppress output"
+	  echo " -Q        suppress shalbum output"
 	  echo ""
 	  echo "More options can be customized by using a .shalbumrec file."
 	  exit 1
@@ -109,8 +109,8 @@ color_vlink="#888888"
 color_alink="#ff0000"
 font_face="Arial, Helvetica"
 
-quiet="no"                           # supress output
-quiet_shalbum="no"                   # supress shalbum output
+quiet="no"                           # suppress output
+quiet_shalbum="no"                   # suppress shalbum output
 
 # System-wide default options
 if [ -e /etc/shalbum/shalbumrec.conf ]; then
