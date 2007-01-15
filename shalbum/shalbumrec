@@ -20,7 +20,7 @@
 # time
 start_time="`date +%s`"
 
-shalbumrec_version="1.7"
+shalbumrec_version="1.8"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://shalbum.sf.net - $shalbumrec_revision_date"
 
@@ -126,8 +126,8 @@ if [ -e $HOME/.shalbum/shalbumrec.conf ]; then
 fi
 
 # read user-defined options
-if [ -e .shalbumrec ]; then
-    . .shalbumrec
+if [ -e ./.shalbumrec ]; then
+    . ./.shalbumrec
 fi
 
 if [ "$cl_back_link" != "" ]; then

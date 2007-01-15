@@ -20,7 +20,7 @@
 # time
 start_time="`date +%s`"
 
-sw_version="1.7"
+sw_version="1.8"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
 
@@ -331,11 +331,11 @@ fi
 
 # read user-defined options
 # deprecated
-if [ -e _options ]; then
-    . _options
+if [ -e ./_options ]; then
+    . ./_options
 fi
-if [ -e .shalbum ]; then
-    . .shalbum
+if [ -e ./.shalbum ]; then
+    . ./.shalbum
 fi
 
 # options chosen from command-line if specified

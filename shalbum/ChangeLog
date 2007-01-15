@@ -1,3 +1,9 @@
+version 1.8
+	Bug Fixes:
+	* Small fix reading config files to correctly support dash
+	  (Debian Almquist shell), default sh on Ubuntu Linux systems.
+
+
 version 1.7 (13-Jan-2007)
 	New Features:
 	* shalbum and shalbumrec now calculate and print running time
