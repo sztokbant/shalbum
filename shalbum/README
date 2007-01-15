@@ -1,7 +1,7 @@
               shalbum - http://sourceforge.net/projects/shalbum
               =================================================
                                    README
-                        document updated: 13-Jan-2007
+                        document updated: 15-Jan-2007
 
 1.) About shalbum
 2.) Using shalbum
@@ -117,18 +117,23 @@ shalbumrec.conf-sample file distributed with shalbum.
 4.) Performance issues
 
 - Version 1.2 of shalbum improved its algorithm for resizing
-  images. Basing the resize of a single image on its immediately
-  superior-size equivalent rather than on the original file, it runs
-  about twice as fast than version 1.1.
+  images. It resizes a single image using its immediately superior-size
+  equivalent as input rather than the original file, which makes it run
+  in about half of the time spent by version 1.1.
 
-- Version 1.6 of shalbum supports either ImageMagick or GraphicsMagick.
-  Using GM shalbum runs about 30% faster than IM.
+- Version 1.6 of shalbum supports not only ImageMagick but also
+  GraphicsMagick. With GM shalbum runs about 30-50% faster than with IM.
+  GraphicsMagick 1.2 (still beta) is apparently faster than 1.1 and
+  might be worth a try.
 
-- Building an optimized version of libjpeg is something that can
+- As of version 1.8 shalbum solved some dash (Debian Almquist shell)
+  compatibility issues. Using dash instead of bash as default /bin/sh
+  makes POSIX-shell script interpretation about twice as fast.
+
+- Building an optimized version of libjpeg is another thing that can
   improve shalbum's performance. The same should be true for other libs
   used by ImageMagick such as libtiff and libpng. Feel free to make your
   own tests.
-
 
 Here I present you the benchmarks of some simple experiments
 optimizing libjpeg on different platforms and systems:
@@ -190,8 +195,8 @@ over CygWin, a Linux-like environment for Windows.
 Instructions on installing CygWin can be found at CygWin official
 website - http://www.cygwin.com. Don't forget to Install a bourne
 shell compatible interpreter and ImageMagick or GraphicsMagick. I
-believe just selecting 'ImageMagick' (or 'GraphicsMagick') and 'bash'
-packages during CygWin installation is enough.
+believe just selecting 'GraphicsMagick' (or 'ImageMagick') and 'dash'
+(or 'bash') packages during CygWin installation is enough.
 
 Once CygWin is installed shalbum shall run like on any other Unix.
 
