@@ -27,12 +27,12 @@ th_res="150"
 n_columns="1"
 
 # site author's name
-# default: "Eduardo Sztokbant"
-author="Eduardo Sztokbant"
+# default: ""
+author=""
 
 # site author's e-mail
-# default: "du@du.eti.br"
-e_mail='du@du.eti.br'
+# default: ""
+e_mail=''
 
 # print link to shalbum site
 # default: "yes"

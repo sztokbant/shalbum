@@ -1,7 +1,7 @@
 #!/bin/sh
 #  $Id$
 
-#  Copyright 2006 Eduardo Sztokbant <du@du.eti.br>
+#  Copyright 2006 Eduardo Sztokbant <du at du.eti.br>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -92,8 +92,8 @@ table_width="800"                    # width of HTML tables
 th_res="150"                         # thumbnail resolution
 n_columns="1"                        # number of table columns
 
-author="Eduardo Sztokbant"           # site author's name
-e_mail='du@du.eti.br'                # site author's e-mail
+author=""                            # site author's name
+e_mail=''                            # site author's e-mail
 support_shalbum="yes"                # print link to shalbum site
 w3c_ok_banner="yes"                  # print "W3C HTML 4.01 compliant" banner
 
@@ -197,7 +197,9 @@ add_credits_footer()
         # Author
 	if [ "$author" != "" ]; then
 	    echo "<p><font size='1' face='${font_face}'><b>$credits_str $author</b></font><br />" >> $1
-	    echo "<a href='mailto:$e_mail'><font size='1' face='${font_face}'><b>$e_mail</b></font></a></p>" >> $1
+	    if [ "$e_mail" != "" ]; then
+		echo "<a href='mailto:$e_mail'><font size='1' face='${font_face}'><b>$e_mail</b></font></a></p>" >> $1
+	    fi
 	fi
 	
 	echo '</tr></table>' >> $1

@@ -62,13 +62,13 @@ n_columns=3
 #         FILENAME2.JPG=other description for other pic
 pic_label_type="conf"
 
-# author (default: "Eduardo Sztokbant" ;)
+# author (default: "" ;)
 # site author's name
-author="Eduardo Sztokbant"
+author=""
 
-# e_mail (default: "du@du.eti.br")
+# e_mail (default: "")
 # site author's e-mail
-e_mail='du@du.eti.br'
+e_mail=''
 
 # string to be added to album's title (default: "")
 third_title=""
