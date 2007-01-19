@@ -1,4 +1,4 @@
-version 1.8
+version 1.8 (19-Jan-2007)
 	Bug Fixes:
 	* Small fix reading config files to correctly support dash
 	  (Debian Almquist shell), the default sh on Ubuntu Linux systems.
