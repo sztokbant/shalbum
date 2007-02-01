@@ -20,7 +20,7 @@
 # time
 start_time="`date +%s`"
 
-sw_version="1.8"
+sw_version="1.9"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
 
@@ -1371,7 +1371,9 @@ println_info " ok!"
 # time
 end_time="`date +%s`"
 
-img_time=$(($img_end_time-$img_start_time))
+if [ "$only_index" != "yes" ]; then
+    img_time=$(($img_end_time-$img_start_time))
+fi
 idx_time=$(($idx_end_time-$idx_start_time))
 total_time=$(($end_time-$start_time))
 
