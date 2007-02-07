@@ -771,7 +771,7 @@ else
     input_from="$default_input_file file"
 fi
 
-total_files="`ls $all_files | wc -l`"
+total_files="`expr \`ls $all_files | wc -l\` + 0`"
 
 IFS='\
 '
@@ -791,7 +791,7 @@ else
     println_info "not found, using default options"
 fi
 println_info "  mhd:      $mhd"
-println_info "  images:   `expr $total_files + 0`"
+println_info "  images:   $total_files"
 println_info "  type(s): $image_types"
 
 
