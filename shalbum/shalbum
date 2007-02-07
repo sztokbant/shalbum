@@ -17,10 +17,15 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# time
-start_time="`date +%s`"
+uname=`uname`
 
-sw_version="1.9"
+# time
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    start_time="`date +%s`"
+fi
+
+sw_version="1.10"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
 
@@ -32,19 +37,19 @@ software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
 #######
 
 # read options specified in _title, _date and _mhd files (deprecated)
-if [ -e _title ]; then
+if [ -f _title ]; then
     title="`cat _title`"
 else
     title="Album"
 fi
 
-if [ -e _date ]; then
+if [ -f _date ]; then
     date="`cat _date`"
 else
     date=""
 fi
 
-if [ -e _mhd ]; then
+if [ -f _mhd ]; then
     mhd="yes"
 else
     mhd="no"
@@ -320,21 +325,21 @@ tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 default_input_file=".shalbum-input" # default input file if order_by="file"
 
 # System-wide default options
-if [ -e /etc/shalbum/shalbum.conf ]; then
+if [ -f /etc/shalbum/shalbum.conf ]; then
     . /etc/shalbum/shalbum.conf
 fi
 
 # User default options
-if [ -e $HOME/.shalbum/shalbum.conf ]; then
+if [ -f $HOME/.shalbum/shalbum.conf ]; then
     . $HOME/.shalbum/shalbum.conf
 fi
 
 # read user-defined options
 # deprecated
-if [ -e ./_options ]; then
+if [ -f ./_options ]; then
     . ./_options
 fi
-if [ -e ./.shalbum ]; then
+if [ -f ./.shalbum ]; then
     . ./.shalbum
 fi
 
@@ -425,7 +430,7 @@ println_info()
 print_info()
 {
     if [ "$quiet" != "yes" ]; then
-	echo -n "$*"
+	printf "$*"
     fi
 }
 
@@ -447,20 +452,20 @@ create_pages_index()
     echo '<table width="'$table_width'"><tr><td align="center">' >> $1
     if [ $n_rows -gt 0 ]; then
 	aux=1
-	echo -n "<font size='2' face='${font_face}'><b>__LAST_PAGE__ " >> $1
+	echo "<font size='2' face='${font_face}'><b>__LAST_PAGE__ " >> $1
 	while [ $aux -le $idx_counter ]; do
-	    last=$(($aux-1))
-	    next=$(($aux+1))
+	    last=`expr $aux - 1`
+	    next=`expr $aux + 1`
 
-	    echo -n '<a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a> ' >> $1
+	    echo '<a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a> ' >> $1
 
 	    if [ $aux -eq $idx_counter ]; then
-		echo -n ' __NEXT_PAGE__' >> $1
+		echo ' __NEXT_PAGE__' >> $1
 	    else
-		echo -n ' ' >> $1
+		echo ' ' >> $1
 	    fi
 
-	    aux=$(($aux+1))
+	    aux=`expr $aux + 1`
 	done;
 	echo '</b></font>' >> $1
     fi;
@@ -633,7 +638,7 @@ create_page_for_pic()
     # long description if appropriate
     if [ "$long_description" = "yes" ]; then
         long_description_file="$1""-description.html"
-	if [ -e $long_description_file ]; then
+	if [ -f $long_description_file ]; then
 	    echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
 	    cat $long_description_file >> $html_file
 	    echo "</td></tr></table>" >> $html_file
@@ -734,7 +739,7 @@ if [ "$order_by" = "name" ]; then
 elif [ "$order_by" = "time" ]; then
     LS_COMMAND="ls -t -r"
 elif [ "$order_by" = "file" ]; then
-    if [ -e "$default_input_file" ]; then
+    if [ -f "$default_input_file" ]; then
 	CAT_COMMAND="cat $default_input_file"
     else
 	println_info "$default_input_file not found, assuming default input."
@@ -759,10 +764,10 @@ if [ "$rx_all_image_types" = "" ]; then
 fi
 
 if [ "$LS_COMMAND" != "" ]; then
-    all_files="`$LS_COMMAND | grep -i -E $rx_all_image_types`"
+    all_files="`$LS_COMMAND | egrep -i $rx_all_image_types`"
     input_from="current dir: `pwd`"
 else
-    all_files="`$CAT_COMMAND | grep -i -E $rx_all_image_types`"
+    all_files="`$CAT_COMMAND | egrep -i $rx_all_image_types`"
     input_from="$default_input_file file"
 fi
 
@@ -780,13 +785,13 @@ println_info "  author:   \"$author\""
 println_info "  e-mail:   \"$e_mail\""
 println_info "  input:    $input_from"
 print_info   "  config:   "
-if [ -e _options ] || [ -e .shalbum ]; then
+if [ -f _options ] || [ -f .shalbum ]; then
     println_info "found, reading custom options"
 else
     println_info "not found, using default options"
 fi
 println_info "  mhd:      $mhd"
-println_info "  images:   $(($total_files))"
+println_info "  images:   `expr $total_files + 0`"
 println_info "  type(s): $image_types"
 
 
@@ -795,7 +800,7 @@ println_info "  type(s): $image_types"
 #############################
 
 # delete previous temporary files
-if [ -e ${tmp_dir} ]; then
+if [ -d ${tmp_dir} ]; then
     rm -rf ${tmp_dir}
 fi
 mkdir ${tmp_dir}
@@ -847,7 +852,10 @@ if [ "$only_index" != "yes" ]; then
     fi
     
     # time elapsed
-    img_start_time="`date +%s`"
+    if [ $uname != "SunOS" ]; then
+        # this doesn't work on SunOS
+	img_start_time="`date +%s`"
+    fi
 
     # generate watermarks
     if [ $watermark = "yes" ]; then
@@ -890,10 +898,10 @@ if [ "$only_index" != "yes" ]; then
     println_info "Creating pictures: "
     processed=0
     for file in $all_files; do
-	processed=$(($processed+1))
-	processed100=$(($processed*100))
-	percent=$(($processed100/$total_files))
-	
+	processed=`expr $processed + 1`
+	processed100=`expr $processed \* 100`
+	percent=`expr $processed100 \/ $total_files`
+
 	printf_info "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
 
         #   1       2      3     4       5           6          7         8
@@ -1030,7 +1038,10 @@ if [ "$only_index" != "yes" ]; then
     done;
 
     # time
-    img_end_time="`date +%s`"
+    if [ $uname != "SunOS" ]; then
+        # this doesn't work on SunOS
+	img_end_time="`date +%s`"
+    fi
 
     if [ $watermark = "yes" ]; then
 	rm $watermark_vga $watermark_th $watermark_huge
@@ -1042,7 +1053,10 @@ fi; # !only_index
 ##########################
 
 # time
-idx_start_time="`date +%s`"
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    idx_start_time="`date +%s`"
+fi
 
 print_info "Generating indexes..."
 
@@ -1061,7 +1075,7 @@ if [ $multi_html = "yes" ]; then
     b4_file="[NONE]"
 fi;
 
-col_percentage=$((100/$n_columns))
+col_percentage=`expr 100 \/ $n_columns`
 
 for file in $all_files; do
 
@@ -1117,7 +1131,7 @@ for file in $all_files; do
 	elif [ "$pic_label_type" = "filename" ]; then
 	    pic_subtitle=$file
 	elif [ "$pic_label_type" = "conf" ]; then
-	    if [ -e _subtitles ]; then
+	    if [ -f _subtitles ]; then
 		pic_subtitle="`grep \"${file}=\" _subtitles | cut -d '=' -f 2`"
 	    fi
 	fi;
@@ -1137,14 +1151,14 @@ for file in $all_files; do
 		if [ "$next_counter" = "$cur_counter" ]; then
 		    break
 		fi;
-		next_counter=$(($next_counter+1))
+		next_counter=`expr $next_counter + 1`
 	    done
 	else
 	    next_file="[NONE]"
 	fi
 
 	# finds out index page
-	index_page=$(((($cur_counter-1)/($n_rows*$n_columns))+1))
+	index_page=`expr \( $cur_counter - 1 \) \/ \( $n_rows \* $n_columns \) + 1`
 
 	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page"
 
@@ -1153,19 +1167,19 @@ for file in $all_files; do
 	fi
     fi
 
-    col_counter=$(($col_counter + 1))
+    col_counter=`expr $col_counter + 1`
 
     if [ $col_counter -gt $n_columns ]; then
 	echo '</tr>' >> $idx_filename
 	col_counter=1
-	lin_counter=$(($lin_counter+1))
+	lin_counter=`expr $lin_counter + 1`
     fi;
 
     if [ $n_rows -gt 0 ]; then
 	if [ $lin_counter -gt $n_rows ]; then
 	    # this 'if' avoids creation of an empty index.html in the end
-	    if [ ! $(($n_rows*$n_columns*$idx_counter)) -eq $total_files ]; then
-		idx_counter=$(($idx_counter+1))
+	    if [ ! `expr $n_rows \* $n_columns \* $idx_counter` -eq $total_files ]; then
+		idx_counter=`expr $idx_counter + 1`
 		idx_filename="$idx_basename""$idx_counter"".html"
 		
 		echo '<table width="'$table_width'"><tr>' >> $idx_filename
@@ -1176,7 +1190,7 @@ for file in $all_files; do
 
     if [ $multi_html = "yes" ]; then
 	b4_file="$file"
-	cur_counter=$(($cur_counter+1))
+	cur_counter=`expr $cur_counter + 1`
     fi;
 done;
 
@@ -1184,7 +1198,7 @@ done;
 while [ $col_counter -gt 1 ]; do
     echo "<td width='${col_percentage}%'></td>" >> $idx_filename
 
-    col_counter=$(($col_counter+1))
+    col_counter=`expr $col_counter + 1`
 
     if [ $col_counter -gt $n_columns ]; then
 	col_counter=1
@@ -1209,15 +1223,15 @@ echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\
 echo '<style TYPE="text/css"> A:link, A:visited { text-decoration: none; } </style>' >> $idx_header
 
 # echo title
-echo -n "<title>" >> $idx_header
+echo "<title>" >> $idx_header
 if [ "$third_title" != "" ]; then
-    echo -n "${third_title} - " >> $idx_header
+    echo "${third_title} - " >> $idx_header
 fi;
-echo -n "$title" >> $idx_header
+echo "$title" >> $idx_header
 if [ "$date" != "" ]; then
-    echo -n " - $date" >> $idx_header
+    echo " - $date" >> $idx_header
 fi;
-echo -n '</title>' >> $idx_header
+echo '</title>' >> $idx_header
 
 echo >> $idx_header
 echo "</head>" >> $idx_header
@@ -1271,15 +1285,15 @@ while [ $aux -le $idx_counter ]; do
 	idx_filename="$idx_basename".html
     fi
 
-    next=$(($aux+1))
-    last=$(($aux-1))
+    next=`expr $aux + 1`
+    last=`expr $aux - 1`
 
     neighbors=0
     # last page
     if [ $aux -eq 1 ]; then
 	cat $idx_filename | sed s/"__LAST_PAGE__"/""/g > tmp_idx.html
     else
-	neighbors=$(($neighbors+1))
+	neighbors=`expr $neighbors + 1`
 	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt;\&lt;<\/b><\/font><\/a> '/g > tmp_idx.html
     fi
     mv tmp_idx.html $idx_filename
@@ -1288,7 +1302,7 @@ while [ $aux -le $idx_counter ]; do
     if [ $aux -eq $idx_counter ]; then
 	cat $idx_filename | sed s/"__NEXT_PAGE__"/""/g > tmp_idx.html
     else
-	neighbors=$(($neighbors+1))
+	neighbors=`expr $neighbors + 1`
 	cat $idx_filename | sed s/"__NEXT_PAGE__"/' <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>\&gt;\&gt;<\/b><\/font><\/a>'/g > tmp_idx.html
     fi
     mv tmp_idx.html $idx_filename
@@ -1301,7 +1315,7 @@ while [ $aux -le $idx_counter ]; do
     cat $idx_filename | sed s/'<a href="'"$idx_filename"'">'"$aux"'<\/a>'/'<font color="red">'"$aux"'<\/font>'/g > tmp_idx.html
     mv tmp_idx.html $idx_filename
 
-    aux=$(($aux+1))
+    aux=`expr $aux + 1`
 done;
 rm $idx_header $idx_footer
 
@@ -1313,7 +1327,10 @@ fi;
 ################################### /CREATION #################################
 
 # time
-idx_end_time="`date +%s`"
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    idx_end_time="`date +%s`"
+fi
 
 println_info " ok!"
 
@@ -1326,11 +1343,11 @@ print_info "Exporting: "
 if [ "$only_index" != yes ]; then
 
     # remove previous backup and backup existing album
-    if [ -e album.bak ]; then
+    if [ -d album.bak ]; then
 	rm -rf album.bak
     fi
 
-    if [ -e album ]; then
+    if [ -d album ]; then
 	mv album album.bak
     fi;
     mkdir album
@@ -1347,7 +1364,7 @@ if [ "$only_index" != yes ]; then
 fi; # !only_index
 
 # cleanup
-if [ -e ${tmp_dir} ]; then
+if [ -d ${tmp_dir} ]; then
     rm -rf ${tmp_dir}
 fi;
 
@@ -1369,17 +1386,20 @@ fi
 println_info " ok!"
 
 # time
-end_time="`date +%s`"
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    end_time="`date +%s`"
 
-if [ "$only_index" != "yes" ]; then
-    img_time=$(($img_end_time-$img_start_time))
+    if [ "$only_index" != "yes" ]; then
+	img_time=`expr $img_end_time - $img_start_time`
+    fi
+    idx_time=`expr $idx_end_time - $idx_start_time`
+    total_time=`expr $end_time - $start_time`
+
+    print_info "Elapsed:  "
+    print_info "img ${img_time}s, "
+    print_info "idx ${idx_time}s, "
+    println_info "total ${total_time}s"
 fi
-idx_time=$(($idx_end_time-$idx_start_time))
-total_time=$(($end_time-$start_time))
-
-print_info "Elapsed:  "
-print_info "img ${img_time}s, "
-print_info "idx ${idx_time}s, "
-println_info "total ${total_time}s"
 
 exit 0

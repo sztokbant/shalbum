@@ -17,10 +17,15 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# time
-start_time="`date +%s`"
+uname=`uname`
 
-shalbumrec_version="1.8"
+# time
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    start_time="`date +%s`"
+fi
+
+shalbumrec_version="1.10"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://shalbum.sf.net - $shalbumrec_revision_date"
 
@@ -116,17 +121,17 @@ quiet="no"                           # suppress output
 quiet_shalbum="no"                   # suppress shalbum output
 
 # System-wide default options
-if [ -e /etc/shalbum/shalbumrec.conf ]; then
+if [ -f /etc/shalbum/shalbumrec.conf ]; then
     . /etc/shalbum/shalbumrec.conf
 fi
 
 # User default options
-if [ -e $HOME/.shalbum/shalbumrec.conf ]; then
+if [ -f $HOME/.shalbum/shalbumrec.conf ]; then
     . $HOME/.shalbum/shalbumrec.conf
 fi
 
 # read user-defined options
-if [ -e ./.shalbumrec ]; then
+if [ -f ./.shalbumrec ]; then
     . ./.shalbumrec
 fi
 
@@ -168,7 +173,7 @@ println_info()
 print_info()
 {
     if [ "$quiet" != "yes" ]; then
-	echo -n "$*"
+	printf "$*"
     fi
 }
 
@@ -255,9 +260,9 @@ IFS='
 '
 
 dirname_bak="${dirname}.bak"
-if [ -e "${dirname}" ] && [ "${only_index}" != "yes" ]; then
+if [ -d "${dirname}" ] && [ "${only_index}" != "yes" ]; then
     # remove previous backup and backup current $dirname
-    if [ -e "${dirname_bak}" ]; then
+    if [ -d "${dirname_bak}" ]; then
 	print_info "Cleaning up previous backup directory..."
 	rm -rf "${dirname_bak}"
 	println_info "done!"
@@ -290,7 +295,10 @@ done
 ##############################################
 
 # time
-idx_start_time="`date +%s`"
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    idx_start_time="`date +%s`"
+fi
 
 cd "${dirname}"
 
@@ -307,16 +315,16 @@ echo "<font size='5' face='${font_face}'><b>${global_title}</b></font>" >> index
 echo "</td></tr></table>" >> index.html
 echo "<table width='$table_width'>" >> index.html
 
-col_percentage=$((100/$n_columns))
+col_percentage=`expr 100 \/ $n_columns`
 col_counter="0"
 
 for dir in `ls`; do
     if [ -d "$dir" ] && [ "$dir" != "${th_dirname}" ]; then
 	# attempt to get index pic specified by user
 	FIRST=""
-	if [ -e ../$dir/.shalbum ]; then
+	if [ -f ../$dir/.shalbum ]; then
 	    FIRST="`grep ^shalbumrec_index_pic= ../$dir/.shalbum | cut -d '=' -f 2`"
-	elif [ -e ../$dir/_options ]; then
+	elif [ -f ../$dir/_options ]; then
 	    FIRST="`grep ^shalbumrec_index_pic= ../$dir/_options | cut -d '=' -f 2`"
 	fi
 
@@ -337,7 +345,7 @@ for dir in `ls`; do
 
 	echo "<td valign='top' width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
-	col_counter="$(($col_counter+1))"
+	col_counter=`expr $col_counter + 1`
 	if [ $col_counter -eq $n_columns ]; then
 	    echo "</tr>" >> ../index.html
 	    col_counter="0"
@@ -359,7 +367,10 @@ echo "</center></body></html>" >> index.html
 echo "<!-- created with $shalbumrec_revision -->" >> index.html
 
 # time
-idx_end_time="`date +%s`"
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    idx_end_time="`date +%s`"
+fi
 
 mkdir -p "${th_dirname}"
 mv th_*.jpg "${th_dirname}"
@@ -368,12 +379,16 @@ cd ..
 println_info "Done!"
 
 # time
-end_time="`date +%s`"
-total_time=$(($end_time-$start_time))
-idx_time=$(($idx_end_time-$idx_start_time))
+if [ $uname != "SunOS" ]; then
+    # this doesn't work on SunOS
+    end_time="`date +%s`"
 
-print_info "Elapsed:  "
-print_info "idx/img ${idx_time}s, "
-println_info "total ${total_time}s"
+    total_time=`expr $end_time - $start_time`
+    idx_time=`expr $idx_end_time - $idx_start_time`
+
+    print_info "Elapsed:  "
+    print_info "idx/img ${idx_time}s, "
+    println_info "total ${total_time}s"
+fi
 
 exit 0
