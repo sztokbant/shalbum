@@ -10,6 +10,7 @@ version 1.10
 	  - 'which' calls updated to parse SunOS's error message
 	  - 'printf_info' wrapper function removed
 	  - 'html_compliant_filename' function renamed to 'html_compliant'
+	  - 'cd -' calls replaced by 'cd ${...}'
 
 
 version 1.9 (1-Feb-2007)
