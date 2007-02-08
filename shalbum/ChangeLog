@@ -1,13 +1,15 @@
 version 1.10
 	Bug Fixes:
-	* Initial effort attempting to make shalbum work under SunOS.
-	- '-e' replaced by '-f' and '-d' on 'if' conditions
-	- replaced "$((...))" by 'expr' calls
-	- not printing time info if uname is 'SunOS'
-	- 'echo -n' calls replaced by 'printf' or simply 'echo'
-	- 'grep -E' calls replaced by 'egrep'
-	- 'which' calls updated to parse SunOS's error message
-	- 'printf_info' wrapper function removed
+	* Fixed heaps of bugs in order to make shalbum to run smoothly
+	  under SunOS. In chronological order:
+	  - '-e' replaced by '-f' and '-d' on 'if' conditions
+	  - replaced "$((...))" by 'expr' calls
+	  - not printing time info if uname is 'SunOS'
+	  - 'echo -n' calls replaced by 'printf' or simply 'echo'
+	  - 'grep -E' calls replaced by 'egrep'
+	  - 'which' calls updated to parse SunOS's error message
+	  - 'printf_info' wrapper function removed
+	  - 'html_compliant_filename' function renamed to 'html_compliant'
 
 
 version 1.9 (1-Feb-2007)

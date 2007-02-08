@@ -531,7 +531,7 @@ create_page_for_pic()
     # slideshow
     if [ "${refresh}" != "" ]; then
 	if [ "$after" != "[NONE]" ]; then
-	    html_compliant_filename "${after}_r.html"
+	    html_compliant "${after}_r.html"
 	    echo "<meta http-equiv='refresh' content='${refresh};url=${html_compliant_filename}'>" >> $html_file
 	fi
     fi
@@ -558,7 +558,7 @@ create_page_for_pic()
     echo "</td><td width='34%'>&nbsp;</td><td width='33%'>&nbsp;</td></tr><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
-	html_compliant_filename "${before}.html"
+	html_compliant "${before}.html"
 	echo "<td align='left' width='33%'><a href='${html_compliant_filename}'><font face='${font_face}'>&lt;&lt;</font></a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
@@ -568,11 +568,11 @@ create_page_for_pic()
     echo "<td align='center' width='34%'>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	if [ "${refresh}" != "" ]; then
-	    html_compliant_filename "${pic}.html"
+	    html_compliant "${pic}.html"
 	    echo "<a href='${html_compliant_filename}'><font face='${font_face}' size='1'>STOP<font color='red' size='1'><b> X</b></font></font></a>" >> $html_file
 	else
 	    if [ "${slideshow_time}" != "0" ]; then
-		html_compliant_filename "${pic}_r.html"
+		html_compliant "${pic}_r.html"
 		echo "<a href='${html_compliant_filename}'><font face='${font_face}' size='1'>PLAY<font color='green' size='3'><b> &gt;</b></font></font></a>" >> $html_file
 	    fi
 	fi
@@ -582,7 +582,7 @@ create_page_for_pic()
     # right top arrow
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
-	html_compliant_filename "${after}.html"
+	html_compliant "${after}.html"
 	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'><font face='${font_face}'>&gt;&gt;</font></a></td>" >> $html_file
     else
 	echo "<td align='right'></td>" >> $html_file
@@ -595,11 +595,11 @@ create_page_for_pic()
 
     # link to huge image
     if [ "$huge_res" != "0" ]; then
-	html_compliant_filename "huge/huge_${pic}"
+	html_compliant "huge/huge_${pic}"
 	echo "<a href='huge/huge_${pic}'>" >> $html_file
     fi
 
-    html_compliant_filename "vga/vga_${pic}"
+    html_compliant "vga/vga_${pic}"
     echo "<img src='${html_compliant_filename}' border='0' alt='' />" >> $html_file
 
     if [ "$huge_res" != "0" ]; then
@@ -613,7 +613,7 @@ create_page_for_pic()
     echo "<table border='0' width='$table_width'><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
-	html_compliant_filename "${before}.html"
+	html_compliant "${before}.html"
 	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'><font face='${font_face}'>&lt;&lt;</font></a></td>" >> $html_file
     else
 	echo "<td align='left'></td>" >> $html_file
@@ -621,7 +621,7 @@ create_page_for_pic()
     echo "<td align='center' width='80%'><font face='${font_face}'><b>$pic_subtitle</b></font></td>" >> $html_file
     if [ "$after" != "[NONE]" ]; then
 	after_th="thumbnails/th_""${after}"
-	html_compliant_filename "${after}.html"
+	html_compliant "${after}.html"
 	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'><font face='${font_face}'>&gt;&gt;</font></a></td>" >> $html_file
     else
 	echo "<td align='right'></td>" >> $html_file
@@ -644,9 +644,9 @@ create_page_for_pic()
         # before
 	echo "<td align='left' valign='top'>" >> $html_file
 	if [ "$before" != "[NONE]" ]; then
-	    html_compliant_filename "${before}.html"
+	    html_compliant "${before}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
-	    html_compliant_filename "${before_th}"
+	    html_compliant "${before_th}"
 	    echo "<img border='0' src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
 	fi;
@@ -657,9 +657,9 @@ create_page_for_pic()
         # after
 	echo "<td align='right' valign='top'>" >> $html_file
 	if [ "$after" != "[NONE]" ]; then
-	    html_compliant_filename "${after}.html"
+	    html_compliant "${after}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
-	    html_compliant_filename "${after_th}"
+	    html_compliant "${after_th}"
 	    echo "<img border='0' src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
 	fi;
@@ -676,7 +676,7 @@ create_page_for_pic()
     echo '<!-- created with '$software_revision' -->' >> $html_file
 }
 
-html_compliant_filename()
+html_compliant()
 {
     # input:  a file name
     # output: ${html_compliant_filename}, this filename with some
@@ -1102,14 +1102,14 @@ for file in $all_files; do
     fi
 
     if [ $multi_html = "yes" ]; then
-	html_compliant_filename "${file}.html"
+	html_compliant "${file}.html"
 	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
-	html_compliant_filename "${th_file}"
+	html_compliant "${th_file}"
 	echo '<img border="0" src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     else
-	html_compliant_filename "${vga_file}"
+	html_compliant "${vga_file}"
 	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img border='0' " >> $idx_filename
-	html_compliant_filename "${th_file}"
+	html_compliant "${th_file}"
 	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     fi
     
