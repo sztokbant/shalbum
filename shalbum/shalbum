@@ -434,13 +434,6 @@ print_info()
     fi
 }
 
-printf_info()
-{
-    if [ "$quiet" != "yes" ]; then
-	printf $*
-    fi
-}
-
 print_err()
 {
     echo $*
@@ -809,7 +802,8 @@ if [ "$only_index" != "yes" ]; then
 
     # check for GraphicsMagick or ImageMagick's binaries (Default: GM)
     if [ "$magick" = "GM" ] || [ "$magick" = "AUTO" ]; then
-	if [ "`which gm`" != "" ]; then
+        WHICH_GM=`which gm | cut -d ' ' -f 1`
+	if [ "$WHICH_GM" != "" ] && [ "$WHICH_GM" != "no" ]; then
 	    gm="gm"
 	    magick="GM"
 	elif [ "$magick" = "GM" ]; then
@@ -821,18 +815,20 @@ if [ "$only_index" != "yes" ]; then
     if [ "$magick" = "IM" ] || [ "$magick" = "AUTO" ]; then
 	gm=""
 	magick="IM"
-
-	if [ "`which convert`" = "" ]; then
+        WHICH_CONVERT=`which convert | cut -d ' ' -f 1`
+	if [ "$WHICH_CONVERT" = "" ] || [ "$WHICH_CONVERT" = "no" ]; then
 	    echo "ImageMagick's 'convert' not found. Exiting."
 	    exit 1
 	fi
 
-	if [ "`which montage`" = "" ]; then
+        WHICH_MONTAGE=`which montage | cut -d ' ' -f 1`
+        if [ "$WHICH_MONTAGE" = "" ] || [ "$WHICH_MONTAGE" = "" ]; then
 	    echo "ImageMagick's 'montage' not found. Exiting."
 	    exit 1
 	fi
 
-	if [ "`which identify`" = "" ]; then
+        WHICH_IDENTIFY=`which identify | cut -d ' ' -f 1`
+        if [ "$WHICH_IDENTIFY" = "" ] || [ "$WHICH_IDENTIFY" = "" ]; then
 	    echo "ImageMagick's 'identify' not found. Exiting."
 	    exit 1
 	fi
@@ -902,7 +898,9 @@ if [ "$only_index" != "yes" ]; then
 	processed100=`expr $processed \* 100`
 	percent=`expr $processed100 \/ $total_files`
 
-	printf_info "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
+        if [ "$quiet" != "yes" ]; then
+	    printf "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
+        fi
 
         #   1       2      3     4       5           6          7         8
         #

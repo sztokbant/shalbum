@@ -88,7 +88,9 @@ while getopts b:hil:qvGIQ opt; do
   esac
 done
 
-shalbum="`which shalbum`"            # path of shalbum script
+# path of shalbum script
+shalbum="`which shalbum | cut -d ' ' -f 1`"
+
 dirname="master_album"               # dir name for master album
 th_dirname="masterth"                # subdir for thumbnails
 global_title="My Albums"             # title for master album
@@ -215,7 +217,7 @@ add_credits_footer()
 
 println_info $shalbumrec_revision
 
-if [ "$shalbum" = "" ]; then
+if [ "$shalbum" = "" ] || [ "$shalbum" = "no" ]; then
     echo "shalbum not found. Exiting."
     exit 1
 fi
@@ -230,7 +232,8 @@ fi
 
 # check for GraphicsMagick or ImageMagick's binaries (Default: GM)
 if [ "$magick" = "GM" ] || [ "$magick" = "AUTO" ]; then
-    if [ "`which gm`" != "" ]; then
+    WHICH_GM=`which gm | cut -d ' ' -f 1`
+    if [ "$WHICH_GM" != "" ] && [ "$WHICH_GM" != "no" ]; then
 	gm="gm"
 	magick="GM"
     elif [ "$magick" = "GM" ]; then
@@ -243,7 +246,8 @@ if [ "$magick" = "IM" ] || [ "$magick" = "AUTO" ]; then
     gm=""
     magick="IM"
 
-    if [ "`which convert`" = "" ]; then
+    WHICH_CONVERT=`which convert | cut -d ' ' -f 1`
+    if [ "$WHICH_CONVERT" = "" ] || [ "$WHICH_CONVERT" = "no" ]; then
 	echo "ImageMagick's 'convert' not found. Exiting."
 	exit 1
     fi
