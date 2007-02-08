@@ -1,4 +1,4 @@
-version 1.10
+version 1.10 (8-Feb-2007)
 	Bug Fixes:
 	* Fixed heaps of bugs in order to make shalbum to run smoothly
 	  under SunOS. In chronological order:
