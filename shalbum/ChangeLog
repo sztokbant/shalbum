@@ -4,8 +4,7 @@ version 1.11
 	  information on SunOS too.
 
 	Bug Fixes:
-	* Small fix counting total number of files when there are files
-	  with names containing white spaces.
+	* Small fix counting files with white spaces in their names.
 
 
 version 1.10 (8-Feb-2007)
