@@ -17,17 +17,23 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-uname=`uname`
-
-# time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    start_time="`date +%s`"
-fi
-
-shalbumrec_version="1.10"
+shalbumrec_version="1.11"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - http://shalbum.sf.net - $shalbumrec_revision_date"
+
+uname=`uname`
+
+epoch()
+{
+    if [ $uname != "SunOS" ]; then
+	date +%s
+    else
+	/usr/bin/truss /usr/bin/date 2>&1 | grep '^time' | cut -d '=' -f 2 | cut -d ' ' -f 2
+    fi
+}
+
+# time
+start_time="`epoch`"
 
 while getopts b:hil:qvGIQ opt; do
   case $opt in
@@ -300,10 +306,7 @@ done
 ##############################################
 
 # time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    idx_start_time="`date +%s`"
-fi
+idx_start_time="`epoch`"
 
 cd "${dirname}"
 
@@ -373,10 +376,7 @@ echo "</center></body></html>" >> index.html
 echo "<!-- created with $shalbumrec_revision -->" >> index.html
 
 # time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    idx_end_time="`date +%s`"
-fi
+idx_end_time="`epoch`"
 
 mkdir -p "${th_dirname}"
 mv th_*.jpg "${th_dirname}"
@@ -385,16 +385,13 @@ cd ..
 println_info "Done!"
 
 # time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    end_time="`date +%s`"
+end_time="`epoch`"
 
-    total_time=`expr $end_time - $start_time`
-    idx_time=`expr $idx_end_time - $idx_start_time`
+total_time=`expr $end_time - $start_time`
+idx_time=`expr $idx_end_time - $idx_start_time`
 
-    print_info "Elapsed:  "
-    print_info "idx/img ${idx_time}s, "
-    println_info "total ${total_time}s"
-fi
+print_info "Elapsed:  "
+print_info "idx/img ${idx_time}s, "
+println_info "total ${total_time}s"
 
 exit 0

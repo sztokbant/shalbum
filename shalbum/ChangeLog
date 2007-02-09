@@ -1,3 +1,9 @@
+version 1.11
+	Improvements:
+	* shalbum and shalbumrec now calculate and print running time
+	  information on SunOS too.
+
+
 version 1.10 (8-Feb-2007)
 	Bug Fixes:
 	* Fixed heaps of bugs in order to make shalbum to run smoothly

@@ -17,20 +17,26 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-uname=`uname`
-
-# time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    start_time="`date +%s`"
-fi
-
-sw_version="1.10"
+sw_version="1.11"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
 
 # TODO-LIST:
 #   - HTML files should be created inside ${tmp_dir}
+
+uname=`uname`
+
+epoch()
+{
+    if [ $uname != "SunOS" ]; then
+	date +%s
+    else
+	/usr/bin/truss /usr/bin/date 2>&1 | grep '^time' | cut -d '=' -f 2 | cut -d ' ' -f 2
+    fi
+}
+
+# time
+start_time="`epoch`"
 
 #######
 # Input
@@ -848,10 +854,7 @@ if [ "$only_index" != "yes" ]; then
     fi
     
     # time elapsed
-    if [ $uname != "SunOS" ]; then
-        # this doesn't work on SunOS
-	img_start_time="`date +%s`"
-    fi
+    img_start_time="`epoch`"
 
     # generate watermarks
     if [ $watermark = "yes" ]; then
@@ -1036,10 +1039,7 @@ if [ "$only_index" != "yes" ]; then
     done;
 
     # time
-    if [ $uname != "SunOS" ]; then
-        # this doesn't work on SunOS
-	img_end_time="`date +%s`"
-    fi
+    img_end_time="`epoch`"
 
     if [ $watermark = "yes" ]; then
 	rm $watermark_vga $watermark_th $watermark_huge
@@ -1051,10 +1051,7 @@ fi; # !only_index
 ##########################
 
 # time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    idx_start_time="`date +%s`"
-fi
+idx_start_time="`epoch`"
 
 print_info "Generating indexes..."
 
@@ -1325,10 +1322,7 @@ fi;
 ################################### /CREATION #################################
 
 # time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    idx_end_time="`date +%s`"
-fi
+idx_end_time="`epoch`"
 
 println_info " ok!"
 
@@ -1384,20 +1378,17 @@ fi
 println_info " ok!"
 
 # time
-if [ $uname != "SunOS" ]; then
-    # this doesn't work on SunOS
-    end_time="`date +%s`"
+end_time="`epoch`"
 
-    if [ "$only_index" != "yes" ]; then
-	img_time=`expr $img_end_time - $img_start_time`
-    fi
-    idx_time=`expr $idx_end_time - $idx_start_time`
-    total_time=`expr $end_time - $start_time`
-
-    print_info "Elapsed:  "
-    print_info "img ${img_time}s, "
-    print_info "idx ${idx_time}s, "
-    println_info "total ${total_time}s"
+if [ "$only_index" != "yes" ]; then
+    img_time=`expr $img_end_time - $img_start_time`
 fi
+idx_time=`expr $idx_end_time - $idx_start_time`
+total_time=`expr $end_time - $start_time`
+
+print_info "Elapsed:  "
+print_info "img ${img_time}s, "
+print_info "idx ${idx_time}s, "
+println_info "total ${total_time}s"
 
 exit 0
