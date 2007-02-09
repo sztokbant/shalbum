@@ -19,7 +19,7 @@
 
 sw_version="1.11"
 sw_rev_date='$Date::             $'
-software_revision="shalbum $sw_version - http://shalbum.sf.net- $sw_rev_date"
+software_revision="shalbum $sw_version - http://shalbum.sf.net - $sw_rev_date"
 
 # TODO-LIST:
 #   - HTML files should be created inside ${tmp_dir}
