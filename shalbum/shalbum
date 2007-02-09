@@ -770,10 +770,10 @@ else
     input_from="$default_input_file file"
 fi
 
-total_files="`expr \`ls $all_files | wc -l\` + 0`"
-
 IFS='\
 '
+
+total_files="`expr \`ls $all_files | wc -l\` + 0`"
 
 println_info "$software_revision"
 println_info "Creating album"

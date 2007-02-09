@@ -3,6 +3,10 @@ version 1.11
 	* shalbum and shalbumrec now calculate and print running time
 	  information on SunOS too.
 
+	Bug Fixes:
+	* Small fix counting total number of files when there are files
+	  with names containing white spaces.
+
 
 version 1.10 (8-Feb-2007)
 	Bug Fixes:
