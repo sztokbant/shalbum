@@ -773,7 +773,7 @@ fi
 IFS='\
 '
 
-total_files="`expr \`ls $all_files | wc -l\` + 0`"
+total_files=`ls $all_files | wc -l | sed -e s/"[^0-9]"//g`
 
 println_info "$software_revision"
 println_info "Creating album"
