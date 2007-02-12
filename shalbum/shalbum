@@ -897,12 +897,12 @@ if [ "$only_index" != "yes" ]; then
     println_info "Creating pictures: "
     processed=0
     for file in $all_files; do
-	processed=`expr $processed + 1`
 	processed100=`expr $processed \* 100`
 	percent=`expr $processed100 \/ $total_files`
+	processed=`expr $processed + 1`
 
         if [ "$quiet" != "yes" ]; then
-	    printf "%4d/%4d [%3.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
+	    printf "%4d/%4d [%2.0f%%] %s: " "$processed" "$total_files" "$percent" "$file"
         fi
 
         #   1       2      3     4       5           6          7         8

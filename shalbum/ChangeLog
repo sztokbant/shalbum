@@ -2,6 +2,8 @@ version 1.11
 	Improvements:
 	* shalbum and shalbumrec now calculate and print running time
 	  information on SunOS too.
+	* Percentage printed now means 'already processed images' instead
+	  of 'to be processed after this one'.
 
 	Bug Fixes:
 	* Small fix counting files with white spaces in their names.
