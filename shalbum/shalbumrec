@@ -109,6 +109,7 @@ author=""                            # site author's name
 e_mail=''                            # site author's e-mail
 support_shalbum="yes"                # print link to shalbum site
 w3c_ok_banner="yes"                  # print "W3C HTML 4.01 compliant" banner
+uname_in_revision="full"             # print OS name in revision comment
 
 back_link=""                         # link to go back
 backlink_label=""                    # back link label for album list site
@@ -373,6 +374,13 @@ echo "</table>" >> index.html
 add_credits_footer index.html
 
 echo "</center></body></html>" >> index.html
+
+if [ "$uname_in_revision" = "full" ]; then
+    shalbumrec_revision="${shalbumrec_revision} (`uname -srm`)"
+elif [ "$uname_in_revision" = "short" ]; then
+    shalbumrec_revision="${shalbumrec_revision} (${uname})"
+fi
+
 echo "<!-- created with $shalbumrec_revision -->" >> index.html
 
 # time

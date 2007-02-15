@@ -1,4 +1,8 @@
 version 1.11
+	New Features:
+	* New uname_in_revision=(full|short|none) to print OS name in
+	  HTML comment (default: full = `uname -srm`).
+
 	Improvements:
 	* shalbum and shalbumrec now calculate and print running time
 	  information on SunOS too.

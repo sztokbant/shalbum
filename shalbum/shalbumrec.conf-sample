@@ -42,6 +42,14 @@ support_shalbum="yes"
 # default: "yes"
 w3c_ok_banner="yes"
 
+# uname_in_revision (default: "full")
+# available options: [full | short | none]
+# none:  print nothing about running OS
+# short: print only OS name
+# full:  print OS name, version and the type of the current hardware platform
+# print OS name in revision comment
+uname_in_revision="full"
+
 # link to go back
 # default: ""
 back_link=""

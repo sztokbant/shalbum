@@ -243,6 +243,7 @@ if [ $mhd != "yes" ]; then
     credits_str=""                  # credit information
     support_shalbum="yes"           # print link to shalbum site
     w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
+    uname_in_revision="full"        # print OS name in revision comment
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
@@ -307,6 +308,7 @@ else
     credits_str="photos by"         # credit information
     support_shalbum="yes"           # print link to shalbum site
     w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
+    uname_in_revision="full"        # print OS name in revision comment
 
     multi_html="yes"                # use one html page per picture?
     th_on_multi="yes"               # show thumbnail for next/last pics?
@@ -1071,6 +1073,12 @@ if [ $multi_html = "yes" ]; then
 fi;
 
 col_percentage=`expr 100 \/ $n_columns`
+
+if [ "$uname_in_revision" = "full" ]; then
+    software_revision="${software_revision} (`uname -srm`)"
+elif [ "$uname_in_revision" = "short" ]; then
+    software_revision="${software_revision} (${uname})"
+fi
 
 for file in $all_files; do
 

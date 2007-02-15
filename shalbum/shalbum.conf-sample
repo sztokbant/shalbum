@@ -153,6 +153,14 @@ support_shalbum="yes"
 # print "W3C HTML 4.01 compliant" banner
 w3c_ok_banner="yes"
 
+# uname_in_revision (default: "full")
+# available options: [full | short | none]
+# none:  print nothing about running OS
+# short: print only OS name
+# full:  print OS name, version and the type of the current hardware platform
+# print OS name in revision comment
+uname_in_revision="full"
+
 # multi_html (default: "yes")
 # use one html page per picture? (otherwise simply links to image file)
 multi_html="yes"
