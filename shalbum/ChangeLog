@@ -1,4 +1,4 @@
-version 1.11
+version 1.11 (18-Feb-2007)
 	New Features:
 	* New uname_in_revision=(full|short|none) to print OS name in
 	  HTML comment (default: full = `uname -srm`).
