@@ -153,7 +153,7 @@ support_shalbum="yes"
 # print "W3C HTML 4.01 compliant" banner
 w3c_ok_banner="yes"
 
-# uname_in_revision (default: "full")
+# uname_in_revision (default: full = `uname -srm`)
 # available options: [full | short | none]
 # none:  print nothing about running OS
 # short: print only OS name
