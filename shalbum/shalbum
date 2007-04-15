@@ -62,7 +62,7 @@ else
 fi
 
 # process command-line options
-while getopts a:b:d:e:hil:mqr:t:vC:GH:IO:R:S:T:V:W: opt; do
+while getopts a:b:d:e:hil:mqr:t:uvC:GH:IO:R:S:T:V:W: opt; do
   case $opt in
       # author's name
       a)  cl_author="$OPTARG"
@@ -102,6 +102,10 @@ while getopts a:b:d:e:hil:mqr:t:vC:GH:IO:R:S:T:V:W: opt; do
 
       # title
       t)  cl_title="$OPTARG"
+	  ;;
+
+      # update
+      u)  cl_update="yes"
 	  ;;
 
       # version
@@ -185,6 +189,8 @@ while getopts a:b:d:e:hil:mqr:t:vC:GH:IO:R:S:T:V:W: opt; do
 	  echo " -G        use GraphicsMagick"
 	  echo " -I        use ImageMagick"
 	  echo ""
+          echo " -u        update existing album"
+	  echo ""
 	  echo " -b link   link to go back"
 	  echo " -l label  back link label for album list site"
 	  echo ""
@@ -253,6 +259,9 @@ if [ $mhd != "yes" ]; then
 
     magick="AUTO"                   # default: GraphicsMagick, if found
 
+    update="no"                     # do not resize already resized pics
+    outdir="album"                  # default output directory
+
     # HTML layout
     color_text="#ffffff"
     color_bgcolor="#000000"
@@ -317,6 +326,9 @@ else
     order_by="name"                 # how to order the images
 
     magick="AUTO"                   # default: GraphicsMagick, if found
+
+    update="no"                     # do not resize already resized pics
+    outdir="album"                  # default output directory
 
     # HTML layout
     color_text="#ffffff"
@@ -422,6 +434,10 @@ fi
 
 if [ "$cl_magick" != "" ]; then
     magick="$cl_magick"
+fi
+
+if [ "$cl_update" != "" ]; then
+    update="$cl_update"
 fi
 
 ###############
@@ -961,12 +977,16 @@ if [ "$only_index" != "yes" ]; then
 		else
 		    huge_resize="${huge_res}x${huge_res}"
 		fi
-	    
-		if [ $hugeframe = "yes" ]; then
-		    $gm convert "$file" -rotate $rotate $flip -resize ${huge_resize} "$huge_file"
-		else
-		    $gm convert "$file" -rotate $rotate $flip -resize ${huge_resize} -quality ${huge_quality} "$huge_file"
-		fi
+
+                if [ ${update} != "yes" ] || [ ! -f ${outdir}/huge/`basename ${huge_file}` ]; then
+		    if [ $hugeframe = "yes" ]; then
+		        $gm convert "$file" -rotate $rotate $flip -resize ${huge_resize} "$huge_file"
+		    else
+		        $gm convert "$file" -rotate $rotate $flip -resize ${huge_resize} -quality ${huge_quality} "$huge_file"
+		    fi
+                else
+                    print_info "*"
+                fi
 
 		# prevent "child" pictures from rotating
 		rotate="0"
@@ -986,12 +1006,16 @@ if [ "$only_index" != "yes" ]; then
 	else
 	    vga_resize="${vga_res}x${vga_res}"
 	fi
-	
-	if [ $vgaframe = "yes" ]; then
-	    $gm convert "$file" -rotate $rotate $flip -resize ${vga_resize} "$vga_file"
-	else
-	    $gm convert "$file" -rotate $rotate $flip -resize ${vga_resize} -quality ${vga_quality} "$vga_file"
-	fi
+
+        if [ ${update} != "yes" ] || [ ! -f ${outdir}/vga/`basename ${vga_file}` ] && [ -f ${file} ]; then
+	    if [ $vgaframe = "yes" ]; then
+	        $gm convert "$file" -rotate $rotate $flip -resize ${vga_resize} "$vga_file"
+	    else
+	        $gm convert "$file" -rotate $rotate $flip -resize ${vga_resize} -quality ${vga_quality} "$vga_file"
+	    fi
+        else
+            print_info "*"
+        fi
 	
 	# thumbnail
 	print_info "[t${th_res}]"
@@ -1002,42 +1026,49 @@ if [ "$only_index" != "yes" ]; then
 	    th_resize="${th_res}x${th_res}"
 	fi
 
-	if [ $thframe = "yes" ]; then
-	    $gm convert "${vga_file}" -resize ${th_resize} "${th_file}"
-	else
-	    $gm convert "${vga_file}" -resize ${th_resize} -quality ${th_quality} "${th_file}"
-	fi
+        if [ ${update} != "yes" ] || [ ! -f ${outdir}/thumbnails/`basename ${th_file}` ] && [ -f ${vga_file} ]; then
+	    if [ $thframe = "yes" ]; then
+	        $gm convert "${vga_file}" -resize ${th_resize} "${th_file}"
+	    else
+	        $gm convert "${vga_file}" -resize ${th_resize} -quality ${th_quality} "${th_file}"
+	    fi
+        else
+            print_info "*"
+        fi
 
 	# watermarks
 	if [ $watermark = "yes" ]; then
 	    print_info "[wm]"
-	    if [ "$huge_res" != 0 ] && [ "$huge_res" != "copy" ]; then
+	    if [ "$huge_res" != 0 ] && [ "$huge_res" != "copy" ] && [ -f ${huge_file} ]; then
 		composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_huge "${huge_file}" "${huge_file}"
 	    fi
 
-	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga "${vga_file}" "${vga_file}"
+            if [ -f ${vga_file} ]; then
+	        composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_vga "${vga_file}" "${vga_file}"
+            fi
 
-	    composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_th "${th_file}" "${th_file}"
-	fi;
+            if [ -f ${th_file} ]; then
+	        composite -dissolve ${watermark_dissolve} -gravity SouthEast $watermark_th "${th_file}" "${th_file}"
+            fi
+	fi
 
 	# frames
-	if [ "$huge_res" != 0 ] && [ $hugeframe = "yes" ] && [ "$huge_res" != "copy" ]; then
+	if [ "$huge_res" != 0 ] && [ $hugeframe = "yes" ] && [ "$huge_res" != "copy" ] && [ -f ${huge_file} ]; then
 	    print_info "[hf]"
 	    $gm montage "${huge_file}" -mode concatenate -frame $hugeframesize -quality ${huge_quality} "${huge_file}"
 	fi
 
-	if [ $vgaframe = "yes" ]; then
+	if [ $vgaframe = "yes" ] && [ -f ${vga_file} ]; then
 	    print_info "[vf]"
 	    $gm montage "${vga_file}" -mode concatenate -frame $vgaframesize -quality ${vga_quality} "${vga_file}"
 	fi;
 	
-	if [ $thframe = "yes" ]; then
+	if [ $thframe = "yes" ] && [ -f ${th_file} ]; then
 	    print_info "[tf]"
 	    $gm montage "${th_file}" -mode concatenate -frame $thframesize $STRIPy -quality ${th_quality} "${th_file}"
 	fi;
 
 	println_info " ok!"
-
     done;
 
     # time
@@ -1342,43 +1373,44 @@ print_info "Exporting: "
 
 if [ "$only_index" != yes ]; then
 
-    # remove previous backup and backup existing album
-    if [ -d album.bak ]; then
-	rm -rf album.bak
+    if [ ${update} != "yes" ]; then
+      # remove previous backup and backup existing album
+      rm -rf ${outdir}.bak
+
+      if [ -d ${outdir} ]; then
+        mv ${outdir} ${outdir}.bak
+      fi
+      mkdir -p ${outdir}/thumbnails
+      mkdir -p ${outdir}/vga
+      mkdir -p ${outdir}/huge
     fi
 
-    if [ -d album ]; then
-	mv album album.bak
-    fi;
-    mkdir album
-
     print_info "[tnails]"
-    mv ${tmp_dir}/thumbnails album
+    
+    mv ${tmp_dir}/thumbnails/* ${outdir}/thumbnails/ 2>/dev/null
     print_info "[pics]"
-    mv ${tmp_dir}/vga album
+    mv ${tmp_dir}/vga/* ${outdir}/vga/ 2>/dev/null
     if [ "$huge_res" != "0" ]; then
 	print_info "[huge]"
-	mv ${tmp_dir}/huge album
+	mv ${tmp_dir}/huge/* ${outdir}/huge/ 2>/dev/null
     fi
 
 fi; # !only_index
 
 # cleanup
-if [ -d ${tmp_dir} ]; then
-    rm -rf ${tmp_dir}
-fi;
+rm -rf ${tmp_dir}
 
 print_info "[idx]"
-mkdir -p album
-rm "album/""$idx_basename"*.html 2>/dev/null
-mv "$idx_basename"*.html album
+mkdir -p ${outdir}
+rm "${outdir}/""$idx_basename"*.html 2>/dev/null
+mv "$idx_basename"*.html ${outdir}
 
 if [ $multi_html = "yes" ]; then
     print_info '[multi-idx]'
     for file in $all_files; do
-	mv "${file}.html" album
+	mv "${file}.html" ${outdir}
 	if [ "${slideshow_time}" != "0" ]; then
-	    mv "${file}_r.html" album
+	    mv "${file}_r.html" ${outdir}
 	fi
     done
 fi
