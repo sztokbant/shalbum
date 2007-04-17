@@ -17,7 +17,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.11"
+sw_version="1.12"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://shalbum.sf.net - $sw_rev_date"
 
@@ -1216,7 +1216,7 @@ for file in $all_files; do
 		idx_counter=`expr $idx_counter + 1`
 		idx_filename="$idx_basename""$idx_counter"".html"
 		
-		echo '<table width="'$table_width'"><tr>' >> $idx_filename
+		echo '<table width="'$table_width'">' >> $idx_filename
 		lin_counter=1
 	    fi;
 	fi;

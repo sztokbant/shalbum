@@ -204,3 +204,13 @@ only_index="no"
 # alter this to tell shalbumrec which pic you want to represent this album
 # (do NOT quote filename)
 shalbumrec_index_pic=
+
+# "GM" for GraphicsMagick, "IM" for ImageMagick, "AUTO" for auto-detect
+# (default: "AUTO" which means use GM if found, IM otherwise)
+magick="AUTO"
+
+# do not resize already resized pics (default: no)
+update="no"
+
+# default output directory (default: "album")
+outdir="album"

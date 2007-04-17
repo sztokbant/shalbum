@@ -39,7 +39,6 @@ Usage: from a directory with image files run
  -V num    specify vga resolution
  -T num    specify thumbnail resolution
  -H num    specify huge image resolution ("copy" to keep same)
-
  -W num    specify table width
  -R num    specify number of rows
  -C num    specify number of columns
@@ -48,6 +47,8 @@ Usage: from a directory with image files run
 
  -G        use GraphicsMagick
  -I        use ImageMagick
+
+ -u        update existing album
 
  -b link   link to go back
  -l label  back link label for album list site
