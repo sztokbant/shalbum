@@ -1065,7 +1065,7 @@ if [ "$only_index" != "yes" ]; then
 	
 	if [ $thframe = "yes" ] && [ -f ${th_file} ]; then
 	    print_info "[tf]"
-	    $gm montage "${th_file}" -mode concatenate -frame $thframesize $STRIPy -quality ${th_quality} "${th_file}"
+	    $gm montage "${th_file}" -mode concatenate -frame $thframesize -quality ${th_quality} "${th_file}"
 	fi;
 
 	println_info " ok!"
