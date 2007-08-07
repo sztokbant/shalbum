@@ -17,7 +17,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-sw_version="1.12"
+sw_version="1.13"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - http://shalbum.sf.net - $sw_rev_date"
 
@@ -222,7 +222,7 @@ if [ $mhd != "yes" ]; then
                                     # "optimal" img will be aligned
                                     # left on 1st col, right on last
                                     # and center on the rest.
-    pic_label_type="conf"           # number, filename, conf, none
+    pic_label_type="conf"           # number, filename, conf, cutatdot, none
     author=""                       # site author's name
     e_mail=''                       # site author's e-mail
     third_title=""                  # string to be added to album's title
@@ -287,7 +287,7 @@ else
                                     # "optimal" img will be aligned
                                     # left on 1st col, right on last
                                     # and center on the rest.
-    pic_label_type="number"         # number, filename, conf, none
+    pic_label_type="number"         # number, filename, conf, cutatdot, none
     author="Meia Hora Depois"       # site author's name
     e_mail='banda@meiahoradepois.com'
                                     # site author's e-mail
@@ -1148,7 +1148,7 @@ for file in $all_files; do
 	html_compliant "${th_file}"
 	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
     fi
-    
+
     if [ "$pic_label_type" != "none" ]; then
         if [ "$pic_label_type" = "number" ]; then
             # try to guess pic number
@@ -1168,6 +1168,8 @@ for file in $all_files; do
 	    if [ -f _subtitles ]; then
 		pic_subtitle="`grep \"${file}=\" _subtitles | cut -d '=' -f 2`"
 	    fi
+	elif [ "$pic_label_type" = "cutatdot" ]; then
+	    pic_subtitle="`echo $file | cut -d '.' -f 1`"
 	fi;
 
 	echo "</td></tr><tr><td width='100%'><font face='${font_face}' size='2'><b>$pic_subtitle</b></font>" >> $idx_filename
@@ -1196,7 +1198,7 @@ for file in $all_files; do
 
 	create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page"
 
-	if [ "slideshow_time" != "0" ]; then
+	if [ "$slideshow_time" != "0" ]; then
 	    create_page_for_pic "$file" "$b4_file" "$next_file" "$pic_subtitle" "$index_page" "$slideshow_time"
 	fi
     fi
