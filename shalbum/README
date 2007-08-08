@@ -8,7 +8,7 @@
 3.) Using shalbum recursively (shalbumrec)
 4.) Performance issues
 5.) Note for non-Unix users (e.g. Windows)
-6.) Known bugs
+6.) Known issues
 7.) Support
 
 
@@ -204,10 +204,10 @@ Once CygWin is installed shalbum shall run like on any other Unix.
 
 ----------------------------------------------------------------------
 
-6.) Know bugs
+6.) Know issues
 
 - Frames code doesn't work properly with GraphicsMagick (tested with
-  version 1.1.7)
+  version 1.1.7). Use ImageMagick instead.
 
 ----------------------------------------------------------------------
 
