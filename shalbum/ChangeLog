@@ -1,4 +1,4 @@
-version 1.13
+version 1.13 (25-Jul-2008)
 	New Features:
 	* shalbum: new 'cutatdot' picture label type
 	* shalbumrec: new dirname_as_title and dirname_underscores_as_spaces
