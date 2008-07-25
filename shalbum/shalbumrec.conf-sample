@@ -14,6 +14,14 @@ th_dirname="masterth"
 # default: "My Albums"
 global_title="My Albums"
 
+# directory name replaces album title
+# default: "no"
+dirname_as_title="no"
+
+# if above option is yes replace _ by ' '
+# default: "yes"
+dirname_underscores_as_spaces="yes"
+
 # width of HTML tables
 # default: "800"
 table_width="800"

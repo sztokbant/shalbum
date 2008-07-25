@@ -101,6 +101,9 @@ dirname="master_album"               # dir name for master album
 th_dirname="masterth"                # subdir for thumbnails
 global_title="My Albums"             # title for master album
 
+dirname_as_title="no"                # directory name replaces album title
+dirname_underscores_as_spaces="yes"  # if above option is yes replace _ by ' '
+
 table_width="800"                    # width of HTML tables
 th_res="150"                         # thumbnail resolution
 n_columns="1"                        # number of table columns
@@ -291,9 +294,25 @@ for dir in `ls`; do
 
 	cd "$dir"
 	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
-	    ${shalbum} -b "${back_link}" -l "${backlink_label}" ${dash_i} ${dash_q}
+	    if [ "${dirname_as_title}" = "yes" ]; then
+		newtitle=`basename "$dir"`
+		if [ "${dirname_underscores_as_spaces}" = "yes" ]; then
+		    newtitle=`echo "${newtitle}" | sed 's/_/ /g'`
+		fi
+		${shalbum} -b "${back_link}" -l "${backlink_label}" ${dash_i} ${dash_q} -t "${newtitle}"
+	    else
+		${shalbum} -b "${back_link}" -l "${backlink_label}" ${dash_i} ${dash_q}
+	    fi
 	else
-	    ${shalbum} ${dash_i} ${dash_q}
+	    if [ "${dirname_as_title}" = "yes" ]; then
+                newtitle=`basename "$dir"`
+                if [ "${dirname_underscores_as_spaces}" = "yes" ]; then
+                    newtitle=`echo "${newtitle}" | sed 's/_/ /g'` 
+		fi
+		${shalbum} ${dash_i} ${dash_q} -t "${newtitle}"
+	    else
+		${shalbum} ${dash_i} ${dash_q}
+	    fi
 	fi
    	cd ${start_pwd} 1>/dev/null
 	mkdir -p "${dirname}/$dir"

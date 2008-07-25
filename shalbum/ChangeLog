@@ -1,6 +1,8 @@
 version 1.13
 	New Features:
-	* New 'cutatdot' label type
+	* shalbum: new 'cutatdot' picture label type
+	* shalbumrec: new dirname_as_title and dirname_underscores_as_spaces
+	  conf options - thanks to Frank Merenda (fmerenda) for the suggestion
 
 	Bug Fixes:
 	* *_r.html files were being generated even if slideshow_time was
