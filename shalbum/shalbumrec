@@ -17,9 +17,10 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+shalbum_website="http://shalbum.org"
 shalbumrec_version="1.13"
 shalbumrec_revision_date='$Date::             $'
-shalbumrec_revision="shalbumrec $shalbumrec_version - http://shalbum.sf.net - $shalbumrec_revision_date"
+shalbumrec_revision="shalbumrec $shalbumrec_version - $shalbum_website - $shalbumrec_revision_date"
 
 uname=`uname`
 
@@ -201,7 +202,7 @@ add_credits_footer()
 	echo '<td width="50%" align="left" valign="top">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
-	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='http://shalbum.sf.net' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
+	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
 	fi
 	
         # W3C HTML 4.01 compliant banner
