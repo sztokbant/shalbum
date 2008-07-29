@@ -1284,9 +1284,9 @@ echo '<table width="'$table_width'"><tr><td>' >> $idx_header
 if [ "$third_title" != "" ]; then
     echo "<font face='${font_face}' size='3'><b>${third_title}</b></font><br />" >> $idx_header
 fi;
-echo "<!-- shalbumrec:title ¬${title}¬ --> <font face='${font_face}' size='5'><b>$title</b></font>" >> $idx_header
+echo "<!-- shalbumrec:title ^${title}^ --> <font face='${font_face}' size='5'><b>$title</b></font>" >> $idx_header
 if [ "$date" != "" ]; then
-    echo "<!-- shalbumrec:date ¬${date}¬ --> <br /><font face='${font_face}' size='3'>$date</font>" >> $idx_header
+    echo "<!-- shalbumrec:date ^${date}^ --> <br /><font face='${font_face}' size='3'>$date</font>" >> $idx_header
 fi
 echo '</td></tr></table>' >> $idx_header
 
