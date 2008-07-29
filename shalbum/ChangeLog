@@ -1,4 +1,5 @@
 version 1.14
+	* shalbumrec: refactoring on piece of code that calls shalbum
 	* References to shalbum website updated to shalbum.org
 	  (watermark samples still pending).
 

@@ -294,27 +294,23 @@ for dir in `ls`; do
 	println_info "- Running shalbum in '$dir' directory"
 
 	cd "$dir"
-	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
-	    if [ "${dirname_as_title}" = "yes" ]; then
-		newtitle=`basename "$dir"`
-		if [ "${dirname_underscores_as_spaces}" = "yes" ]; then
-		    newtitle=`echo "${newtitle}" | sed 's/_/ /g'`
-		fi
-		${shalbum} -b "${back_link}" -l "${backlink_label}" ${dash_i} ${dash_q} -t "${newtitle}"
-	    else
-		${shalbum} -b "${back_link}" -l "${backlink_label}" ${dash_i} ${dash_q}
+
+	command_line=""
+
+	if [ "${dirname_as_title}" = "yes" ]; then
+	    newtitle=`basename "$dir"`
+	    if [ "${dirname_underscores_as_spaces}" = "yes" ]; then
+		newtitle=`echo "${newtitle}" | sed 's/_/ /g'`
 	    fi
-	else
-	    if [ "${dirname_as_title}" = "yes" ]; then
-                newtitle=`basename "$dir"`
-                if [ "${dirname_underscores_as_spaces}" = "yes" ]; then
-                    newtitle=`echo "${newtitle}" | sed 's/_/ /g'` 
-		fi
-		${shalbum} ${dash_i} ${dash_q} -t "${newtitle}"
-	    else
-		${shalbum} ${dash_i} ${dash_q}
-	    fi
+	    command_line="${command_line} -t '${newtitle}'"
 	fi
+
+	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
+	    command_line="${command_line} -b '${back_link}' -l '${backlink_label}'"
+	fi
+
+	sh -c "${shalbum} ${dash_i} ${dash_q} ${command_line}"
+
    	cd ${start_pwd} 1>/dev/null
 	mkdir -p "${dirname}/$dir"
    	mv "$dir/album/"* "${dirname}/$dir"
