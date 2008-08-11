@@ -1316,8 +1316,8 @@ aux=1
 while [ $aux -le $idx_counter ]; do
     idx_filename="$idx_basename""$aux"".html"
 
-    cat $idx_header $idx_filename $idx_footer > tmp.html
-    mv tmp.html $idx_filename
+    cat $idx_header $idx_filename $idx_footer > ${tmp_dir}/curr_idx.html
+    mv ${tmp_dir}/curr_idx.html $idx_filename
 
     if [ $idx_filename = "${idx_basename}1.html" ]; then
 	mv $idx_filename "$idx_basename".html
