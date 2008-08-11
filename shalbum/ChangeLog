@@ -4,6 +4,9 @@ version 1.14
 	  (watermark samples still pending).
 	* BUGFIX: shalbumrec/shalbum title/date delimiter changed to '^'
 	  to prevent 'invalid delimiter' error on some systems.
+	* BUGFIX: replaced hard-coded index.html by ${idx_basename}.html
+	* Improvement: <picture>.html and <picture>_r.html files being
+	  created inside temporary directory.
 
 
 version 1.13 (25-Jul-2008)

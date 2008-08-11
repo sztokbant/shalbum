@@ -23,7 +23,9 @@ sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
 # TODO-LIST:
-#   - HTML files should be created inside ${tmp_dir}
+#   - HTML index files should be created inside ${tmp_dir}
+#   - 'shalbumrec -u'
+#   - update sample watermark files to 'shalbum.org'
 
 uname=`uname`
 
@@ -541,9 +543,9 @@ create_page_for_pic()
     refresh="$6"
 
     if [ "${refresh}" != "" ]; then
-	html_file=${pic}"_r.html"
+	html_file=${tmp_dir}/${pic}"_r.html"
     else
-	html_file=${pic}".html"
+	html_file=${tmp_dir}/${pic}".html"
     fi
 
     echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > $html_file
@@ -1317,7 +1319,7 @@ while [ $aux -le $idx_counter ]; do
     cat $idx_header $idx_filename $idx_footer > tmp.html
     mv tmp.html $idx_filename
 
-    if [ $idx_filename = "index1.html" ]; then
+    if [ $idx_filename = "${idx_basename}1.html" ]; then
 	mv $idx_filename "$idx_basename".html
 	idx_filename="$idx_basename".html
     fi
@@ -1344,8 +1346,8 @@ while [ $aux -le $idx_counter ]; do
     fi
     mv tmp_idx.html $idx_filename
 
-    # index1.html
-    cat $idx_filename | sed s/"index1.html"/"index.html"/g > tmp_idx.html
+    # ${idx_basename}1.html
+    cat $idx_filename | sed s/"${idx_basename}1.html"/"${idx_basename}.html"/g > tmp_idx.html
     mv tmp_idx.html $idx_filename
 
     # link to current file
@@ -1389,7 +1391,6 @@ if [ "$only_index" != yes ]; then
     fi
 
     print_info "[tnails]"
-    
     mv ${tmp_dir}/thumbnails/* ${outdir}/thumbnails/ 2>/dev/null
     print_info "[pics]"
     mv ${tmp_dir}/vga/* ${outdir}/vga/ 2>/dev/null
@@ -1400,9 +1401,6 @@ if [ "$only_index" != yes ]; then
 
 fi; # !only_index
 
-# cleanup
-rm -rf ${tmp_dir}
-
 print_info "[idx]"
 mkdir -p ${outdir}
 rm "${outdir}/""$idx_basename"*.html 2>/dev/null
@@ -1411,12 +1409,15 @@ mv "$idx_basename"*.html ${outdir}
 if [ $multi_html = "yes" ]; then
     print_info '[multi-idx]'
     for file in $all_files; do
-	mv "${file}.html" ${outdir}
+	mv "${tmp_dir}/${file}.html" ${outdir}
 	if [ "${slideshow_time}" != "0" ]; then
-	    mv "${file}_r.html" ${outdir}
+	    mv "${tmp_dir}/${file}_r.html" ${outdir}
 	fi
     done
 fi
+
+# cleanup
+rm -rf ${tmp_dir}
 
 println_info " ok!"
 
