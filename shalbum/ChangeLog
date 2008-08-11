@@ -1,11 +1,14 @@
 version 1.14
+	Improvements:
 	* shalbumrec: refactoring on piece of code that calls shalbum
 	* References to shalbum website updated to shalbum.org
 	  (watermark samples still pending).
-	* BUGFIX: shalbumrec/shalbum title/date delimiter changed to '^'
+	* HTML files are now created inside temporary directory.
+
+	Bug Fixes:
+	* shalbumrec/shalbum title/date delimiter changed to '^'
 	  to prevent 'invalid delimiter' error on some systems.
-	* BUGFIX: replaced hard-coded index.html by ${idx_basename}.html
-	* Improvement: html files being created inside temporary directory.
+	* Replaced hard-coded index.html references by ${idx_basename}.html
 
 
 version 1.13 (25-Jul-2008)
