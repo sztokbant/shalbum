@@ -23,7 +23,6 @@ sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
 # TODO-LIST:
-#   - HTML index files should be created inside ${tmp_dir}
 #   - 'shalbumrec -u'
 #   - update sample watermark files to 'shalbum.org'
 
@@ -1093,7 +1092,7 @@ print_info "Generating indexes..."
 
 idx_basename='index'
 idx_counter=1
-idx_filename="$idx_basename""$idx_counter"".html"
+idx_filename="${tmp_dir}/$idx_basename""$idx_counter"".html"
 
 ############################## CONTENTS ##############################
 echo '<table width="'$table_width'">' >> $idx_filename
@@ -1219,7 +1218,7 @@ for file in $all_files; do
 	    # this 'if' avoids creation of an empty index.html in the end
 	    if [ ! `expr $n_rows \* $n_columns \* $idx_counter` -eq $total_files ]; then
 		idx_counter=`expr $idx_counter + 1`
-		idx_filename="$idx_basename""$idx_counter"".html"
+		idx_filename="${tmp_dir}/$idx_basename""$idx_counter"".html"
 		
 		echo '<table width="'$table_width'">' >> $idx_filename
 		lin_counter=1
@@ -1314,14 +1313,14 @@ echo '<!-- created with '$software_revision' -->' >> $idx_footer
 ################################### CREATION #################################
 aux=1
 while [ $aux -le $idx_counter ]; do
-    idx_filename="$idx_basename""$aux"".html"
+    idx_filename="${tmp_dir}/$idx_basename""$aux"".html"
 
-    cat $idx_header $idx_filename $idx_footer > ${tmp_dir}/curr_idx.html
-    mv ${tmp_dir}/curr_idx.html $idx_filename
+    cat $idx_header $idx_filename $idx_footer > ${tmp_dir}/tmp_idx.html
+    mv ${tmp_dir}/tmp_idx.html $idx_filename
 
-    if [ $idx_filename = "${idx_basename}1.html" ]; then
-	mv $idx_filename "$idx_basename".html
-	idx_filename="$idx_basename".html
+    if [ $idx_filename = "${tmp_dir}/${idx_basename}1.html" ]; then
+	mv $idx_filename "${tmp_dir}/$idx_basename".html
+	idx_filename="${tmp_dir}/$idx_basename".html
     fi
 
     next=`expr $aux + 1`
@@ -1330,29 +1329,29 @@ while [ $aux -le $idx_counter ]; do
     neighbors=0
     # last page
     if [ $aux -eq 1 ]; then
-	cat $idx_filename | sed s/"__LAST_PAGE__"/""/g > tmp_idx.html
+	cat $idx_filename | sed s/"__LAST_PAGE__"/""/g > ${tmp_dir}/tmp_idx.html
     else
 	neighbors=`expr $neighbors + 1`
-	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt;\&lt;<\/b><\/font><\/a> '/g > tmp_idx.html
+	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt;\&lt;<\/b><\/font><\/a> '/g > ${tmp_dir}/tmp_idx.html
     fi
-    mv tmp_idx.html $idx_filename
+    mv ${tmp_dir}/tmp_idx.html $idx_filename
 
     # next page
     if [ $aux -eq $idx_counter ]; then
-	cat $idx_filename | sed s/"__NEXT_PAGE__"/""/g > tmp_idx.html
+	cat $idx_filename | sed s/"__NEXT_PAGE__"/""/g > ${tmp_dir}/tmp_idx.html
     else
 	neighbors=`expr $neighbors + 1`
-	cat $idx_filename | sed s/"__NEXT_PAGE__"/' <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>\&gt;\&gt;<\/b><\/font><\/a>'/g > tmp_idx.html
+	cat $idx_filename | sed s/"__NEXT_PAGE__"/' <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>\&gt;\&gt;<\/b><\/font><\/a>'/g > ${tmp_dir}/tmp_idx.html
     fi
-    mv tmp_idx.html $idx_filename
-
-    # ${idx_basename}1.html
-    cat $idx_filename | sed s/"${idx_basename}1.html"/"${idx_basename}.html"/g > tmp_idx.html
-    mv tmp_idx.html $idx_filename
+    mv ${tmp_dir}/tmp_idx.html $idx_filename
 
     # link to current file
-    cat $idx_filename | sed s/'<a href="'"$idx_filename"'">'"$aux"'<\/a>'/'<font color="red">'"$aux"'<\/font>'/g > tmp_idx.html
-    mv tmp_idx.html $idx_filename
+    cat $idx_filename | sed s/'<a href="'"${idx_basename}${aux}.html"'">'"$aux"'<\/a>'/'<font color="red">'"$aux"'<\/font>'/g > ${tmp_dir}/tmp_idx.html
+    mv ${tmp_dir}/tmp_idx.html $idx_filename
+
+    # ${idx_basename}1.html
+    cat $idx_filename | sed s/"${idx_basename}1.html"/"${idx_basename}.html"/g > ${tmp_dir}/tmp_idx.html
+    mv ${tmp_dir}/tmp_idx.html $idx_filename
 
     aux=`expr $aux + 1`
 done;
@@ -1360,8 +1359,8 @@ rm $idx_header $idx_footer
 
 # if there's only one index file, remove page number.
 if [ $neighbors -eq 0 ]; then
-    cat $idx_filename | sed s/'<font color="red">1<\/font>'/""/g > tmp_idx.html
-    mv tmp_idx.html $idx_filename
+    cat $idx_filename | sed s/'<font color="red">1<\/font>'/""/g > ${tmp_dir}/tmp_idx.html
+    mv ${tmp_dir}/tmp_idx.html $idx_filename
 fi;
 ################################### /CREATION #################################
 
@@ -1404,7 +1403,7 @@ fi; # !only_index
 print_info "[idx]"
 mkdir -p ${outdir}
 rm "${outdir}/""$idx_basename"*.html 2>/dev/null
-mv "$idx_basename"*.html ${outdir}
+mv "${tmp_dir}/$idx_basename"*.html ${outdir}
 
 if [ $multi_html = "yes" ]; then
     print_info '[multi-idx]'
