@@ -1,4 +1,4 @@
-version 1.14
+version 1.14 (13-Aug-2008)
 	Improvements:
 	* shalbumrec: refactoring on piece of code that calls shalbum
 	* References to shalbum website updated to shalbum.org
