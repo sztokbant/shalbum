@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-shalbumrec_version="1.14"
+shalbumrec_version="1.15-pre"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - $shalbum_website - $shalbumrec_revision_date"
 
@@ -128,7 +128,7 @@ color_bgcolor="#000000"
 color_link="#ffffff"
 color_vlink="#888888"
 color_alink="#ff0000"
-font_face="Arial, Helvetica"
+font_face="Arial, Helvetica, Sans Serif"
 
 quiet="no"                           # suppress output
 quiet_shalbum="no"                   # suppress shalbum output

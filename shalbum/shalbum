@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-sw_version="1.14"
+sw_version="1.15-pre"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
@@ -270,7 +270,7 @@ if [ $mhd != "yes" ]; then
     color_link="#ffffff"
     color_vlink="#888888"
     color_alink="#ff0000"
-    font_face="Arial, Helvetica"
+    font_face="Arial, Helvetica, Sans Serif"
 else
     # Mostly Harmless Decisions
     # secondary set of default options, selected with "-m" in command-line
