@@ -1,4 +1,4 @@
-version 1.15
+version 1.15 (28-Oct-2008)
 	Bug Fixes:
 	* shalbumrec: fixed bug with files named '*img*' (thanks to Sima M)
 
