@@ -356,7 +356,7 @@ for dir in `ls`; do
 
 	cd "$dir"
 	if [ "$FIRST" = "" ]; then
-	    FIRST="`grep img index.html | head -1 | cut -d \\\" -f 6`"
+	    FIRST="`grep \<img index.html | head -1 | cut -d \\\" -f 6`"
 	fi
 
 	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d '^' -f 2`"

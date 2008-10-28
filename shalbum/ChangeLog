@@ -1,4 +1,7 @@
 version 1.15
+	Bug Fixes:
+	* shalbumrec: fixed bug with files named '*img*' (thanks to Sima M)
+
 	Improvements:
 	* font face += Sans Serif
 
