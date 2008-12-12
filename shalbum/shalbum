@@ -357,10 +357,13 @@ if [ -f $HOME/.shalbum/shalbum.conf ]; then
 fi
 
 # read user-defined options
+
 # deprecated
 if [ -f ./_options ]; then
+    echo "WARNING: '_options' is deprecated. Use '.shalbum' instead."
     . ./_options
 fi
+
 if [ -f ./.shalbum ]; then
     . ./.shalbum
 fi
