@@ -564,15 +564,14 @@ print_css()
          table
          {
              border-color: #888888;
-             border-width: 0 0 0px 0px;
-             border-style: solid;
+             border-width: 0px 0px;
+             border-style: dotted;
          }
          td
          {
              border-color: #888888;
-             border-width: 0px 0px 0 0;
-             border-style: solid;
-             margin: 0;
+             border-width: 0px 0px;
+             border-style: dotted;
              padding: 0px;
              vertical-align: top;
          }
