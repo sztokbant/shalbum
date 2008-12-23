@@ -574,6 +574,7 @@ print_css()
              border-style: solid;
              margin: 0;
              padding: 0px;
+             vertical-align: top;
          }
          </style>"
 
@@ -716,7 +717,7 @@ create_page_for_pic()
     if [ "$th_on_multi" = yes ]; then
 	echo "<table width='$table_width'><tr>" >> $html_file
         # before
-	echo "<td align='left' valign='top'>" >> $html_file
+	echo "<td align='left'>" >> $html_file
 	if [ "$before" != "[NONE]" ]; then
 	    html_compliant "${before}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
@@ -726,10 +727,10 @@ create_page_for_pic()
 	fi;
 	echo "</td>" >> $html_file
 	
-	echo "<td align='center' valign='top' width='100%'></td>" >> $html_file
+	echo "<td align='center' width='100%'></td>" >> $html_file
 	
         # after
-	echo "<td align='right' valign='top'>" >> $html_file
+	echo "<td align='right'>" >> $html_file
 	if [ "$after" != "[NONE]" ]; then
 	    html_compliant "${after}.html"
 	    echo "<a href='${html_compliant_filename}'>" >> $html_file
@@ -1168,7 +1169,7 @@ for file in $all_files; do
 	echo "<!-- row begins -->" >> $idx_filename
 	echo "<tr>" >> $idx_filename
     fi;
-    echo "<td width='${col_percentage}%' valign='top'>" >> $idx_filename
+    echo "<td width='${col_percentage}%'>" >> $idx_filename
 
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"

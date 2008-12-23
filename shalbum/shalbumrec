@@ -229,6 +229,7 @@ print_css()
              border-style: solid;
              margin: 0;
              padding: 0px;
+             vertical-align: top;
          }
          </style>"
 
@@ -244,7 +245,7 @@ add_credits_footer()
 	echo "<!-- credits begin -->" >> $1
 	echo '<table width="'$table_width'"><tr>' >> $1
 
-	echo '<td width="50%" align="left" valign="top">' >> $1
+	echo '<td width="50%" align="left">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
 	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
@@ -256,7 +257,7 @@ add_credits_footer()
 	fi
 	echo "</td>" >> $1
 	
-	echo '<td width="50%" align="right" valign="top">' >> $1
+	echo '<td width="50%" align="right">' >> $1
         # Author
 	if [ "$author" != "" ]; then
 	    echo "<p><font size='1'><b>$credits_str $author</b></font><br />" >> $1
@@ -414,7 +415,7 @@ for dir in `ls`; do
 	    echo "<tr>" >> ../index.html
 	fi
 
-	echo "<td valign='top' width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "<td width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
 	col_counter=`expr $col_counter + 1`
 	if [ $col_counter -eq $n_columns ]; then
