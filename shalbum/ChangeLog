@@ -1,6 +1,7 @@
 version 1.16-pre
 	Improvements:
-	* Cleaning up hard-coded HTML, getting ready for CSS!
+	* HTML 4.01 Transitional => XHTML 1.0 Transitional
+	* Lots of clean ups on hard-coded HTML (replaced by CSS)
 
 
 version 1.15 (28-Oct-2008)
