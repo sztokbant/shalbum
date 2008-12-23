@@ -612,7 +612,7 @@ create_page_for_pic()
 	fi
     fi
 
-    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />" >> $html_file
+    echo "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $html_file
     print_css >> $html_file
     echo "<title>$pic</title>" >> $html_file
     echo "</head>" >> $html_file
@@ -1306,7 +1306,7 @@ echo "<!-- head -->" >> $idx_header
 echo "<head>" >> $idx_header
 
 # meta
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />" >> $idx_header
+echo "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $idx_header
 
 # style
 print_css >> $idx_header
