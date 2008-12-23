@@ -250,19 +250,20 @@ add_credits_footer()
 	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
 	fi
 	
-        # W3C HTML 4.01 compliant banner
+        # W3C XHTML 1.0 compliant banner
 	if [ "$w3c_ok_banner" = "yes" ]; then
-	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-html401-blue" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
+	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a></p>' >> $1
 	fi
 	echo "</td>" >> $1
 	
-	echo '<td width="50%" align="right">' >> $1
         # Author
 	if [ "$author" != "" ]; then
+	    echo '<td width="50%" align="right">' >> $1
 	    echo "<p><font size='1'><b>$credits_str $author</b></font><br />" >> $1
 	    if [ "$e_mail" != "" ]; then
 		echo "<a href='mailto:$e_mail'><font size='1'><b>$e_mail</b></font></a></p>" >> $1
 	    fi
+	    echo '</td>' >> $1
 	fi
 	
 	echo '</tr></table>' >> $1
@@ -372,10 +373,10 @@ idx_start_time="`epoch`"
 
 cd "${dirname}"
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">' > index.html
-echo "<html>" >> index.html
+echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' > index.html
+echo "<html xmlns='http://www.w3.org/1999/xhtml'>" >> index.html
 echo "<head>" >> index.html
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> index.html
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />" >> index.html
 print_css >> index.html
 echo "<title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
@@ -414,7 +415,7 @@ for dir in `ls`; do
 	    echo "<tr>" >> ../index.html
 	fi
 
-	echo "<td width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "<td width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg' /></a></td><td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
 	col_counter=`expr $col_counter + 1`
 	if [ $col_counter -eq $n_columns ]; then

@@ -509,25 +509,26 @@ add_credits_footer()
 	echo "<!-- credits begin -->" >> $1
 	echo '<table width="'$table_width'"><tr>' >> $1
 
-	echo '<td width="50%" align="left" valign="top">' >> $1
+	echo '<td width="50%" align="left">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
 	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
 	fi
 	
-        # W3C HTML 4.01 compliant banner
+        # W3C XHTML 1.0 compliant banner
 	if [ "$w3c_ok_banner" = "yes" ]; then
-	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-html401-blue" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
+	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a></p>' >> $1
 	fi
 	echo "</td>" >> $1
 	
-	echo '<td width="50%" align="right" valign="top">' >> $1
         # Author
 	if [ "$author" != "" ]; then
+	    echo '<td width="50%" align="right">' >> $1
 	    echo "<p><font size='1'><b>$credits_str $author</b></font><br />" >> $1
 	    if [ "$e_mail" != "" ]; then
 		echo "<a href='mailto:$e_mail'><font size='1'><b>$e_mail</b></font></a></p>" >> $1
 	    fi
+	    echo '</td>' >> $1
 	fi
 	
 	echo '</tr></table>' >> $1
@@ -595,8 +596,9 @@ create_page_for_pic()
 	html_file=${tmp_dir}/${pic}".html"
     fi
 
-    echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">' > $html_file
-    echo "<html>" >> $html_file
+    echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' > $html_file
+
+    echo "<html xmlns='http://www.w3.org/1999/xhtml'>" >> $html_file
 
     # <head>
     echo "<!-- head -->" >> $html_file
@@ -606,11 +608,11 @@ create_page_for_pic()
     if [ "${refresh}" != "" ]; then
 	if [ "$after" != "[NONE]" ]; then
 	    html_compliant "${after}_r.html"
-	    echo "<meta http-equiv='refresh' content='${refresh};url=${html_compliant_filename}'>" >> $html_file
+	    echo "<meta http-equiv='refresh' content='${refresh};url=${html_compliant_filename}' />" >> $html_file
 	fi
     fi
 
-    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> $html_file
+    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />" >> $html_file
     print_css >> $html_file
     echo "<title>$pic</title>" >> $html_file
     echo "</head>" >> $html_file
@@ -1290,20 +1292,21 @@ while [ $col_counter -gt 1 ]; do
 	col_counter=1
     fi;
 done;
+echo '</tr>' >> $idx_filename
 ############################## /CONTENTS ##############################
 
 ############################## HEADER ##############################
 idx_header="header.html"
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">' > $idx_header
-echo "<html>" >> $idx_header
+echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' > $idx_header
+echo "<html xmlns='http://www.w3.org/1999/xhtml'>" >> $idx_header
 
 # <head>
 echo "<!-- head -->" >> $idx_header
 echo "<head>" >> $idx_header
 
 # meta
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> $idx_header
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />" >> $idx_header
 
 # style
 print_css >> $idx_header
