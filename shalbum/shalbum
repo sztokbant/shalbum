@@ -1289,10 +1289,10 @@ while [ $col_counter -gt 1 ]; do
     col_counter=`expr $col_counter + 1`
 
     if [ $col_counter -gt $n_columns ]; then
+	echo '</tr>' >> $idx_filename
 	col_counter=1
     fi;
 done;
-echo '</tr>' >> $idx_filename
 ############################## /CONTENTS ##############################
 
 ############################## HEADER ##############################
