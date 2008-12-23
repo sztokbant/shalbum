@@ -216,6 +216,20 @@ print_css()
          img {
            border: 0px solid;
          }
+         table
+         {
+             border-color: #888888;
+             border-width: 0 0 0px 0px;
+             border-style: solid;
+         }
+         td
+         {
+             border-color: #888888;
+             border-width: 0px 0px 0 0;
+             border-style: solid;
+             margin: 0;
+             padding: 0px;
+         }
          </style>"
 
     echo $css

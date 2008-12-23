@@ -517,7 +517,7 @@ add_credits_footer()
 	
         # W3C HTML 4.01 compliant banner
 	if [ "$w3c_ok_banner" = "yes" ]; then
-	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img border="0" src="http://www.w3.org/Icons/valid-html401-blue" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
+	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-html401-blue" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
 	fi
 	echo "</td>" >> $1
 	
@@ -560,6 +560,20 @@ print_css()
          }
          img {
            border: 0px solid;
+         }
+         table
+         {
+             border-color: #888888;
+             border-width: 0 0 0px 0px;
+             border-style: solid;
+         }
+         td
+         {
+             border-color: #888888;
+             border-width: 0px 0px 0 0;
+             border-style: solid;
+             margin: 0;
+             padding: 0px;
          }
          </style>"
 
@@ -607,7 +621,7 @@ create_page_for_pic()
     echo "<body><center>" >> $html_file
 
     # reference to index
-    echo "<table border='0' width='$table_width'><tr><td width='33%'>" >> $html_file
+    echo "<table width='$table_width'><tr><td width='33%'>" >> $html_file
     if [ "$index_page" = "1" ]; then
 	echo "<a href='index.html'><b>${backlink_label_thumbs}</b></a>" >> $html_file
     else
@@ -651,7 +665,7 @@ create_page_for_pic()
     echo "</tr></table>" >> $html_file
 
     # pic
-    echo "<table border='0' width='$table_width'><tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
+    echo "<table width='$table_width'><tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
 
     # link to huge image
     if [ "$huge_res" != "0" ]; then
@@ -670,7 +684,7 @@ create_page_for_pic()
     echo "</table>" >> $html_file
 
     # bottom arrows and pic subtitle
-    echo "<table border='0' width='$table_width'><tr>" >> $html_file
+    echo "<table width='$table_width'><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
 	html_compliant "${before}.html"
@@ -692,7 +706,7 @@ create_page_for_pic()
     if [ "$long_description" = "yes" ]; then
         long_description_file="$1""-description.html"
 	if [ -f $long_description_file ]; then
-	    echo "<table border='0' width='$table_width'><tr><td>" >> $html_file
+	    echo "<table width='$table_width'><tr><td>" >> $html_file
 	    cat $long_description_file >> $html_file
 	    echo "</td></tr></table>" >> $html_file
 	fi
@@ -700,7 +714,7 @@ create_page_for_pic()
 
     # thumbnails with links
     if [ "$th_on_multi" = yes ]; then
-	echo "<table border='0' width='$table_width'><tr>" >> $html_file
+	echo "<table width='$table_width'><tr>" >> $html_file
         # before
 	echo "<td align='left' valign='top'>" >> $html_file
 	if [ "$before" != "[NONE]" ]; then
