@@ -190,6 +190,37 @@ print_info()
     fi
 }
 
+print_css()
+{
+    css="<style type='text/css'>\
+         a:link {
+           text-decoration: none;
+           color: $color_link;
+         }
+         a:visited {
+           text-decoration: none;
+           color: $color_vlink;
+         }
+         a:active {
+           text-decoration: none;
+           color: $color_alink;
+         }
+         body {
+           margin: 0px;
+           padding: 0px;
+           background: $color_bgcolor;
+           color: $color_text;
+           font-family: $font_face;
+           font-size: 14px;
+         }
+         img {
+           border: 0px solid;
+         }
+         </style>"
+
+    echo $css
+}
+
 add_credits_footer()
 {
     if  [ "$author" != "" ] ||
@@ -202,21 +233,21 @@ add_credits_footer()
 	echo '<td width="50%" align="left" valign="top">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
-	    echo "<p><font size='1' face='${font_face}'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
+	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
 	fi
 	
         # W3C HTML 4.01 compliant banner
 	if [ "$w3c_ok_banner" = "yes" ]; then
-	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
+	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-html401-blue" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a></p>' >> $1
 	fi
 	echo "</td>" >> $1
 	
 	echo '<td width="50%" align="right" valign="top">' >> $1
         # Author
 	if [ "$author" != "" ]; then
-	    echo "<p><font size='1' face='${font_face}'><b>$credits_str $author</b></font><br />" >> $1
+	    echo "<p><font size='1'><b>$credits_str $author</b></font><br />" >> $1
 	    if [ "$e_mail" != "" ]; then
-		echo "<a href='mailto:$e_mail'><font size='1' face='${font_face}'><b>$e_mail</b></font></a></p>" >> $1
+		echo "<a href='mailto:$e_mail'><font size='1'><b>$e_mail</b></font></a></p>" >> $1
 	    fi
 	fi
 	
@@ -327,16 +358,16 @@ idx_start_time="`epoch`"
 
 cd "${dirname}"
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">' > index.html
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">' > index.html
 echo "<html>" >> index.html
 echo "<head>" >> index.html
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" >> index.html
-echo "<style TYPE=\"text/css\"> A:link, A:visited { text-decoration: none; } </style>" >> index.html
+print_css >> index.html
 echo "<title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
-echo "<body text='$color_text' bgcolor='$color_bgcolor' link='$color_link' vlink='$color_vlink' alink='$color_alink'><center>" >> index.html
+echo "<body><center>" >> index.html
 echo "<table width='$table_width'><tr><td>" >> index.html
-echo "<font size='5' face='${font_face}'><b>${global_title}</b></font>" >> index.html
+echo "<font size='5'><b>${global_title}</b></font>" >> index.html
 echo "</td></tr></table>" >> index.html
 echo "<table width='$table_width'>" >> index.html
 
@@ -356,7 +387,7 @@ for dir in `ls`; do
 
 	cd "$dir"
 	if [ "$FIRST" = "" ]; then
-	    FIRST="`grep \<img index.html | head -1 | cut -d \\\" -f 6`"
+	    FIRST="`grep \<img index.html | head -1 | cut -d \\\" -f 4`"
 	fi
 
 	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d '^' -f 2`"
@@ -369,7 +400,7 @@ for dir in `ls`; do
 	    echo "<tr>" >> ../index.html
 	fi
 
-	echo "<td valign='top' width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img border='0' alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3' face='${font_face}'><b>${TITLE}</b></font></a><br /><font size='2' face='${font_face}'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "<td valign='top' width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}' valign='top'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg'></a></td><td valign='top' align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
 	col_counter=`expr $col_counter + 1`
 	if [ $col_counter -eq $n_columns ]; then
