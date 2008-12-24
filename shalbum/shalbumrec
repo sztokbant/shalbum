@@ -381,7 +381,7 @@ print_css >> index.html
 echo "<title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
 echo "<body><center>" >> index.html
-echo "<table width='$table_width'><tr><td>" >> index.html
+echo "<table width='$table_width'><tr><td align='left'>" >> index.html
 echo "<font size='5'><b>${global_title}</b></font>" >> index.html
 echo "</td></tr></table>" >> index.html
 echo "<table width='$table_width'>" >> index.html
@@ -415,7 +415,7 @@ for dir in `ls`; do
 	    echo "<tr>" >> ../index.html
 	fi
 
-	echo "<td width='${col_percentage}%'><table width='100%'><tr><td width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg' /></a></td><td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "<td align='left' width='${col_percentage}%'><table width='100%'><tr><td align='left' width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg' /></a></td><td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
 
 	col_counter=`expr $col_counter + 1`
 	if [ $col_counter -eq $n_columns ]; then

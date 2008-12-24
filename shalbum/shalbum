@@ -623,7 +623,7 @@ create_page_for_pic()
     echo "<body><center>" >> $html_file
 
     # reference to index
-    echo "<table width='$table_width'><tr><td width='33%'>" >> $html_file
+    echo "<table width='$table_width'><tr><td align='left' width='33%'>" >> $html_file
     if [ "$index_page" = "1" ]; then
 	echo "<a href='index.html'><b>${backlink_label_thumbs}</b></a>" >> $html_file
     else
@@ -631,7 +631,7 @@ create_page_for_pic()
     fi
 
     # left top arrow
-    echo "</td><td width='34%'>&nbsp;</td><td width='33%'>&nbsp;</td></tr><tr>" >> $html_file
+    echo "</td><td align='left' width='34%'>&nbsp;</td><td align='left' width='33%'>&nbsp;</td></tr><tr>" >> $html_file
     if [ "$before" != "[NONE]" ]; then
 	before_th="thumbnails/th_""${before}"
 	html_compliant "${before}.html"
@@ -708,7 +708,7 @@ create_page_for_pic()
     if [ "$long_description" = "yes" ]; then
         long_description_file="$1""-description.html"
 	if [ -f $long_description_file ]; then
-	    echo "<table width='$table_width'><tr><td>" >> $html_file
+	    echo "<table width='$table_width'><tr><td align='left'>" >> $html_file
 	    cat $long_description_file >> $html_file
 	    echo "</td></tr></table>" >> $html_file
 	fi
@@ -1170,7 +1170,7 @@ for file in $all_files; do
 	echo "<!-- row begins -->" >> $idx_filename
 	echo "<tr>" >> $idx_filename
     fi;
-    echo "<td width='${col_percentage}%'>" >> $idx_filename
+    echo "<td align='left' width='${col_percentage}%'>" >> $idx_filename
 
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
@@ -1224,7 +1224,7 @@ for file in $all_files; do
 	    pic_subtitle="`echo $file | cut -d '.' -f 1`"
 	fi;
 
-	echo "</td></tr><tr><td width='100%'><b>$pic_subtitle</b>" >> $idx_filename
+	echo "</td></tr><tr><td align='left' width='100%'><b>$pic_subtitle</b>" >> $idx_filename
     fi
 
     echo '</td></tr></table></td>' >> $idx_filename
@@ -1284,7 +1284,7 @@ done;
 
 # Fill empty columns
 while [ $col_counter -gt 1 ]; do
-    echo "<td width='${col_percentage}%'></td>" >> $idx_filename
+    echo "<td align='left' width='${col_percentage}%'></td>" >> $idx_filename
 
     col_counter=`expr $col_counter + 1`
 
@@ -1332,7 +1332,7 @@ echo "<body><center>" >> $idx_header
 
 # body title
 echo "<!-- body title -->" >> $idx_header
-echo '<table width="'$table_width'"><tr><td>' >> $idx_header
+echo '<table width="'$table_width'"><tr><td align="left">' >> $idx_header
 if [ "$third_title" != "" ]; then
     echo "<font size='3'><b>${third_title}</b></font><br />" >> $idx_header
 fi;

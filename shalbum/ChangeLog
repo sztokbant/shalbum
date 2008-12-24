@@ -1,3 +1,8 @@
+version 1.17-pre
+	Bug Fixes:
+	* Improved display on IE 6.0
+
+
 version 1.16 (23-Dec-2008)
 	Improvements:
 	* HTML 4.01 Transitional => XHTML 1.0 Transitional
