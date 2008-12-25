@@ -23,6 +23,7 @@ sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
 # TODO-LIST:
+#   - remove hard-coded HTML, improve CSS, make output equal for every browser
 #   - 'shalbumrec -u'
 #   - update sample watermark files to 'shalbum.org'
 
