@@ -1,6 +1,8 @@
 version 1.18-pre
 	Improvements:
 	* img alt is picture subtitle (when available)
+	* more improvements on CSS and HTML code: footer, pages index
+	* other minor code improvements
 
 
 version 1.17 (25-Dec-2008)

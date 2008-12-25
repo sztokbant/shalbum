@@ -326,7 +326,7 @@ else
                                     # back link label for album list site
     backlink_label_thumbs="&lt;&lt;&lt; miniaturas"
                                     # back link label for thumbnails page
-    credits_str="photos by"         # credit information
+    credits_str="photos by "        # credit information
     support_shalbum="yes"           # print link to shalbum site
     w3c_ok_banner="yes"             # print "W3C HTML 4.01 compliant" banner
     uname_in_revision="full"        # print OS name in revision comment
@@ -352,7 +352,7 @@ else
     color_vlink="#888888"
     color_alink="#ff0000"
     font_face="Arial, Helvetica, Sans Serif"
-fi;
+fi
 
 quiet="no"                          # suppress output
 only_index="no"                     # only create HTML files
@@ -489,34 +489,35 @@ print_err()
 
 create_pages_index()
 {
-    echo '<!-- pages index begin -->' >> $1
-    echo '<table width="'$table_width'"><tr><td align="center">' >> $1
+    echo '<!-- pages index begin -->'
+    echo '<table width="'$table_width'">'
+    echo ' <tr>'
+    echo '  <td class="pagesIndex">'
     if [ $n_rows -gt 0 ]; then
 	aux=1
-	echo "<b>__LAST_PAGE__ " >> $1
+	echo '   __LAST_PAGE__'
 	while [ $aux -le $idx_counter ]; do
 	    last=`expr $aux - 1`
 	    next=`expr $aux + 1`
 
-	    echo '<a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a> ' >> $1
+	    echo '   <a href="'"$idx_basename""$aux"".html"'">'"$aux"'</a>'
 
 	    if [ $aux -eq $idx_counter ]; then
-		echo ' __NEXT_PAGE__' >> $1
-	    else
-		echo ' ' >> $1
+		echo '   __NEXT_PAGE__'
 	    fi
 
 	    aux=`expr $aux + 1`
-	done;
-	echo '</b>' >> $1
-    fi;
+	done
+    fi
 
     if [ "$back_link" != "" ]; then
-	echo "<p align='center'><a href=\"$back_link\"><b>$backlink_label</b></a></p>" >> $1
-    fi;
+	echo "   <p align='center'><a href=\"$back_link\">$backlink_label</a></p>"
+    fi
 
-    echo '</td></tr></table>' >> $1
-    echo '<!-- pages index end -->' >> $1
+    echo '  </td>'
+    echo ' </tr>'
+    echo '</table>'
+    echo '<!-- pages index end -->'
 }
 
 add_credits_footer()
@@ -525,33 +526,35 @@ add_credits_footer()
 	[ "$support_shalbum" = "yes" ] ||
 	[ "$w3c_ok_banner" = "yes" ]; then
 	
-	echo "<!-- credits begin -->" >> $1
-	echo '<table width="'$table_width'"><tr>' >> $1
+	echo "<!-- credits begin -->"
+	echo '<table width="'$table_width'">'
+	echo ' <tr>'
 
-	echo '<td width="50%" align="left">' >> $1
+	echo '  <td class="footerLeft">'
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
-	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'>shalbum</a></b></font></p>" >> $1
+	    echo "   <div>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></div><br />"
 	fi
 	
         # W3C XHTML 1.0 compliant banner
 	if [ "$w3c_ok_banner" = "yes" ]; then
-	    echo '<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a></p>' >> $1
+	    echo '   <div><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a></div>'
 	fi
-	echo "</td>" >> $1
+	echo "  </td>"
 	
         # Author
 	if [ "$author" != "" ]; then
-	    echo '<td width="50%" align="right">' >> $1
-	    echo "<p><font size='1'><b>$credits_str $author</b></font><br />" >> $1
+	    echo '  <td class="footerRight">'
+	    echo "   <div>${credits_str}${author}</div>"
 	    if [ "$e_mail" != "" ]; then
-		echo "<a href='mailto:$e_mail'><font size='1'><b>$e_mail</b></font></a></p>" >> $1
+		echo "   <div><a href='mailto:$e_mail'>$e_mail</a></div>"
 	    fi
-	    echo '</td>' >> $1
+	    echo '  </td>'
 	fi
 	
-	echo '</tr></table>' >> $1
-	echo "<!-- credits end -->" >> $1
+	echo ' </tr>'
+	echo '</table>'
+	echo "<!-- credits end -->"
     fi
 }
 
@@ -592,11 +595,28 @@ load_css()
           }
           td
           {
-              border-color: #888888;
-              border-width: 0px 0px;
-              border-style: dotted;
-              padding: 0px;
-              vertical-align: top;
+            padding: 0px;
+            vertical-align: top;
+          }
+          td.pagesIndex
+          {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+          }
+          td.footerLeft
+          {
+            text-align: left;
+            width: 50%;
+            font-size: 12px;
+            font-weight: bold;
+          }
+          td.footerRight
+          {
+            text-align: right;
+            width: 50%;
+            font-size: 12px;
+            font-weight: bold;
           }"
 
 	css_file=""
@@ -752,7 +772,7 @@ create_page_for_pic()
 	    html_compliant "${before_th}"
 	    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
-	fi;
+	fi
 	echo "</td>" >> $html_file
 	
 	echo "<td align='center' width='100%'></td>" >> $html_file
@@ -765,7 +785,7 @@ create_page_for_pic()
 	    html_compliant "${after_th}"
 	    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
-	fi;
+	fi
 	echo "</td>" >> $html_file
 	
 	echo "</tr></table>" >> $html_file
@@ -773,7 +793,7 @@ create_page_for_pic()
 
     echo "<br />" >> $html_file
 
-    add_credits_footer $html_file
+    add_credits_footer >> $html_file
 
     echo "</center></body></html>" >> $html_file
     echo '<!-- created with '$software_revision' -->' >> $html_file
@@ -998,7 +1018,7 @@ if [ "$only_index" != "yes" ]; then
 	fi
 	    
 	println_info " ok!"
-    fi; # $watermark = yes
+    fi # $watermark = yes
     
     println_info "Creating pictures: "
     processed=0
@@ -1149,23 +1169,23 @@ if [ "$only_index" != "yes" ]; then
 	if [ $vgaframe = "yes" ] && [ -f ${vga_file} ]; then
 	    print_info "[vf]"
 	    $gm montage "${vga_file}" -mode concatenate -frame $vgaframesize -quality ${vga_quality} "${vga_file}"
-	fi;
+	fi
 	
 	if [ $thframe = "yes" ] && [ -f ${th_file} ]; then
 	    print_info "[tf]"
 	    $gm montage "${th_file}" -mode concatenate -frame $thframesize -quality ${th_quality} "${th_file}"
-	fi;
+	fi
 
 	println_info " ok!"
-    done;
+    done
 
     # time
     img_end_time="`epoch`"
 
     if [ $watermark = "yes" ]; then
 	rm $watermark_vga $watermark_th $watermark_huge
-    fi;
-fi; # !only_index
+    fi
+fi # !only_index
 
 ##########################
 # Part II: the index files
@@ -1189,7 +1209,7 @@ lin_counter=1
 if [ $multi_html = "yes" ]; then
     cur_counter=1
     b4_file="[NONE]"
-fi;
+fi
 
 col_percentage=`expr 100 \/ $n_columns`
 
@@ -1205,7 +1225,7 @@ for file in $all_files; do
     if [ $col_counter -eq 1 ]; then
 	echo "<!-- row begins -->" >> $idx_filename
 	echo "<tr>" >> $idx_filename
-    fi;
+    fi
     echo "<td align='left' width='${col_percentage}%'>" >> $idx_filename
 
     th_file="thumbnails/th_""$file"
@@ -1246,7 +1266,7 @@ for file in $all_files; do
 	    fi
 	elif [ "$pic_label_type" = "cutatdot" ]; then
 	    pic_subtitle="`echo $file | cut -d '.' -f 1`"
-	fi;
+	fi
     fi
 
     alt=""
@@ -1283,7 +1303,7 @@ for file in $all_files; do
 		next_file=$f_find
 		if [ "$next_counter" = "$cur_counter" ]; then
 		    break
-		fi;
+		fi
 		next_counter=`expr $next_counter + 1`
 	    done
 	else
@@ -1306,7 +1326,7 @@ for file in $all_files; do
 	echo '</tr>' >> $idx_filename
 	col_counter=1
 	lin_counter=`expr $lin_counter + 1`
-    fi;
+    fi
 
     if [ $n_rows -gt 0 ]; then
 	if [ $lin_counter -gt $n_rows ]; then
@@ -1317,15 +1337,15 @@ for file in $all_files; do
 		
 		echo '<table width="'$table_width'">' >> $idx_filename
 		lin_counter=1
-	    fi;
-	fi;
-    fi;
+	    fi
+	fi
+    fi
 
     if [ $multi_html = "yes" ]; then
 	b4_file="$file"
 	cur_counter=`expr $cur_counter + 1`
-    fi;
-done;
+    fi
+done
 
 # Fill empty columns
 while [ $col_counter -gt 1 ]; do
@@ -1336,8 +1356,8 @@ while [ $col_counter -gt 1 ]; do
     if [ $col_counter -gt $n_columns ]; then
 	echo '</tr>' >> $idx_filename
 	col_counter=1
-    fi;
-done;
+    fi
+done
 ############################## /CONTENTS ##############################
 
 ############################## HEADER ##############################
@@ -1360,11 +1380,11 @@ print_css >> $idx_header
 echo "<title>" >> $idx_header
 if [ "$third_title" != "" ]; then
     echo "${third_title} - " >> $idx_header
-fi;
+fi
 echo "$title" >> $idx_header
 if [ "$date" != "" ]; then
     echo " - $date" >> $idx_header
-fi;
+fi
 echo '</title>' >> $idx_header
 
 echo >> $idx_header
@@ -1380,7 +1400,7 @@ echo "<!-- body title -->" >> $idx_header
 echo '<table width="'$table_width'"><tr><td align="left">' >> $idx_header
 if [ "$third_title" != "" ]; then
     echo "<font size='3'><b>${third_title}</b></font><br />" >> $idx_header
-fi;
+fi
 echo "<!-- shalbumrec:title ^${title}^ --> <font size='5'><b>$title</b></font>" >> $idx_header
 if [ "$date" != "" ]; then
     echo "<!-- shalbumrec:date ^${date}^ --> <br /><font size='3'>$date</font>" >> $idx_header
@@ -1388,7 +1408,7 @@ fi
 echo '</td></tr></table>' >> $idx_header
 
 # page index
-create_pages_index $idx_header
+create_pages_index >> $idx_header
 ############################## /HEADER ##############################
 
 ############################## FOOTER ##############################
@@ -1397,10 +1417,10 @@ idx_footer="footer.html"
 echo '</table><br />' >> $idx_footer
 
 # page index
-create_pages_index $idx_footer
+create_pages_index >> $idx_footer
 
 # credits footer
-add_credits_footer $idx_footer
+add_credits_footer >> $idx_footer
 
 echo '</center></body></html>' >> $idx_footer
 echo '<!-- created with '$software_revision' -->' >> $idx_footer
@@ -1428,7 +1448,7 @@ while [ $aux -le $idx_counter ]; do
 	cat $idx_filename | sed s/"__LAST_PAGE__"/""/g > ${tmp_dir}/tmp_idx.html
     else
 	neighbors=`expr $neighbors + 1`
-	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'"><font size="1"><b>\&lt;\&lt;<\/b><\/font><\/a> '/g > ${tmp_dir}/tmp_idx.html
+	cat $idx_filename | sed s/"__LAST_PAGE__"/'<a href="'"$idx_basename""$last"".html"'">\&lt;\&lt;<\/a> '/g > ${tmp_dir}/tmp_idx.html
     fi
     mv ${tmp_dir}/tmp_idx.html $idx_filename
 
@@ -1437,7 +1457,7 @@ while [ $aux -le $idx_counter ]; do
 	cat $idx_filename | sed s/"__NEXT_PAGE__"/""/g > ${tmp_dir}/tmp_idx.html
     else
 	neighbors=`expr $neighbors + 1`
-	cat $idx_filename | sed s/"__NEXT_PAGE__"/' <a href="'"$idx_basename""$next"".html"'"><font size="1"><b>\&gt;\&gt;<\/b><\/font><\/a>'/g > ${tmp_dir}/tmp_idx.html
+	cat $idx_filename | sed s/"__NEXT_PAGE__"/'<a href="'"$idx_basename""$next"".html"'">\&gt;\&gt;<\/a>'/g > ${tmp_dir}/tmp_idx.html
     fi
     mv ${tmp_dir}/tmp_idx.html $idx_filename
 
@@ -1450,14 +1470,14 @@ while [ $aux -le $idx_counter ]; do
     mv ${tmp_dir}/tmp_idx.html $idx_filename
 
     aux=`expr $aux + 1`
-done;
+done
 rm $idx_header $idx_footer
 
 # if there's only one index file, remove page number.
 if [ $neighbors -eq 0 ]; then
     cat $idx_filename | sed s/'<font color="red">1<\/font>'/""/g > ${tmp_dir}/tmp_idx.html
     mv ${tmp_dir}/tmp_idx.html $idx_filename
-fi;
+fi
 ################################### /CREATION #################################
 
 # time
@@ -1494,7 +1514,7 @@ if [ "$only_index" != yes ]; then
 	mv ${tmp_dir}/huge/* ${outdir}/huge/ 2>/dev/null
     fi
 
-fi; # !only_index
+fi # !only_index
 
 print_info "[idx]"
 mkdir -p ${outdir}
