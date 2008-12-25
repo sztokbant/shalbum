@@ -1,0 +1,45 @@
+/* $Id$ */
+
+a:link {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+a:visited {
+  text-decoration: none;
+  color: #888888;
+}
+
+a:active {
+  text-decoration: none;
+  color: #ff0000;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  background: #000000;
+  color: #ffffff;
+  font-family: Arial, Helvetica, Sans Serif;
+  font-size: 14px;
+}
+
+img {
+  border: 0px solid;
+}
+
+table
+{
+    border-color: #888888;
+    border-width: 0px 0px;
+    border-style: dotted;
+}
+
+td
+{
+    border-color: #888888;
+    border-width: 0px 0px;
+    border-style: dotted;
+    padding: 0px;
+    vertical-align: top;
+}
