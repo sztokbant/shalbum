@@ -1,31 +1,31 @@
 /* $Id$ */
 
 a:link {
-  text-decoration: none;
-  color: #ffffff;
+    text-decoration: none;
+    color: #ffffff;
 }
 
 a:visited {
-  text-decoration: none;
-  color: #888888;
+    text-decoration: none;
+    color: #888888;
 }
 
 a:active {
-  text-decoration: none;
-  color: #ff0000;
+    text-decoration: none;
+    color: #ff0000;
 }
 
 body {
-  margin: 0px;
-  padding: 0px;
-  background: #000000;
-  color: #ffffff;
-  font-family: Arial, Helvetica, Sans Serif;
-  font-size: 14px;
+    margin: 0px;
+    padding: 0px;
+    background: #000000;
+    color: #ffffff;
+    font-family: Arial, Helvetica, Sans Serif;
+    font-size: 14px;
 }
 
 img {
-  border: 0px solid;
+    border: 0px solid;
 }
 
 table
@@ -37,9 +37,29 @@ table
 
 td
 {
-    border-color: #888888;
-    border-width: 0px 0px;
-    border-style: dotted;
     padding: 0px;
     vertical-align: top;
+}
+
+td.pagesIndex
+{
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+td.footerLeft
+{
+    text-align: left;
+    width: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+td.footerRight
+{
+    text-align: right;
+    width: 50%;
+    font-size: 12px;
+    font-weight: bold;
 }
