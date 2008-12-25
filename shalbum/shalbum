@@ -825,9 +825,9 @@ set_images_to_grep()
     fi
 }
 
-#########################################
-# Part 0: Init (Look for images, Load CSS
-#########################################
+##########################################
+# Part 0: init (look for images, load css)
+##########################################
 
 # handle file names with white spaces and order by modify time
 if [ "$order_by" = "name" ]; then
@@ -1225,18 +1225,6 @@ for file in $all_files; do
 	fi
     fi
 
-    if [ $multi_html = "yes" ]; then
-	html_compliant "${file}.html"
-	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
-	html_compliant "${th_file}"
-	echo '<img src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
-    else
-	html_compliant "${vga_file}"
-	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img " >> $idx_filename
-	html_compliant "${th_file}"
-	echo 'src="'${html_compliant_filename}'" alt="'${file}'" /></a>' >> $idx_filename
-    fi
-
     if [ "$pic_label_type" != "none" ]; then
         if [ "$pic_label_type" = "number" ]; then
             # try to guess pic number
@@ -1259,7 +1247,28 @@ for file in $all_files; do
 	elif [ "$pic_label_type" = "cutatdot" ]; then
 	    pic_subtitle="`echo $file | cut -d '.' -f 1`"
 	fi;
+    fi
 
+    alt=""
+    if [ "${pic_subtitle}" != "" ]; then
+	alt="${pic_subtitle}"
+    else
+	alt="${file}"
+    fi
+
+    if [ $multi_html = "yes" ]; then
+	html_compliant "${file}.html"
+	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
+	html_compliant "${th_file}"
+	echo '<img src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
+    else
+	html_compliant "${vga_file}"
+	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img " >> $idx_filename
+	html_compliant "${th_file}"
+	echo 'src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
+    fi
+
+    if [ "$pic_label_type" != "none" ]; then
 	echo "</td></tr><tr><td align='left' width='100%'><b>$pic_subtitle</b>" >> $idx_filename
     fi
 
