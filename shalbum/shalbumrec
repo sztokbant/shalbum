@@ -427,7 +427,8 @@ echo "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset
 print_css >> index.html
 echo "<title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
-echo "<body><center>" >> index.html
+echo "<body>" >> index.html
+echo "<div align='center'>" >> index.html
 echo "<table width='$table_width'><tr><td align='left'>" >> index.html
 echo "<font size='5'><b>${global_title}</b></font>" >> index.html
 echo "</td></tr></table>" >> index.html
@@ -482,7 +483,7 @@ echo "</table>" >> index.html
 
 add_credits_footer >> index.html
 
-echo "</center></body></html>" >> index.html
+echo "</div></body></html>" >> index.html
 
 if [ "$uname_in_revision" = "full" ]; then
     shalbumrec_revision="${shalbumrec_revision} (`uname -srm`)"

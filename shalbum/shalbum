@@ -667,7 +667,8 @@ create_page_for_pic()
 
     # <body>
     echo "<!-- body -->" >> $html_file
-    echo "<body><center>" >> $html_file
+    echo "<body>" >> $html_file
+    echo "<div align='center'>" >> $html_file
 
     # reference to index
     echo "<table width='$table_width'><tr><td align='left' width='33%'>" >> $html_file
@@ -795,7 +796,7 @@ create_page_for_pic()
 
     add_credits_footer >> $html_file
 
-    echo "</center></body></html>" >> $html_file
+    echo "</div></body></html>" >> $html_file
     echo '<!-- created with '$software_revision' -->' >> $html_file
 }
 
@@ -1393,7 +1394,8 @@ echo "</head>" >> $idx_header
 
 # <body>
 echo "<!-- body -->" >> $idx_header
-echo "<body><center>" >> $idx_header
+echo "<body>" >> $idx_header
+echo "<div align='center'>" >> $idx_header
 
 # body title
 echo "<!-- body title -->" >> $idx_header
@@ -1422,7 +1424,7 @@ create_pages_index >> $idx_footer
 # credits footer
 add_credits_footer >> $idx_footer
 
-echo '</center></body></html>' >> $idx_footer
+echo '</div></body></html>' >> $idx_footer
 echo '<!-- created with '$software_revision' -->' >> $idx_footer
 ############################## /FOOTER ##############################
 
