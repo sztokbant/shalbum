@@ -530,7 +530,7 @@ add_credits_footer()
 	echo '<td width="50%" align="left">' >> $1
         # support shalbum!
 	if [ "$support_shalbum" = "yes" ]; then
-	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'><u>shalbum</u></a></b></font></p>" >> $1
+	    echo "<p><font size='1'><b>page created with <a href='$shalbum_website' target='shalbum'>shalbum</a></b></font></p>" >> $1
 	fi
 	
         # W3C XHTML 1.0 compliant banner
