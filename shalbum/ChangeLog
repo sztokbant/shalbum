@@ -1,4 +1,7 @@
 version 1.17-pre
+	New Features:
+	* shalbum/shalbumrec: now user can specify his/her default CSS
+	
 	Bug Fixes:
 	* Improved display on IE 6.0
 

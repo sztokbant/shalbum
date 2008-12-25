@@ -187,13 +187,28 @@ slideshow_time="5"
 # order. The .shalbum-input file should name one image file per line.
 order_by="time"
 
-# HTML layout
-color_text="#ffffff"           # default: "#ffffff"
-color_bgcolor="#000000"        # default: "#000000"
-color_link="#ffffff"           # default: "#ffffff"
-color_vlink="#888888"          # default: "#888888"
-color_alink="#ff0000"          # default: "#ff0000"
-font_face="Arial, Helvetica"   # default: "Arial, Helvetica"
+# default CSS file
+# default: ""
+css_file=""
+
+# HTML layout (deprecated, use CSS instead)
+# default: "#ffffff"
+color_text="#ffffff"
+
+# default: "#000000"
+color_bgcolor="#000000"
+
+# default: "#ffffff"
+color_link="#ffffff"
+
+# default: "#888888"
+color_vlink="#888888"
+
+# default: "#ff0000"
+color_alink="#ff0000"
+
+# default: "Arial, Helvetica, Sans Serif"
+font_face="Arial, Helvetica, Sans Serif"
 
 # supress output (default: no)
 quiet="no"

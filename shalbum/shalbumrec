@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-shalbumrec_version="1.16"
+shalbumrec_version="1.17"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - $shalbum_website - $shalbumrec_revision_date"
 
@@ -36,10 +36,14 @@ epoch()
 # time
 start_time="`epoch`"
 
-while getopts b:hil:qvGIQ opt; do
+while getopts b:c:hil:qvGIQ opt; do
   case $opt in
       # link to go back
       b)  cl_back_link="$OPTARG"
+	  ;;
+
+      # CSS file
+      c)  cl_css="$OPTARG"
 	  ;;
 
       # index
@@ -85,6 +89,8 @@ while getopts b:hil:qvGIQ opt; do
 	  echo " -G        use GraphicsMagick"
 	  echo " -I        use ImageMagick"
 	  echo ""
+	  echo " -c        specify CSS file path"
+	  echo ""
 	  echo " -i        don't resize shalbum images, only rebuild the HTML files"
 	  echo " -q        quiet mode, suppress output"
 	  echo " -Q        suppress shalbum output"
@@ -122,7 +128,10 @@ only_index="no"                      # only create HTML files
 
 magick="AUTO"                        # default: GraphicsMagick, if found
 
-# HTML layout
+# CSS
+css_file=""                          # default CSS file
+
+# HTML layout (deprecated, use CSS instead)
 color_text="#ffffff"
 color_bgcolor="#000000"
 color_link="#ffffff"
@@ -132,6 +141,8 @@ font_face="Arial, Helvetica, Sans Serif"
 
 quiet="no"                           # suppress output
 quiet_shalbum="no"                   # suppress shalbum output
+
+css_content=""
 
 # System-wide default options
 if [ -f /etc/shalbum/shalbumrec.conf ]; then
@@ -172,6 +183,10 @@ if [ "$cl_magick" != "" ]; then
     magick="$cl_magick"
 fi
 
+if [ "$cl_css" != "" ]; then
+    css_file="$cl_css"
+fi
+
 ###############
 # Aux functions
 ###############
@@ -190,49 +205,57 @@ print_info()
     fi
 }
 
+load_css()
+{
+
+    if [ "$css_file" != "" ] && [ -f "$css_file" ]; then
+	css_content="`cat $css_file`"
+    else
+	css_content="a:link {
+            text-decoration: none;
+            color: $color_link;
+          }
+          a:visited {
+            text-decoration: none;
+            color: $color_vlink;
+          }
+          a:active {
+            text-decoration: none;
+            color: $color_alink;
+          }
+          body {
+            margin: 0px;
+            padding: 0px;
+            background: $color_bgcolor;
+            color: $color_text;
+            font-family: $font_face;
+            font-size: 14px;
+          }
+          img {
+            border: 0px solid;
+          }
+          table
+          {
+              border-color: #888888;
+              border-width: 0px 0px;
+              border-style: dotted;
+          }
+          td
+          {
+              border-color: #888888;
+              border-width: 0px 0px;
+              border-style: dotted;
+              padding: 0px;
+              vertical-align: top;
+          }"
+
+	css_file=""
+    fi
+}
+
 print_css()
 {
-    css="<style type='text/css'>\
-         a:link {
-           text-decoration: none;
-           color: $color_link;
-         }
-         a:visited {
-           text-decoration: none;
-           color: $color_vlink;
-         }
-         a:active {
-           text-decoration: none;
-           color: $color_alink;
-         }
-         body {
-           margin: 0px;
-           padding: 0px;
-           background: $color_bgcolor;
-           color: $color_text;
-           font-family: $font_face;
-           font-size: 14px;
-         }
-         img {
-           border: 0px solid;
-         }
-         table
-         {
-             border-color: #888888;
-             border-width: 0px 0px;
-             border-style: dotted;
-         }
-         td
-         {
-             border-color: #888888;
-             border-width: 0px 0px;
-             border-style: dotted;
-             padding: 0px;
-             vertical-align: top;
-         }
-         </style>"
-
-    echo $css
+    echo "<style type='text/css'>"${css_content}"</style>"
 }
 
 add_credits_footer()
@@ -316,9 +339,11 @@ elif [ "$magick" = "GM" ]; then
     println_info "  magick:   GraphicsMagick"
 fi
 
-
 IFS='
 '
+
+# load CSS file
+load_css
 
 dirname_bak="${dirname}.bak"
 if [ -d "${dirname}" ] && [ "${only_index}" != "yes" ]; then
@@ -353,6 +378,10 @@ for dir in `ls`; do
 
 	if [ "${back_link}" != "" ] && [ "${backlink_label}" != "" ]; then
 	    command_line="${command_line} -b '${back_link}' -l '${backlink_label}'"
+	fi
+
+	if [ "${css_file}" != "" ]; then
+	    command_line="${command_line} -c '${css_file}'"
 	fi
 
 	sh -c "${shalbum} ${dash_i} ${dash_q} ${command_line}"

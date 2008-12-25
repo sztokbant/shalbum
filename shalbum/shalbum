@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-sw_version="1.16"
+sw_version="1.17"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
@@ -64,7 +64,7 @@ else
 fi
 
 # process command-line options
-while getopts a:b:d:e:hil:mqr:t:uvC:GH:IO:R:S:T:V:W: opt; do
+while getopts a:b:c:d:e:hil:mqr:t:uvC:GH:IO:R:S:T:V:W: opt; do
   case $opt in
       # author's name
       a)  cl_author="$OPTARG"
@@ -72,6 +72,10 @@ while getopts a:b:d:e:hil:mqr:t:uvC:GH:IO:R:S:T:V:W: opt; do
 
       # link to go back
       b)  cl_back_link="$OPTARG"
+	  ;;
+
+      # CSS file
+      c)  cl_css="$OPTARG"
 	  ;;
 
       # date/subtitle
@@ -191,6 +195,8 @@ while getopts a:b:d:e:hil:mqr:t:uvC:GH:IO:R:S:T:V:W: opt; do
 	  echo " -G        use GraphicsMagick"
 	  echo " -I        use ImageMagick"
 	  echo ""
+	  echo " -c        specify CSS file path"
+	  echo ""
           echo " -u        update existing album"
 	  echo ""
 	  echo " -b link   link to go back"
@@ -264,7 +270,10 @@ if [ $mhd != "yes" ]; then
     update="no"                     # do not resize already resized pics
     outdir="album"                  # default output directory
 
-    # HTML layout
+    # CSS
+    css_file=""                     # default CSS file
+
+    # HTML layout (deprecated, use CSS instead)
     color_text="#ffffff"
     color_bgcolor="#000000"
     color_link="#ffffff"
@@ -332,7 +341,10 @@ else
     update="no"                     # do not resize already resized pics
     outdir="album"                  # default output directory
 
-    # HTML layout
+    # CSS
+    css_file=""                     # default CSS file
+
+    # HTML layout (deprecated, use CSS instead)
     color_text="#ffffff"
     color_bgcolor="#000000"
     color_link="#ffffff"
@@ -345,6 +357,8 @@ quiet="no"                          # suppress output
 only_index="no"                     # only create HTML files
 tmp_dir="_shalbum.tmp"              # directory for shalbum temporary files
 default_input_file=".shalbum-input" # default input file if order_by="file"
+
+css_content=""
 
 # System-wide default options
 if [ -f /etc/shalbum/shalbum.conf ]; then
@@ -445,6 +459,10 @@ if [ "$cl_update" != "" ]; then
     update="$cl_update"
 fi
 
+if [ "$cl_css" != "" ]; then
+    css_file="$cl_css"
+fi
+
 ###############
 # Aux functions
 ###############
@@ -536,49 +554,57 @@ add_credits_footer()
     fi
 }
 
+load_css()
+{
+
+    if [ "$css_file" != "" ] && [ -f "$css_file" ]; then
+	css_content="`cat $css_file`"
+    else
+	css_content="a:link {
+            text-decoration: none;
+            color: $color_link;
+          }
+          a:visited {
+            text-decoration: none;
+            color: $color_vlink;
+          }
+          a:active {
+            text-decoration: none;
+            color: $color_alink;
+          }
+          body {
+            margin: 0px;
+            padding: 0px;
+            background: $color_bgcolor;
+            color: $color_text;
+            font-family: $font_face;
+            font-size: 14px;
+          }
+          img {
+            border: 0px solid;
+          }
+          table
+          {
+              border-color: #888888;
+              border-width: 0px 0px;
+              border-style: dotted;
+          }
+          td
+          {
+              border-color: #888888;
+              border-width: 0px 0px;
+              border-style: dotted;
+              padding: 0px;
+              vertical-align: top;
+          }"
+
+	css_file=""
+    fi
+}
+
 print_css()
 {
-    css="<style type='text/css'>\
-         a:link {
-           text-decoration: none;
-           color: $color_link;
-         }
-         a:visited {
-           text-decoration: none;
-           color: $color_vlink;
-         }
-         a:active {
-           text-decoration: none;
-           color: $color_alink;
-         }
-         body {
-           margin: 0px;
-           padding: 0px;
-           background: $color_bgcolor;
-           color: $color_text;
-           font-family: $font_face;
-           font-size: 14px;
-         }
-         img {
-           border: 0px solid;
-         }
-         table
-         {
-             border-color: #888888;
-             border-width: 0px 0px;
-             border-style: dotted;
-         }
-         td
-         {
-             border-color: #888888;
-             border-width: 0px 0px;
-             border-style: dotted;
-             padding: 0px;
-             vertical-align: top;
-         }
-         </style>"
-
-    echo $css
+    echo "<style type='text/css'>"${css_content}"</style>"
 }
 
 create_page_for_pic()
@@ -798,9 +824,9 @@ set_images_to_grep()
     fi
 }
 
-#########################
-# Part 0: Look for images
-#########################
+#########################################
+# Part 0: Init (Look for images, Load CSS
+#########################################
 
 # handle file names with white spaces and order by modify time
 if [ "$order_by" = "name" ]; then
@@ -845,6 +871,9 @@ IFS='\
 
 total_files=`ls $all_files | wc -l | sed -e s/"[^0-9]"//g`
 
+# load CSS file
+load_css
+
 println_info "$software_revision"
 println_info "Creating album"
 println_info "  title:    \"$title\""
@@ -855,9 +884,15 @@ println_info "  e-mail:   \"$e_mail\""
 println_info "  input:    $input_from"
 print_info   "  config:   "
 if [ -f _options ] || [ -f .shalbum ]; then
-    println_info "found, reading custom options"
+    println_info "found, using custom options"
 else
     println_info "not found, using default options"
+fi
+print_info   "  css:      "
+if [ "$css_file" != "" ]; then
+    println_info "found, using custom CSS"
+else
+    println_info "not found, using default CSS"
 fi
 println_info "  mhd:      $mhd"
 println_info "  images:   $total_files"

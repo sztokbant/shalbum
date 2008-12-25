@@ -70,7 +70,11 @@ backlink_label=""
 # default: "no"
 only_index="no"
 
-# HTML layout
+# default CSS file
+# default: ""
+css_file=""
+
+# HTML layout (deprecated, use CSS instead)
 
 # default: "#ffffff"
 color_text="#ffffff"
@@ -87,5 +91,5 @@ color_vlink="#888888"
 # default: "#ff0000"
 color_alink="#ff0000"
 
-# default: "Arial, Helvetica"
-font_face="Arial, Helvetica"
+# default: "Arial, Helvetica, Sans Serif"
+font_face="Arial, Helvetica, Sans Serif"

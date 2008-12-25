@@ -1,7 +1,7 @@
-              shalbum - http://sourceforge.net/projects/shalbum
+                        shalbum -- http://shalbum.org
               =================================================
                                    README
-                        document updated: 04-Aug-2007
+                        document updated: 25-Dec-2008
 
 1.) About shalbum
 2.) Using shalbum
@@ -48,6 +48,8 @@ Usage: from a directory with image files run
 
  -G        use GraphicsMagick
  -I        use ImageMagick
+
+ -c        specify CSS file path
 
  -u        update existing album
 
@@ -98,6 +100,8 @@ Usage: from a directory containing sub-directories with image files run
 
  -G        use GraphicsMagick
  -I        use ImageMagick
+
+ -c        specify CSS file path
 
  -i        don't resize shalbum images, only rebuild the HTML files
  -q        quiet mode, suppress output
