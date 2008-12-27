@@ -1,9 +1,10 @@
 version 1.18-pre
 	Improvements:
-	* img alt is picture subtitle (when available)
-	* more improvements on CSS and HTML code: footer, pages index
+	* img alt and img page title are picture subtitle (when available)
+	* major improvements on CSS and HTML code
 	* other minor code improvements
-
+	* slideshow now scrolls to picture
+	
 
 version 1.17 (25-Dec-2008)
 	New Features:

@@ -617,6 +617,21 @@ load_css()
             width: 50%;
             font-size: 12px;
             font-weight: bold;
+          }
+          label.currentPage
+          {
+            color: #ff0000;
+          }
+
+          label.playButton
+          {
+            color: #00ff00;
+            font-weight: bold;
+          }
+          label.stopButton
+          {
+            color: #ff0000;
+            font-weight: bold;
           }"
 
 	css_file=""
@@ -626,6 +641,29 @@ load_css()
 print_css()
 {
     echo "<style type='text/css'>"${css_content}"</style>"
+}
+
+left_arrow()
+{
+    echo -n "  <td align='left' width='10%'>"
+    if [ "$before" != "__NULL__" ]; then
+	before_th="thumbnails/th_""${before}"
+	html_compliant "${before}.html"
+	echo -n "<a href='${html_compliant_filename}'>&lt;&lt;</a>"
+    fi
+    echo "</td>"
+}
+
+right_arrow()
+{
+    # right top arrow
+    echo -n "  <td align='right' width='10%'>"
+    if [ "$after" != "__NULL__" ]; then
+	after_th="thumbnails/th_""${after}"
+	html_compliant "${after}.html"
+	echo -n "<a href='${html_compliant_filename}'>&gt;&gt;</a>"
+    fi
+    echo "</td>"
 }
 
 create_page_for_pic()
@@ -653,15 +691,21 @@ create_page_for_pic()
 
     # slideshow
     if [ "${refresh}" != "" ]; then
-	if [ "$after" != "[NONE]" ]; then
+	if [ "$after" != "__NULL__" ]; then
 	    html_compliant "${after}_r.html"
-	    echo "<meta http-equiv='refresh' content='${refresh};url=${html_compliant_filename}' />" >> $html_file
+	    echo " <meta http-equiv='refresh' content='${refresh};url=${html_compliant_filename}#picture' />" >> $html_file
 	fi
     fi
 
-    echo "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $html_file
+    echo " <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $html_file
+    echo -n " " >> $html_file
     print_css >> $html_file
-    echo "<title>$pic</title>" >> $html_file
+    if [ "$pic_subtitle" != "" ]; then
+	title="$pic_subtitle"
+    else
+	title="$pic"
+    fi
+    echo " <title>$title</title>" >> $html_file
     echo "</head>" >> $html_file
     # </head>
 
@@ -671,86 +715,78 @@ create_page_for_pic()
     echo "<div align='center'>" >> $html_file
 
     # reference to index
-    echo "<table width='$table_width'><tr><td align='left' width='33%'>" >> $html_file
-    if [ "$index_page" = "1" ]; then
-	echo "<a href='index.html'><b>${backlink_label_thumbs}</b></a>" >> $html_file
-    else
-	echo "<a href='index${index_page}.html'><b>${backlink_label_thumbs}</b></a>" >> $html_file
+    echo "<!-- header -->" >> $html_file
+    echo "<table width='$table_width'>" >> $html_file
+    echo " <tr>" >> $html_file
+    echo "  <td align='left' colspan='3'>" >> $html_file
+    echo -n "   <a href='index" >> $html_file
+    if [ "$index_page" != "1" ]; then
+	echo -n "${index_page}" >> $html_file
     fi
+    echo ".html'><b>${backlink_label_thumbs}</b></a>" >> $html_file
+    echo "  </td>" >> $html_file
+    echo " </tr>" >> $html_file
 
-    # left top arrow
-    echo "</td><td align='left' width='34%'>&nbsp;</td><td align='left' width='33%'>&nbsp;</td></tr><tr>" >> $html_file
-    if [ "$before" != "[NONE]" ]; then
-	before_th="thumbnails/th_""${before}"
-	html_compliant "${before}.html"
-	echo "<td align='left' width='33%'><a href='${html_compliant_filename}'>&lt;&lt;</a></td>" >> $html_file
-    else
-	echo "<td align='left'></td>" >> $html_file
-    fi
+    echo " <tr>" >> $html_file
+    left_arrow >> $html_file
 
     # slideshow
-    echo "<td align='center' width='34%'>" >> $html_file
-    if [ "$after" != "[NONE]" ]; then
+    echo -n "  <td align='center' width='80%'>" >> $html_file
+    if [ "$after" != "__NULL__" ]; then
 	if [ "${refresh}" != "" ]; then
 	    html_compliant "${pic}.html"
-	    echo "<a href='${html_compliant_filename}'><font size='1'>STOP<font color='red' size='1'><b> X</b></font></font></a>" >> $html_file
+	    echo -n "<a href='${html_compliant_filename}'><font size='1'>STOP</font> <label class='stopButton'>X</label></a>" >> $html_file
 	else
 	    if [ "${slideshow_time}" != "0" ]; then
 		html_compliant "${pic}_r.html"
-		echo "<a href='${html_compliant_filename}'><font size='1'>PLAY<font color='green' size='3'><b> &gt;</b></font></font></a>" >> $html_file
+		echo -n "<a href='${html_compliant_filename}#picture'><font size='1'>PLAY</font> <label class='playButton'>&gt;</label></a>" >> $html_file
 	    fi
 	fi
     fi
     echo "</td>" >> $html_file
 
-    # right top arrow
-    if [ "$after" != "[NONE]" ]; then
-	after_th="thumbnails/th_""${after}"
-	html_compliant "${after}.html"
-	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'>&gt;&gt;</a></td>" >> $html_file
-    else
-	echo "<td align='right'></td>" >> $html_file
-    fi
+    right_arrow >> $html_file
 
-    echo "</tr></table>" >> $html_file
+    echo " </tr>" >> $html_file
+    echo "</table>" >> $html_file
 
     # pic
-    echo "<table width='$table_width'><tr><td valign='middle' width='$vga_res' align='center'>" >> $html_file
+    echo "<!-- the picture itself -->" >> $html_file
+    echo "<a name='picture'></a>" >> $html_file
+    echo "<table width='$table_width'>" >> $html_file
+    echo " <tr>" >> $html_file
+    echo "  <td valign='middle' width='$vga_res' align='center'>" >> $html_file
 
     # link to huge image
     if [ "$huge_res" != "0" ]; then
 	html_compliant "huge/huge_${pic}"
-	echo "<a href='huge/huge_${pic}'>" >> $html_file
+	echo -n "   <a href='huge/huge_${pic}'>" >> $html_file
     fi
 
     html_compliant "vga/vga_${pic}"
-    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
+    echo -n "<img src='${html_compliant_filename}' alt='' />" >> $html_file
 
     if [ "$huge_res" != "0" ]; then
 	echo "</a>" >> $html_file
+    else
+	echo "" >> $html_file
     fi
 
-    echo "</td></tr>" >> $html_file
+    echo "  </td>" >> $html_file
+    echo " </tr>" >> $html_file
     echo "</table>" >> $html_file
 
     # bottom arrows and pic subtitle
-    echo "<table width='$table_width'><tr>" >> $html_file
-    if [ "$before" != "[NONE]" ]; then
-	before_th="thumbnails/th_""${before}"
-	html_compliant "${before}.html"
-	echo "<td align='left' width='10%'><a href='${html_compliant_filename}'>&lt;&lt;</a></td>" >> $html_file
-    else
-	echo "<td align='left'></td>" >> $html_file
-    fi
-    echo "<td align='center' width='80%'><b>$pic_subtitle</b></td>" >> $html_file
-    if [ "$after" != "[NONE]" ]; then
-	after_th="thumbnails/th_""${after}"
-	html_compliant "${after}.html"
-	echo "<td align='right' width='10%'><a href='${html_compliant_filename}'>&gt;&gt;</a></td>" >> $html_file
-    else
-	echo "<td align='right'></td>" >> $html_file
-    fi
-    echo "</tr></table>" >> $html_file
+    echo "<!-- bottom arrows and subtitle -->" >> $html_file
+    echo "<table width='$table_width'>" >> $html_file
+    echo " <tr>" >> $html_file
+
+    left_arrow >> $html_file
+    echo "  <td align='center' width='80%'><b>$pic_subtitle</b></td>" >> $html_file
+    right_arrow >> $html_file
+
+    echo " </tr>" >> $html_file
+    echo "</table>" >> $html_file
 
     # long description if appropriate
     if [ "$long_description" = "yes" ]; then
@@ -764,39 +800,44 @@ create_page_for_pic()
 
     # thumbnails with links
     if [ "$th_on_multi" = yes ]; then
-	echo "<table width='$table_width'><tr>" >> $html_file
+	echo "<!-- thumbnails for adjacent pictures -->" >> $html_file
+	echo "<table width='$table_width'>" >> $html_file
+	echo " <tr>" >> $html_file
         # before
-	echo "<td align='left'>" >> $html_file
-	if [ "$before" != "[NONE]" ]; then
+	echo "  <td align='left'>" >> $html_file
+	if [ "$before" != "__NULL__" ]; then
 	    html_compliant "${before}.html"
-	    echo "<a href='${html_compliant_filename}'>" >> $html_file
+	    echo -n "   <a href='${html_compliant_filename}'>" >> $html_file
 	    html_compliant "${before_th}"
-	    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
+	    echo -n "<img src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
 	fi
-	echo "</td>" >> $html_file
+	echo "  </td>" >> $html_file
 	
-	echo "<td align='center' width='100%'></td>" >> $html_file
+	echo "  <td align='center' width='100%'></td>" >> $html_file
 	
         # after
-	echo "<td align='right'>" >> $html_file
-	if [ "$after" != "[NONE]" ]; then
+	echo "  <td align='right'>" >> $html_file
+	if [ "$after" != "__NULL__" ]; then
 	    html_compliant "${after}.html"
-	    echo "<a href='${html_compliant_filename}'>" >> $html_file
+	    echo -n "   <a href='${html_compliant_filename}'>" >> $html_file
 	    html_compliant "${after_th}"
-	    echo "<img src='${html_compliant_filename}' alt='' />" >> $html_file
+	    echo -n "<img src='${html_compliant_filename}' alt='' />" >> $html_file
 	    echo "</a>" >> $html_file
 	fi
-	echo "</td>" >> $html_file
+	echo "  </td>" >> $html_file
 	
-	echo "</tr></table>" >> $html_file
+	echo " </tr>" >> $html_file
+	echo "</table>" >> $html_file
     fi
 
     echo "<br />" >> $html_file
 
     add_credits_footer >> $html_file
 
-    echo "</div></body></html>" >> $html_file
+    echo "</div>" >> $html_file
+    echo "</body>" >> $html_file
+    echo "</html>" >> $html_file
     echo '<!-- created with '$software_revision' -->' >> $html_file
 }
 
@@ -1209,7 +1250,7 @@ lin_counter=1
 
 if [ $multi_html = "yes" ]; then
     cur_counter=1
-    b4_file="[NONE]"
+    b4_file="__NULL__"
 fi
 
 col_percentage=`expr 100 \/ $n_columns`
@@ -1225,9 +1266,9 @@ for file in $all_files; do
     # rows & columns
     if [ $col_counter -eq 1 ]; then
 	echo "<!-- row begins -->" >> $idx_filename
-	echo "<tr>" >> $idx_filename
+	echo " <tr>" >> $idx_filename
     fi
-    echo "<td align='left' width='${col_percentage}%'>" >> $idx_filename
+    echo "  <td align='left' width='${col_percentage}%'>" >> $idx_filename
 
     th_file="thumbnails/th_""$file"
     vga_file="vga/vga_""$file"
@@ -1277,23 +1318,32 @@ for file in $all_files; do
 	alt="${file}"
     fi
 
+    echo "   <table width='100%'>" >> $idx_filename
+    echo "    <tr>" >> $idx_filename
+
     if [ $multi_html = "yes" ]; then
 	html_compliant "${file}.html"
-	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
+	echo -n "     <td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
 	html_compliant "${th_file}"
-	echo '<img src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
+	echo -n '<img src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
     else
 	html_compliant "${vga_file}"
-	echo "<table width='100%'><tr><td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img " >> $idx_filename
+	echo -n "     <td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img " >> $idx_filename
 	html_compliant "${th_file}"
-	echo 'src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
+	echo -n 'src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
     fi
 
     if [ "$pic_label_type" != "none" ]; then
-	echo "</td></tr><tr><td align='left' width='100%'><b>$pic_subtitle</b>" >> $idx_filename
+	echo "</td>" >> $idx_filename
+	echo "    </tr>" >> $idx_filename
+	echo "    <tr>" >> $idx_filename
+	echo -n "     <td align='left' width='100%'><b>$pic_subtitle</b>" >> $idx_filename
     fi
 
-    echo '</td></tr></table></td>' >> $idx_filename
+    echo '</td>' >> $idx_filename
+    echo '    </tr>' >> $idx_filename
+    echo '   </table>' >> $idx_filename
+    echo '  </td>' >> $idx_filename
 
     # multi-pages
     if [ $multi_html = "yes" ]; then
@@ -1308,7 +1358,7 @@ for file in $all_files; do
 		next_counter=`expr $next_counter + 1`
 	    done
 	else
-	    next_file="[NONE]"
+	    next_file="__NULL__"
 	fi
 
 	# finds out index page
@@ -1350,12 +1400,12 @@ done
 
 # Fill empty columns
 while [ $col_counter -gt 1 ]; do
-    echo "<td align='left' width='${col_percentage}%'></td>" >> $idx_filename
+    echo "  <td align='left' width='${col_percentage}%'></td>" >> $idx_filename
 
     col_counter=`expr $col_counter + 1`
 
     if [ $col_counter -gt $n_columns ]; then
-	echo '</tr>' >> $idx_filename
+	echo ' </tr>' >> $idx_filename
 	col_counter=1
     fi
 done
@@ -1367,28 +1417,34 @@ idx_header="header.html"
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' > $idx_header
 echo "<html xmlns='http://www.w3.org/1999/xhtml'>" >> $idx_header
 
+# shalbumrec stuff
+echo "<!-- shalbumrec:title ^${title}^ -->" >> $idx_header
+if [ "$date" != "" ]; then
+    echo "<!-- shalbumrec:date ^${date}^ -->" >> $idx_header
+fi
+
 # <head>
 echo "<!-- head -->" >> $idx_header
 echo "<head>" >> $idx_header
 
 # meta
-echo "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $idx_header
+echo " <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $idx_header
 
 # style
+echo -n " " >> $idx_header
 print_css >> $idx_header
 
 # echo title
-echo "<title>" >> $idx_header
+echo -n " <title>" >> $idx_header
 if [ "$third_title" != "" ]; then
-    echo "${third_title} - " >> $idx_header
+    echo -n "${third_title} - " >> $idx_header
 fi
-echo "$title" >> $idx_header
+echo -n "$title" >> $idx_header
 if [ "$date" != "" ]; then
-    echo " - $date" >> $idx_header
+    echo -n " - $date" >> $idx_header
 fi
 echo '</title>' >> $idx_header
 
-echo >> $idx_header
 echo "</head>" >> $idx_header
 # </head>
 
@@ -1399,15 +1455,20 @@ echo "<div align='center'>" >> $idx_header
 
 # body title
 echo "<!-- body title -->" >> $idx_header
-echo '<table width="'$table_width'"><tr><td align="left">' >> $idx_header
+echo '<table width="'$table_width'">' >> $idx_header
+echo ' <tr>' >> $idx_header
+echo '  <td align="left">' >> $idx_header
 if [ "$third_title" != "" ]; then
-    echo "<font size='3'><b>${third_title}</b></font><br />" >> $idx_header
+    echo "   <font size='3'><b>${third_title}</b></font><br />" >> $idx_header
 fi
-echo "<!-- shalbumrec:title ^${title}^ --> <font size='5'><b>$title</b></font>" >> $idx_header
+echo -n "   <font size='5'><b>$title</b></font>" >> $idx_header
 if [ "$date" != "" ]; then
-    echo "<!-- shalbumrec:date ^${date}^ --> <br /><font size='3'>$date</font>" >> $idx_header
+    echo "<br />" >> $idx_header
+    echo "   <font size='3'>$date</font>" >> $idx_header
 fi
-echo '</td></tr></table>' >> $idx_header
+echo '  </td>' >> $idx_header
+echo ' </tr>' >> $idx_header
+echo '</table>' >> $idx_header
 
 # page index
 create_pages_index >> $idx_header
@@ -1416,7 +1477,8 @@ create_pages_index >> $idx_header
 ############################## FOOTER ##############################
 idx_footer="footer.html"
 
-echo '</table><br />' >> $idx_footer
+echo '</table>' >> $idx_footer
+echo '<br />' >> $idx_footer
 
 # page index
 create_pages_index >> $idx_footer
@@ -1424,7 +1486,9 @@ create_pages_index >> $idx_footer
 # credits footer
 add_credits_footer >> $idx_footer
 
-echo '</div></body></html>' >> $idx_footer
+echo '</div>' >> $idx_footer
+echo '</body>' >> $idx_footer
+echo '</html>' >> $idx_footer
 echo '<!-- created with '$software_revision' -->' >> $idx_footer
 ############################## /FOOTER ##############################
 
@@ -1464,7 +1528,7 @@ while [ $aux -le $idx_counter ]; do
     mv ${tmp_dir}/tmp_idx.html $idx_filename
 
     # link to current file
-    cat $idx_filename | sed s/'<a href="'"${idx_basename}${aux}.html"'">'"$aux"'<\/a>'/'<font color="red">'"$aux"'<\/font>'/g > ${tmp_dir}/tmp_idx.html
+    cat $idx_filename | sed s/'<a href="'"${idx_basename}${aux}.html"'">'"$aux"'<\/a>'/'<label class="currentPage">'"$aux"'<\/label>'/g > ${tmp_dir}/tmp_idx.html
     mv ${tmp_dir}/tmp_idx.html $idx_filename
 
     # ${idx_basename}1.html
@@ -1477,7 +1541,7 @@ rm $idx_header $idx_footer
 
 # if there's only one index file, remove page number.
 if [ $neighbors -eq 0 ]; then
-    cat $idx_filename | sed s/'<font color="red">1<\/font>'/""/g > ${tmp_dir}/tmp_idx.html
+    cat $idx_filename | sed s/'<label class="currentPage">1<\/label>'/""/g > ${tmp_dir}/tmp_idx.html
     mv ${tmp_dir}/tmp_idx.html $idx_filename
 fi
 ################################### /CREATION #################################
