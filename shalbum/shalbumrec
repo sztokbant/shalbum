@@ -437,21 +437,29 @@ cd "${dirname}"
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' > index.html
 echo "<html xmlns='http://www.w3.org/1999/xhtml'>" >> index.html
+echo "<!-- head -->" >> index.html
 echo "<head>" >> index.html
-echo "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> index.html
+echo " <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> index.html
+echo -n " " >> index.html
 print_css >> index.html
-echo "<title>${global_title}</title>" >> index.html
+echo " <title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
+echo "<!-- body -->" >> index.html
 echo "<body>" >> index.html
 echo "<div align='center'>" >> index.html
-echo "<table width='$table_width'><tr><td align='left'>" >> index.html
-echo "<font size='5'><b>${global_title}</b></font>" >> index.html
-echo "</td></tr></table>" >> index.html
+echo "<!-- header -->" >> index.html
 echo "<table width='$table_width'>" >> index.html
+echo " <tr>" >> index.html
+echo "  <td align='left'>" >> index.html
+echo "   <font size='5'><b>${global_title}</b></font>" >> index.html
+echo "  </td>" >> index.html
+echo " </tr>" >> index.html
+echo "</table>" >> index.html
 
 col_percentage=`expr 100 \/ $n_columns`
 col_counter="0"
-
+echo "<!-- main -->" >> index.html
+echo "<table width='$table_width'>" >> index.html
 m_albums_pwd=`pwd`
 for dir in `ls`; do
     if [ -d "$dir" ] && [ "$dir" != "${th_dirname}" ]; then
@@ -468,21 +476,28 @@ for dir in `ls`; do
 	    FIRST="`grep \<img index.html | head -1 | cut -d _ -f 2 | cut -d \\\" -f 1`"
 	fi
 
-	TITLE="`grep '<!-- shalbumrec:title' index.html | cut -d '^' -f 2`"
-	DATE="`grep '<!-- shalbumrec:date' index.html | cut -d '^' -f 2`"
+	TITLE="`grep '<!-- shalbumrec:title' index.html | head -1 | cut -d '^' -f 2`"
+	DATE="`grep '<!-- shalbumrec:date' index.html | head -1 | cut -d '^' -f 2`"
 
 	println_info "Generating thumbnail for '$dir'"
 	$gm convert "vga/vga_${FIRST}" -resize ${th_res}x${th_res} ../th_"${dir}".jpg
 
 	if [ $col_counter -eq 0 ]; then
-	    echo "<tr>" >> ../index.html
+	    echo " <tr>" >> ../index.html
 	fi
 
-	echo "<td align='left' width='${col_percentage}%'><table width='100%'><tr><td align='left' width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg' /></a></td><td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td></tr></table></td>" >> ../index.html
+	echo "  <td align='left' width='${col_percentage}%'>" >> ../index.html
+	echo "   <table width='100%'>" >> ../index.html
+	echo "    <tr>" >> ../index.html
+	echo "     <td align='left' width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg' /></a></td>" >> ../index.html
+	echo "     <td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td>"  >> ../index.html
+	echo "    </tr>" >> ../index.html
+	echo "   </table>" >> ../index.html
+	echo "  </td>" >> ../index.html
 
 	col_counter=`expr $col_counter + 1`
 	if [ $col_counter -eq $n_columns ]; then
-	    echo "</tr>" >> ../index.html
+	    echo " </tr>" >> ../index.html
 	    col_counter="0"
 	fi
 
@@ -491,10 +506,11 @@ for dir in `ls`; do
 done
 
 if [ ! $col_counter -eq 0 ]; then
-    echo "</tr>" >> index.html
+    echo " </tr>" >> index.html
 fi
 
 echo "</table>" >> index.html
+echo "<br />" >> index.html
 
 add_credits_footer >> index.html
 
