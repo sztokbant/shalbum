@@ -701,11 +701,11 @@ create_page_for_pic()
     echo -n " " >> $html_file
     print_css >> $html_file
     if [ "$pic_subtitle" != "" ]; then
-	title="$pic_subtitle"
+	pic_title="$pic_subtitle"
     else
-	title="$pic"
+	pic_title="$pic"
     fi
-    echo " <title>$title</title>" >> $html_file
+    echo " <title>$pic_title</title>" >> $html_file
     echo "</head>" >> $html_file
     # </head>
 
