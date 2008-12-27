@@ -1,7 +1,7 @@
                         shalbum -- http://shalbum.org
               =================================================
                           INSTALLATION INSTRUCTIONS
-                        document updated: 25-Dec-2007
+                        document updated: 27-Dec-2007
 
 
 Installing
@@ -30,7 +30,8 @@ $(PREFIX)/share/shalbum
   README                  General shalbum instructions
   shalbum.conf-sample     Sample shalbum configuration file
   shalbumrec.conf-sample  Sample shalbum configuration file
-  shalbum.css             Sample shalbum CSS file
+  shalbum-black.css       Sample shalbum CSS file
+  shalbum-white.css       Sample shalbum CSS file
   watermark_th.png        Sample watermark for thumbnail
   watermark_vga.png       Sample watermark for final image
 

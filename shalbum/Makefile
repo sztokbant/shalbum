@@ -22,7 +22,8 @@ install:
 	cp shalbumrec $(PREFIX)/bin && chmod 755 $(PREFIX)/bin/shalbumrec
 	cp shalbum.conf-sample $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/shalbum.conf-sample
 	cp shalbumrec.conf-sample $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/shalbumrec.conf-sample
-	cp shalbum.css $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/shalbum.css
+	cp shalbum-black.css $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/shalbum-black.css
+	cp shalbum-white.css $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/shalbum-white.css
 	cp watermark_th.png $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/watermark_th.png
 	cp watermark_vga.png $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/watermark_vga.png
 	cp README $(PREFIX)/share/shalbum && chmod 644 $(PREFIX)/share/shalbum/README
@@ -33,7 +34,8 @@ uninstall deinstall:
 	-rm -f $(PREFIX)/bin/shalbumrec
 	-rm -f $(PREFIX)/share/shalbum/shalbum.conf-sample
 	-rm -f $(PREFIX)/share/shalbum/shalbumrec.conf-sample
-	-rm -f $(PREFIX)/share/shalbum/shalbum.css
+	-rm -f $(PREFIX)/share/shalbum/shalbum-black.css
+	-rm -f $(PREFIX)/share/shalbum/shalbum-white.css
 	-rm -f $(PREFIX)/share/shalbum/watermark_th.png
 	-rm -f $(PREFIX)/share/shalbum/watermark_vga.png
 	-rm -f $(PREFIX)/share/shalbum/README

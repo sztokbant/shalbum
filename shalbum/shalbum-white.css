@@ -1,0 +1,82 @@
+/* $Id$ */
+
+a:link {
+    text-decoration: none;
+    color: #000000;
+}
+
+a:visited {
+    text-decoration: none;
+    color: #777777;
+}
+
+a:active {
+    text-decoration: none;
+    color: #ff0000;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    background: #ffffff;
+    color: #000000;
+    font-family: Arial, Helvetica, Sans Serif;
+    font-size: 14px;
+}
+
+img {
+    border: 0px solid;
+}
+
+table
+{
+    border-color: #777777;
+    border-width: 0px 0px;
+    border-style: dotted;
+}
+
+td
+{
+    padding: 0px;
+    vertical-align: top;
+}
+
+td.pagesIndex
+{
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+td.footerLeft
+{
+    text-align: left;
+    width: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+td.footerRight
+{
+    text-align: right;
+    width: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+label.currentPage
+{
+    color: #ff0000;
+}
+
+label.playButton
+{
+    color: #00ff00;
+    font-weight: bold;
+}
+
+label.stopButton
+{
+    color: #ff0000;
+    font-weight: bold;
+}
