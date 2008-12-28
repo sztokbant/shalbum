@@ -269,7 +269,6 @@ load_css()
           {
             color: #ff0000;
           }
-
           label.playButton
           {
             color: #00ff00;
@@ -279,6 +278,15 @@ load_css()
           {
             color: #ff0000;
             font-weight: bold;
+          }
+          label.title
+          {
+            font-size: 22px;
+            font-weight: bold;
+          }
+          label.subtitle
+          {
+            font-size: 16px;
           }"
 
 	css_file=""
@@ -451,7 +459,7 @@ echo "<!-- header -->" >> index.html
 echo "<table width='$table_width'>" >> index.html
 echo " <tr>" >> index.html
 echo "  <td align='left'>" >> index.html
-echo "   <font size='5'><b>${global_title}</b></font>" >> index.html
+echo "   <label class='title'>${global_title}</label>" >> index.html
 echo "  </td>" >> index.html
 echo " </tr>" >> index.html
 echo "</table>" >> index.html
@@ -490,7 +498,7 @@ for dir in `ls`; do
 	echo "   <table width='100%'>" >> ../index.html
 	echo "    <tr>" >> ../index.html
 	echo "     <td align='left' width='${th_res}'><a href='$dir/index.html'><img alt='$dir' src='${th_dirname}/th_${dir}.jpg' /></a></td>" >> ../index.html
-	echo "     <td align='left'><a href='$dir/index.html'><font size='3'><b>${TITLE}</b></font></a><br /><font size='2'>${DATE}</font></td>"  >> ../index.html
+	echo "     <td align='left'><a href='$dir/index.html'><label class='subtitle'><b>${TITLE}</b></label></a><br />${DATE}</td>"  >> ../index.html
 	echo "    </tr>" >> ../index.html
 	echo "   </table>" >> ../index.html
 	echo "  </td>" >> ../index.html

@@ -80,3 +80,14 @@ label.stopButton
     color: #ff0000;
     font-weight: bold;
 }
+
+label.title
+{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+label.subtitle
+{
+    font-size: 16px;
+}

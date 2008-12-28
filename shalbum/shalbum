@@ -23,7 +23,6 @@ sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
 # TODO-LIST:
-#   - remove hard-coded HTML, improve CSS, make output equal for every browser
 #   - 'shalbumrec -u'
 #   - update sample watermark files to 'shalbum.org'
 
@@ -622,7 +621,6 @@ load_css()
           {
             color: #ff0000;
           }
-
           label.playButton
           {
             color: #00ff00;
@@ -632,6 +630,15 @@ load_css()
           {
             color: #ff0000;
             font-weight: bold;
+          }
+          label.title
+          {
+            font-size: 22px;
+            font-weight: bold;
+          }
+          label.subtitle
+          {
+            font-size: 16px;
           }"
 
 	css_file=""
@@ -735,11 +742,11 @@ create_page_for_pic()
     if [ "$after" != "__NULL__" ]; then
 	if [ "${refresh}" != "" ]; then
 	    html_compliant "${pic}.html"
-	    echo -n "<a href='${html_compliant_filename}'><font size='1'>STOP</font> <label class='stopButton'>X</label></a>" >> $html_file
+	    echo -n "<a href='${html_compliant_filename}'>STOP <label class='stopButton'>X</label></a>" >> $html_file
 	else
 	    if [ "${slideshow_time}" != "0" ]; then
 		html_compliant "${pic}_r.html"
-		echo -n "<a href='${html_compliant_filename}#picture'><font size='1'>PLAY</font> <label class='playButton'>&gt;</label></a>" >> $html_file
+		echo -n "<a href='${html_compliant_filename}#picture'>PLAY <label class='playButton'>&gt;</label></a>" >> $html_file
 	    fi
 	fi
     fi
@@ -1459,12 +1466,12 @@ echo '<table width="'$table_width'">' >> $idx_header
 echo ' <tr>' >> $idx_header
 echo '  <td align="left">' >> $idx_header
 if [ "$third_title" != "" ]; then
-    echo "   <font size='3'><b>${third_title}</b></font><br />" >> $idx_header
+    echo "   <label class='subtitle'><b>${third_title}</b></label><br />" >> $idx_header
 fi
-echo -n "   <font size='5'><b>$title</b></font>" >> $idx_header
+echo -n "   <label class='title'><b>$title</b></label>" >> $idx_header
 if [ "$date" != "" ]; then
     echo "<br />" >> $idx_header
-    echo "   <font size='3'>$date</font>" >> $idx_header
+    echo "   <label class='subtitle'>$date</label>" >> $idx_header
 fi
 echo '  </td>' >> $idx_header
 echo ' </tr>' >> $idx_header
