@@ -1,10 +1,21 @@
-version 1.18-pre
+version 1.18 (28-Dec-2008): the best so far
 	Improvements:
-	* img alt and img page title are picture subtitle (when available)
-	* major improvements on CSS and HTML code
-	* other minor code improvements
-	* slideshow now scrolls to picture
-	* 'black' and 'white' CSS files included
+
+	* Major improvements on CSS and HTML code: output HTML not only is
+	  well indented and better commented but also the page display is
+	  is about the same in every web browser.
+	
+	* New 'shalbum-white.css' sample Cascading Style Sheet file
+	  included along with the default 'shalbum-black.css'. It has
+	  never been easier to customize the layout of your albums.
+	
+	* Slideshow mode now scrolls to the picture to optimize usage of
+	  screen space.
+	
+	* Image 'alt' property and page title are now the picture subtitle
+	  instead of picture name (when available).
+	
+	* Other minor code improvements.
 	
 
 version 1.17 (25-Dec-2008)
