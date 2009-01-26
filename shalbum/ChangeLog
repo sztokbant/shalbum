@@ -1,3 +1,8 @@
+version 1.19 (26-Jan-2009): oops...
+	Bug Fixes:
+	* Fixed 'echo -n' incompatibility issues on MacOS X
+
+
 version 1.18 (28-Dec-2008): the best so far
 	Improvements:
 

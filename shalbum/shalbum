@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-sw_version="1.18"
+sw_version="1.19"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
@@ -652,25 +652,29 @@ print_css()
 
 left_arrow()
 {
-    echo -n "  <td align='left' width='10%'>"
+    LEFT_ARROW="  <td align='left' width='10%'>"
     if [ "$before" != "__NULL__" ]; then
 	before_th="thumbnails/th_""${before}"
 	html_compliant "${before}.html"
-	echo -n "<a href='${html_compliant_filename}'>&lt;&lt;</a>"
+	LEFT_ARROW=${LEFT_ARROW}"<a href='${html_compliant_filename}'>&lt;&lt;</a>"
     fi
-    echo "</td>"
+    LEFT_ARROW=${LEFT_ARROW}"</td>"
+
+    echo $LEFT_ARROW
 }
 
 right_arrow()
 {
     # right top arrow
-    echo -n "  <td align='right' width='10%'>"
+    RIGHT_ARROW="  <td align='right' width='10%'>"
     if [ "$after" != "__NULL__" ]; then
 	after_th="thumbnails/th_""${after}"
 	html_compliant "${after}.html"
-	echo -n "<a href='${html_compliant_filename}'>&gt;&gt;</a>"
+	RIGHT_ARROW=${RIGHT_ARROW}"<a href='${html_compliant_filename}'>&gt;&gt;</a>"
     fi
-    echo "</td>"
+    RIGHT_ARROW=${RIGHT_ARROW}"</td>"
+
+    echo $RIGHT_ARROW
 }
 
 create_page_for_pic()
@@ -705,7 +709,7 @@ create_page_for_pic()
     fi
 
     echo " <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $html_file
-    echo -n " " >> $html_file
+    printf " " >> $html_file
     print_css >> $html_file
     if [ "$pic_subtitle" != "" ]; then
 	pic_title="$pic_subtitle"
@@ -726,9 +730,9 @@ create_page_for_pic()
     echo "<table width='$table_width'>" >> $html_file
     echo " <tr>" >> $html_file
     echo "  <td align='left' colspan='3'>" >> $html_file
-    echo -n "   <a href='index" >> $html_file
+    printf "   <a href='index" >> $html_file
     if [ "$index_page" != "1" ]; then
-	echo -n "${index_page}" >> $html_file
+	printf "${index_page}" >> $html_file
     fi
     echo ".html'><b>${backlink_label_thumbs}</b></a>" >> $html_file
     echo "  </td>" >> $html_file
@@ -738,19 +742,20 @@ create_page_for_pic()
     left_arrow >> $html_file
 
     # slideshow
-    echo -n "  <td align='center' width='80%'>" >> $html_file
+    SLIDESHOW="  <td align='center' width='80%'>"
     if [ "$after" != "__NULL__" ]; then
 	if [ "${refresh}" != "" ]; then
 	    html_compliant "${pic}.html"
-	    echo -n "<a href='${html_compliant_filename}'>STOP <label class='stopButton'>X</label></a>" >> $html_file
+	    SLIDESHOW=${SLIDESHOW}"<a href='${html_compliant_filename}'>STOP <label class='stopButton'>X</label></a>"
 	else
 	    if [ "${slideshow_time}" != "0" ]; then
 		html_compliant "${pic}_r.html"
-		echo -n "<a href='${html_compliant_filename}#picture'>PLAY <label class='playButton'>&gt;</label></a>" >> $html_file
+		SLIDESHOW=${SLIDESHOW}"<a href='${html_compliant_filename}#picture'>PLAY <label class='playButton'>&gt;</label></a>"
 	    fi
 	fi
     fi
-    echo "</td>" >> $html_file
+    SLIDESHOW=${SLIDESHOW}"</td>"
+    echo $SLIDESHOW >> $html_file
 
     right_arrow >> $html_file
 
@@ -765,19 +770,20 @@ create_page_for_pic()
     echo "  <td valign='middle' width='$vga_res' align='center'>" >> $html_file
 
     # link to huge image
+    HUGE_REF=""
     if [ "$huge_res" != "0" ]; then
 	html_compliant "huge/huge_${pic}"
-	echo -n "   <a href='huge/huge_${pic}'>" >> $html_file
+	HUGE_REF=${HUGE_REF}"   <a href='huge/huge_${pic}'>"
     fi
 
     html_compliant "vga/vga_${pic}"
-    echo -n "<img src='${html_compliant_filename}' alt='' />" >> $html_file
+    HUGE_REF=${HUGE_REF}"<img src='${html_compliant_filename}' alt='' />"
 
     if [ "$huge_res" != "0" ]; then
-	echo "</a>" >> $html_file
-    else
-	echo "" >> $html_file
+	HUGE_REF=${HUGE_REF}"</a>"
     fi
+
+    echo $HUGE_REF >> $html_file
 
     echo "  </td>" >> $html_file
     echo " </tr>" >> $html_file
@@ -814,10 +820,12 @@ create_page_for_pic()
 	echo "  <td align='left'>" >> $html_file
 	if [ "$before" != "__NULL__" ]; then
 	    html_compliant "${before}.html"
-	    echo -n "   <a href='${html_compliant_filename}'>" >> $html_file
+	    BEFORE_REF="   <a href='${html_compliant_filename}'>"
 	    html_compliant "${before_th}"
-	    echo -n "<img src='${html_compliant_filename}' alt='' />" >> $html_file
-	    echo "</a>" >> $html_file
+	    BEFORE_REF=${BEFORE_REF}"<img src='${html_compliant_filename}' alt='' />"
+	    BEFORE_REF=${BEFORE_REF}"</a>"
+
+	    echo $BEFORE_REF >> $html_file
 	fi
 	echo "  </td>" >> $html_file
 	
@@ -827,10 +835,12 @@ create_page_for_pic()
 	echo "  <td align='right'>" >> $html_file
 	if [ "$after" != "__NULL__" ]; then
 	    html_compliant "${after}.html"
-	    echo -n "   <a href='${html_compliant_filename}'>" >> $html_file
+	    AFTER_REF="   <a href='${html_compliant_filename}'>"
 	    html_compliant "${after_th}"
-	    echo -n "<img src='${html_compliant_filename}' alt='' />" >> $html_file
-	    echo "</a>" >> $html_file
+	    AFTER_REF=${AFTER_REF}"<img src='${html_compliant_filename}' alt='' />"
+	    AFTER_REF=${AFTER_REF}"</a>"
+
+	    echo $AFTER_REF >> $html_file
 	fi
 	echo "  </td>" >> $html_file
 	
@@ -1328,26 +1338,28 @@ for file in $all_files; do
     echo "   <table width='100%'>" >> $idx_filename
     echo "    <tr>" >> $idx_filename
 
+    PIC_LINK=""
     if [ $multi_html = "yes" ]; then
 	html_compliant "${file}.html"
-	echo -n "     <td width='100%' $center_str><a href='${html_compliant_filename}'>" >> $idx_filename
+	PIC_LINK=${PIC_LINK}"     <td width='100%' $center_str><a href='${html_compliant_filename}'>"
 	html_compliant "${th_file}"
-	echo -n '<img src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
+	PIC_LINK=${PIC_LINK}'<img src="'${html_compliant_filename}'" alt="'${alt}'" /></a>'
     else
 	html_compliant "${vga_file}"
-	echo -n "     <td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img " >> $idx_filename
+	PIC_LINK=${PIC_LINK}"     <td width='100%' $center_str><a href='${html_compliant_filename}' target='${file}'><img "
 	html_compliant "${th_file}"
-	echo -n 'src="'${html_compliant_filename}'" alt="'${alt}'" /></a>' >> $idx_filename
+	PIC_LINK=${PIC_LINK}'src="'${html_compliant_filename}'" alt="'${alt}'" /></a>'
     fi
+    echo $PIC_LINK >> $idx_filename
 
     if [ "$pic_label_type" != "none" ]; then
-	echo "</td>" >> $idx_filename
+	echo "     </td>" >> $idx_filename
 	echo "    </tr>" >> $idx_filename
 	echo "    <tr>" >> $idx_filename
-	echo -n "     <td align='left' width='100%'><b>$pic_subtitle</b>" >> $idx_filename
+	echo "     <td align='left' width='100%'><b>$pic_subtitle</b>" >> $idx_filename
     fi
 
-    echo '</td>' >> $idx_filename
+    echo '     </td>' >> $idx_filename
     echo '    </tr>' >> $idx_filename
     echo '   </table>' >> $idx_filename
     echo '  </td>' >> $idx_filename
@@ -1438,19 +1450,20 @@ echo "<head>" >> $idx_header
 echo " <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> $idx_header
 
 # style
-echo -n " " >> $idx_header
+printf " " >> $idx_header
 print_css >> $idx_header
 
 # echo title
-echo -n " <title>" >> $idx_header
+TITLE=" <title>"
 if [ "$third_title" != "" ]; then
-    echo -n "${third_title} - " >> $idx_header
+    TITLE=${TITLE}"${third_title} - "
 fi
-echo -n "$title" >> $idx_header
+TITLE=${TITLE}"$title"
 if [ "$date" != "" ]; then
-    echo -n " - $date" >> $idx_header
+    TITLE=${TITLE}" - $date"
 fi
-echo '</title>' >> $idx_header
+TITLE=${TITLE}'</title>'
+echo $TITLE >> $idx_header
 
 echo "</head>" >> $idx_header
 # </head>
@@ -1468,9 +1481,9 @@ echo '  <td align="left">' >> $idx_header
 if [ "$third_title" != "" ]; then
     echo "   <label class='subtitle'><b>${third_title}</b></label><br />" >> $idx_header
 fi
-echo -n "   <label class='title'><b>$title</b></label>" >> $idx_header
+echo "   <label class='title'><b>$title</b></label>" >> $idx_header
 if [ "$date" != "" ]; then
-    echo "<br />" >> $idx_header
+    echo "   <br />" >> $idx_header
     echo "   <label class='subtitle'>$date</label>" >> $idx_header
 fi
 echo '  </td>' >> $idx_header

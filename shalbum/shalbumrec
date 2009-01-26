@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-shalbumrec_version="1.18"
+shalbumrec_version="1.19"
 shalbumrec_revision_date='$Date::             $'
 shalbumrec_revision="shalbumrec $shalbumrec_version - $shalbum_website - $shalbumrec_revision_date"
 
@@ -448,7 +448,7 @@ echo "<html xmlns='http://www.w3.org/1999/xhtml'>" >> index.html
 echo "<!-- head -->" >> index.html
 echo "<head>" >> index.html
 echo " <meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=ISO-8859-1\" />" >> index.html
-echo -n " " >> index.html
+printf " " >> index.html
 print_css >> index.html
 echo " <title>${global_title}</title>" >> index.html
 echo "</head>" >> index.html
