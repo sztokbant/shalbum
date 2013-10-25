@@ -1,3 +1,9 @@
+version 1.20 (24-Oct-2013)
+	Bug Fixes:
+	* Minor bug in which subtitles were truncated at first '='
+	  occurrence.
+
+
 version 1.19 (26-Jan-2009): oops...
 	Bug Fixes:
 	* Fixed 'echo -n' incompatibility issues on MacOS X

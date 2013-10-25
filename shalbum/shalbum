@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-sw_version="1.19"
+sw_version="1.20"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
@@ -1321,7 +1321,7 @@ for file in $all_files; do
 	    pic_subtitle=$file
 	elif [ "$pic_label_type" = "conf" ]; then
 	    if [ -f _subtitles ]; then
-		pic_subtitle="`grep \"${file}=\" _subtitles | cut -d '=' -f 2`"
+		pic_subtitle="`grep \"${file}=\" _subtitles | cut -d '=' -f 2-`"
 	    fi
 	elif [ "$pic_label_type" = "cutatdot" ]; then
 	    pic_subtitle="`echo $file | cut -d '.' -f 1`"
