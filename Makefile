@@ -1,5 +1,5 @@
 # Makefile for shalbum - http://www.sourceforge.net/projects/shalbum
-# updated: 20-March-2006
+e updated: 20-March-2006
 
 PREFIX:="/usr/local"
 
@@ -40,3 +40,23 @@ uninstall deinstall:
 	-rm -f $(PREFIX)/share/shalbum/watermark_vga.png
 	-rm -f $(PREFIX)/share/shalbum/README
 	-rmdir $(PREFIX)/share/shalbum
+
+release:
+	$(eval DIR := shalbum-$(shell grep sw_version shalbum | head -1 | awk -F '\"' '{ print $$2 }'))
+	mkdir -p $(DIR)
+	cp AUTHORS $(DIR)
+	cp ChangeLog $(DIR)
+	cp COPYING $(DIR)
+	cp INSTALL $(DIR)
+	cp Makefile $(DIR)
+	cp README $(DIR)
+	cp shalbum $(DIR)
+	cp shalbum-black.css $(DIR)
+	cp shalbum-white.css $(DIR)
+	cp shalbum.conf-sample $(DIR)
+	cp shalbumrec $(DIR)
+	cp shalbumrec.conf-sample $(DIR)
+	cp watermark_th.png $(DIR)
+	cp watermark_vga.png $(DIR)
+	tar czvf $(DIR).tar.gz $(DIR)
+	rm -rfv $(DIR)
