@@ -60,3 +60,6 @@ release:
 	cp watermark_vga.png $(DIR)
 	tar czvf $(DIR).tar.gz $(DIR)
 	rm -rfv $(DIR)
+
+clean:
+	-rm shalbum-*.tar.gz
