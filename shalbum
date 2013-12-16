@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 shalbum_website="http://shalbum.org"
-sw_version="1.20"
+sw_version="1.21"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
@@ -1586,10 +1586,11 @@ if [ "$only_index" != yes ]; then
       if [ -d ${outdir} ]; then
         mv ${outdir} ${outdir}.bak
       fi
-      mkdir -p ${outdir}/thumbnails
-      mkdir -p ${outdir}/vga
-      mkdir -p ${outdir}/huge
     fi
+
+    mkdir -p ${outdir}/thumbnails
+    mkdir -p ${outdir}/vga
+    mkdir -p ${outdir}/huge
 
     print_info "[tnails]"
     mv ${tmp_dir}/thumbnails/* ${outdir}/thumbnails/ 2>/dev/null

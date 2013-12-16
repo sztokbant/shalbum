@@ -1,3 +1,9 @@
+version 1.21 (15-Dec-2013)
+	Bug Fixes:
+	* 'shalbum -u' was not properly creating image dirs inside 'album'
+	  whenever they were not present.
+
+
 version 1.20 (24-Oct-2013)
 	Bug Fixes:
 	* Minor bug in which subtitles were truncated at first '='
