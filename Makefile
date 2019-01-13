@@ -1,4 +1,4 @@
-# Makefile for shalbum - http://www.sourceforge.net/projects/shalbum
+# Makefile for shalbum - https://github.com/sztokbant/shalbum/releases
 e updated: 20-March-2006
 
 PREFIX:="/usr/local"

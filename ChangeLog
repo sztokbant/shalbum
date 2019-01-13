@@ -1,3 +1,9 @@
+version 1.22 (13-Jan-2019)
+	Improvements:
+	* References to shalbum website updated to GitHub
+	  (watermark samples still pending).
+
+
 version 1.21 (15-Dec-2013)
 	Bug Fixes:
 	* 'shalbum -u' was not properly creating image dirs inside 'album'

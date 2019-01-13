@@ -17,14 +17,14 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-shalbum_website="http://shalbum.org"
-sw_version="1.21"
+shalbum_website="https://github.com/sztokbant/shalbum/releases"
+sw_version="1.22"
 sw_rev_date='$Date::             $'
 software_revision="shalbum $sw_version - $shalbum_website - $sw_rev_date"
 
 # TODO-LIST:
 #   - 'shalbumrec -u'
-#   - update sample watermark files to 'shalbum.org'
+#   - update sample watermark files to $shalbum_website
 
 uname=`uname`
 
