@@ -1,3 +1,8 @@
+version 1.23 (28-Dec-2025)
+	Bug Fixes:
+	* Fix subtitle parsing bug
+
+
 version 1.22 (13-Jan-2019)
 	Improvements:
 	* References to shalbum website updated to GitHub
